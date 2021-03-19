@@ -1,0 +1,531 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Normalization &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Discretization" href="U1-M1-L2-prep-discretization.html" />
+    <link rel="prev" title="Welcome!" href="intro.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/UPY-completo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Lecture Notes in Unsupervised and Reinforcement Learning</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome!
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Unit 1 - Unsupervised Preprocessing
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Data Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="U1-M1-L2-prep-discretization.html">
+   Discretization
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="freedman-diaconis.html">
+   Freedman-Diaconis Rule
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/U1-M1-L1-prep-normalization.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FU1-M1-L1-prep-normalization.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#min-max-normalization">
+   Min-max normalization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mean-normalization">
+   Mean normalization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#standardization">
+   Standardization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaling-rows-to-unit-length">
+   Scaling rows to unit length
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#max-abs-normalization">
+   Max-abs normalization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scaling-data-with-outliers">
+   Scaling data with outliers
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#assignment">
+   Assignment
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#to-do">
+   TO-DO
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="data-normalization">
+<h1>Data Normalization<a class="headerlink" href="#data-normalization" title="Permalink to this headline">¶</a></h1>
+<p>In this notebook we’ll explore data preprocessing techniques through
+the California housing dataset available from sklearn. We’ll reproduce
+results found on the sklearn documentation <span id="id1">[<a class="reference internal" href="#id7"><span>1</span></a>]</span>, though we will
+be using our own functions to understand how each method works. For
+production its a good idea to use the sklearn methods as they provide a
+convenient API for ML pipelines. Links to skleran relevant docs can be
+found at the end of the notebook.</p>
+<p>We begin with our standard imports:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+
+<span class="c1"># Load the example dataset</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_california_housing</span>
+</pre></div>
+</div>
+<p>We define our dataset and create some auxiliary functions for plotting.
+We will only use two features, median income and number of house holds.
+The plotting functions are available from the <a href="utils.py">utils.py</a>
+file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">fetch_california_housing</span><span class="p">()</span>
+<span class="n">X_full</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">data</span>
+
+<span class="c1"># Take only 2 features to make visualization easier</span>
+<span class="c1"># Feature of 0 has a long tail distribution.</span>
+<span class="c1"># Feature 5 has a few but very large outliers.</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">X_full</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">make_plot</span>
+
+<span class="c1"># Original Data</span>
+<span class="n">make_plot</span><span class="p">(</span><span class="s1">&#39;Unscaled data&#39;</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/e9a14cb7e3882ec98a2ceab9f2b985e35a9cc259.png" /></p>
+<p>Our base plot shows data in its original scale. We will review the
+effect of different scalings by comparing them to the plot above.</p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Data normalization is a standard preprocessing step that helps equalize
+the relative importance of features before applying a learning algorithm
+<span id="id2">[<a class="reference internal" href="#id6"><span>2</span></a>]</span>. By applying normalization the effect of each feature
+particular scale is removed, all quantities become dimensionless.</p>
+<p>For example, many classifiers calculate the distance between two points
+by the Euclidean distance. If one of the features has a broad range of
+values, the distance will be governed by this particular feature.
+Therefore, the range of all features should be normalized so that each
+feature contributes approximately proportionately to the final distance.</p>
+<p>From <span id="id3">[<a class="reference internal" href="#id5"><span>3</span></a>]</span>. If one input has a range of 0 to 1,
+while another input has a range of 0 to 1,000,000, then the contribution
+of the first input to the distance will be swamped by the second input.
+So it is essential to rescale the inputs so that their variability
+reflects their importance, or at least is not in inverse relation to
+their importance. For lack of better prior information, it is common to
+standardize each input to the same range or the same standard deviation.
+If you know that some inputs are more important than others, it may help
+to scale the inputs such that the more important ones have larger
+variances and/or ranges.</p>
+<p>Standardizing input variables can have far more important effects on
+initialization of the weights than simply avoiding saturation. Assume we
+have an MLP with one hidden layer applied to a classification problem
+and are therefore interested in the hyperplanes defined by each hidden
+unit. Each hyperplane is the locus of points where the net-input to the
+hidden unit is zero and is thus the classification boundary generated by
+that hidden unit considered in isolation. The connection weights from
+the inputs to a hidden unit determine the orientation of the hyperplane.
+The bias determines the distance of the hyperplane from the origin. If
+the bias terms are all small random numbers, then all the hyperplanes
+will pass close to the origin. Hence, if the data are not centered at
+the origin, the hyperplane may fail to pass through the data cloud. If
+all the inputs have a small coefficient of variation, it is quite
+possible that all the initial hyperplanes will miss the data entirely.
+With such a poor initialization, local minima are very likely to occur.
+It is therefore important to center the inputs to get good random
+initializations. In particular, scaling the inputs to [-1,1] will work
+better than [0,1], although any scaling that sets to zero the mean or
+median or other measure of central tendency is likely to be as good, and
+robust estimators of location and scale (Iglewicz, 1983) will be even
+better for input variables with extreme outliers.</p>
+<p>Thus it is easy to see that you will get better initializations if the
+data are centered near zero and if most of the data are distributed over
+an interval of roughly [-1,1] or [-2,2]. If you are firmly opposed
+to the idea of standardizing the input variables, you can compensate by
+transforming the initial weights, but this is much more complicated than
+standardizing the input variables.</p>
+<p>Another reason why feature scaling is applied is that gradient descent
+converges much faster with feature scaling than without it.</p>
+<p>Various other pairs of location and scale estimators can be used besides
+the mean and standard deviation, or midrange and range. Robust estimates
+of location and scale are desirable if the inputs contain outliers.</p>
+</div>
+<div class="section" id="min-max-normalization">
+<h2>Min-max normalization<a class="headerlink" href="#min-max-normalization" title="Permalink to this headline">¶</a></h2>
+<p>To re-scale a range between an arbitrary set of values <span class="math notranslate nohighlight">\([a, b]\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+x' = a + \frac{\left(x - x_{min}\right)\left(b - a\right)}{x_{max} - x_{min}}
+\]</div>
+<p>The general formula for a min-max of <span class="math notranslate nohighlight">\([0, 1]\)</span> is given as:</p>
+<div class="math notranslate nohighlight">
+\[
+x' = \frac{x - x_{min}}{x_{max} - x_{min}}
+\]</div>
+<p><img alt="" src="_images/25b8b5e5012613e798e1fc1d503c837e1e397f24.png" /></p>
+</div>
+<div class="section" id="mean-normalization">
+<h2>Mean normalization<a class="headerlink" href="#mean-normalization" title="Permalink to this headline">¶</a></h2>
+<p>Center the data, such that the scaled mean is at zero. The scaled range
+is 1.</p>
+<div class="math notranslate nohighlight">
+\[
+x' = \frac{x - \bar{x}}{x_{max} - x_{min}}
+\]</div>
+<p><img alt="" src="_images/e2df8bf999669416a75ce34567043c2cbb6e8101.png" /></p>
+</div>
+<div class="section" id="standardization">
+<h2>Standardization<a class="headerlink" href="#standardization" title="Permalink to this headline">¶</a></h2>
+<p>Feature standardization makes the values of each feature in the data
+have zero-mean (when subtracting the mean in the numerator) and
+unit-variance. The general method of calculation is to determine the
+distribution mean and standard deviation for each feature. Next we
+subtract the mean from each feature. Then we divide the values (mean is
+already subtracted) of each feature by its standard deviation.</p>
+<div class="math notranslate nohighlight">
+\[
+x' = \frac{x - \bar{x}}{\sigma_x}
+\]</div>
+<p><img alt="" src="_images/720fec4d4747a37f1ad4c9c1ae59195eaeba3ee6.png" /></p>
+</div>
+<div class="section" id="scaling-rows-to-unit-length">
+<h2>Scaling rows to unit length<a class="headerlink" href="#scaling-rows-to-unit-length" title="Permalink to this headline">¶</a></h2>
+<p>Another option that is widely used in machine-learning is to scale the
+components of a feature vector such that the complete vector has length
+one. This usually means dividing each component by the Euclidean length
+of the vector:</p>
+<div class="math notranslate nohighlight">
+\[
+x' = \frac{x}{\left\| x \right\|}
+\]</div>
+<p>In some applications it can be more practical to use the L1 norm of the
+feature vector. Note that this transformation acts on ROWS, not columns
+of the data matrix. It is useful when using similarity measures based on
+the vector dot product, such as when working with Natural Language
+Processing models.</p>
+<p><img alt="" src="_images/0755763526a2bc1e382d2bdbe4339b10b8c18321.png" /></p>
+</div>
+<div class="section" id="max-abs-normalization">
+<h2>Max-abs normalization<a class="headerlink" href="#max-abs-normalization" title="Permalink to this headline">¶</a></h2>
+<p>Scales features so that the maximum absolute value of each feature is
+scaled to unit size. The motivation to use this scaling include
+robustness to very small standard deviations of features and preserving
+zero entries in sparse data. It does not shift/center the data, and thus
+does not destroy any sparsity.</p>
+<div class="math notranslate nohighlight">
+\[
+x' = \frac{x}{max(|x|)}
+\]</div>
+<p><img alt="" src="_images/72efbd621f47d713e0b266dc24e2a710b2379971.png" /></p>
+</div>
+<div class="section" id="scaling-data-with-outliers">
+<h2>Scaling data with outliers<a class="headerlink" href="#scaling-data-with-outliers" title="Permalink to this headline">¶</a></h2>
+<p>If your data contains many outliers, scaling using the mean and variance
+of the data is likely to not work very well. A more robust scaling
+removes the median and scales the data according to the quantile range.</p>
+<div class="math notranslate nohighlight">
+\[
+x' = \frac{x - q_2}{q_3 - q_1}
+\]</div>
+<p><img alt="" src="_images/a241683c03d75cb02869294177251f4de13f1e1c.png" /></p>
+</div>
+<div class="section" id="assignment">
+<h2>Assignment<a class="headerlink" href="#assignment" title="Permalink to this headline">¶</a></h2>
+<p>Your assignment is to implement all normalization schemes from scratch.</p>
+<p>Assignment link: TODO</p>
+<p>You make compare your plots to the ones found here to validate your
+answers.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="id4"><dl class="citation">
+<dt class="label" id="id7"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>SciKit Learn Developers. Preprocessing data - scikit-learn 0.24.1 documentation. URL: <a class="reference external" href="https://scikit-learn.org/stable/modules/preprocessing.html">https://scikit-learn.org/stable/modules/preprocessing.html</a> (visited on 2021-03-11).</p>
+</dd>
+<dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Wikipedia contributors. Feature scaling — Wikipedia, the free encyclopedia. 2021. [Online; accessed 11-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Feature_scaling&amp;oldid=1001781300">https://en.wikipedia.org/w/index.php?title=Feature_scaling&amp;oldid=1001781300</a>.</p>
+</dd>
+<dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>Warren Sarle. Comp.ai.neural-nets FAQ, Part 2 of 7: Learning, Section - Should I normalize/standardize/rescale the data? URL: <a class="reference external" href="http://www.faqs.org/faqs/ai-faq/neural-nets/part2/section-16.html">http://www.faqs.org/faqs/ai-faq/neural-nets/part2/section-16.html</a> (visited on 2021-03-11).</p>
+</dd>
+</dl>
+</p>
+</div>
+<div class="section" id="to-do">
+<h2>TO-DO<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>[ ] Include examples using sklearn methods for comparison.</p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="intro.html" title="previous page">Welcome!</a>
+    <a class='right-next' id="next-link" href="U1-M1-L2-prep-discretization.html" title="next page">Discretization</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Gonzalo G. Peraza Mues<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
