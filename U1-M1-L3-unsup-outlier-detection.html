@@ -464,11 +464,10 @@ Likelihood estimators. To estimate the mean, we will use:</p>
 <div class="math notranslate nohighlight">
 \[ \Sigma = \frac{1}{n}\left(X - 1 \mu^T \right)^T\left(X - 1 \mu^T \right)\]</div>
 <p>We’ll implement a function which estimates the parameters using the
-equations above. (<code class="docutils literal notranslate"><span class="pre">estimateGaussian</span></code>{.verbatim}). The function takes as
-input the data matrix <code class="docutils literal notranslate"><span class="pre">X</span></code>{.verbatim} and should output an n-dimension
-vector <code class="docutils literal notranslate"><span class="pre">mu</span></code>{.verbatim} that holds the mean for each of the <span class="math notranslate nohighlight">\(n\)</span> features
-and the nxn covariance matrix <code class="docutils literal notranslate"><span class="pre">Sigma</span></code>{.verbatim} that holds the
-variances of each of the features.</p>
+equations above. (<code class="docutils literal notranslate"><span class="pre">estimateGaussian</span></code>). The function takes as input the
+data matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> and should output an n-dimension vector <code class="docutils literal notranslate"><span class="pre">mu</span></code> that holds
+the mean for each of the <span class="math notranslate nohighlight">\(n\)</span> features and the nxn covariance matrix
+<code class="docutils literal notranslate"><span class="pre">Sigma</span></code> that holds the variances of each of the features.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>def estimateGaussian(X):
     &quot;&quot;&quot;
     This function estimates the parameters of a Gaussian distribution

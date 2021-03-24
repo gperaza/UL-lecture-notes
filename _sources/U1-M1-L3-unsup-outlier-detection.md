@@ -188,11 +188,10 @@ and for the covariance you will use:
 $$ \Sigma = \frac{1}{n}\left(X - 1 \mu^T \right)^T\left(X - 1 \mu^T \right)$$
 
 We\'ll implement a function which estimates the parameters using the
-equations above. (`estimateGaussian`{.verbatim}). The function takes as
-input the data matrix `X`{.verbatim} and should output an n-dimension
-vector `mu`{.verbatim} that holds the mean for each of the $n$ features
-and the nxn covariance matrix `Sigma`{.verbatim} that holds the
-variances of each of the features.
+equations above. (`estimateGaussian`). The function takes as input the
+data matrix `X` and should output an n-dimension vector `mu` that holds
+the mean for each of the $n$ features and the nxn covariance matrix
+`Sigma` that holds the variances of each of the features.
 
 ``` python
 def estimateGaussian(X):
