@@ -318,11 +318,12 @@ we would like to estimate the covariance using only the clean subset of
 the data.
 
 One way to solve this problems is to use a robust estimator for the
-covariance matrix called the Minimum Covariance Determinant. The Minimum
-Covariance Determinant estimator is a robust, high-breakdown point (i.e.
-it can be used to estimate the covariance matrix of highly contaminated
-datasets, up to $\frac{n_\text{samples} - n_\text{features} - 1}{2}$
-outliers) estimator of covariance. The idea is to find
+covariance matrix called the Minimum Covariance Determinant
+{cite}`hubert2018minimum`. The Minimum Covariance Determinant estimator is a
+robust, high-breakdown point (i.e. it can be used to estimate the
+covariance matrix of highly contaminated datasets, up to
+$\frac{n_\text{samples} - n_\text{features} - 1}{2}$ outliers) estimator
+of covariance. The idea is to find
 $\frac{n_\text{samples}+n_\text{features}+1}{2}$ observations whose
 empirical covariance has the smallest determinant, yielding a \"pure\"
 subset of observations from which to compute standards estimates of
@@ -431,7 +432,8 @@ Our KNN algorithm will use a brute force approach to calculate the
 nearest neighbors. This implies the calculation of $N^2$ pairwise
 distances among all observations (rows) of the data matrix. More
 efficient approaches for large datasets employ KDTrees or BallTrees
-(<https://scikit-learn.org/stable/modules/neighbors.html>). Euclidian
+(see, for example,
+<https://scikit-learn.org/stable/modules/neighbors.html>). Euclidian
 distance is often used, but other metrics can be employed as well. The
 distance matrix is an $N\times N$ matrix defined as:
 
@@ -500,9 +502,10 @@ plt.ylabel('Proline');
 
 ## LOF
 
-The local outlier factor is the most well-known local anomaly detection
-algorithm and also introduced the idea of local anomalies first. To
-calculate the LOF score, three steps have to be computed:
+The local outlier factor {cite}`breunig2000lof`,enwiki:992466888 is the most
+well-known local anomaly detection algorithm and also introduced the
+idea of local anomalies first. To calculate the LOF score, three steps
+have to be computed:
 
 1.  The k-nearest-neighbors have to be found for each record x. In case
     of distance tie of the kth neighbor, more than k neighbors are used.
@@ -620,8 +623,9 @@ plt.ylabel('Proline');
 
 ## Angle based outlier detection (ABOD)
 
-The main idea behind ABOD is that if $x$ is an outlier, the variance of
-angles between pairs of the remaining objects becomes small:
+The main idea behind ABOD {cite}`kriegel2008angle` is that if $x$ is an
+outlier, the variance of angles between pairs of the remaining objects
+becomes small:
 
 ![](Figures/abod.png)
 
@@ -772,9 +776,9 @@ plt.ylabel('Proline');
 
 One efficient way of performing outlier detection in high-dimensional
 datasets is to use random forests. The Isolation Forest algorithm
-\'isolates\' observations by randomly selecting a feature and then
-randomly selecting a split value between the maximum and minimum values
-of the selected feature.
+{cite}`liu2008isolation`,enwiki:1005785930 \'isolates\' observations by
+randomly selecting a feature and then randomly selecting a split value
+between the maximum and minimum values of the selected feature.
 
 Since recursive partitioning can be represented by a tree structure, the
 number of splittings required to isolate a sample is equivalent to the
@@ -1107,13 +1111,9 @@ plt.ylabel('Proline');
 
 Further reading:
 
+-   <https://github.com/yzhao062/anomaly-detection-resources>
+
+Python modules for outlier detection:
+
 -   <https://scikit-learn.org/stable/modules/outlier_detection.html>
 -   <https://pyod.readthedocs.io/en/latest/>
--   <https://github.com/yzhao062/anomaly-detection-resources>
--   <https://arxiv.org/abs/1709.07045>
--   <https://scikit-learn.org/stable/modules/neighbors.html>
--   <https://en.wikipedia.org/wiki/Local_outlier_factor>
--   Angle-Based Outlier Detection in High-dimensional Data, Kriegel
-    et.al.
--   <https://en.wikipedia.org/wiki/Isolation_forest>
--   Isolation Forest, Liu and Zhou

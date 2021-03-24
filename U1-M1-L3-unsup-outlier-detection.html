@@ -309,7 +309,7 @@
 <h1>Anomaly and Outlier Detection<a class="headerlink" href="#anomaly-and-outlier-detection" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>Section from <span id="id1">[<a class="reference internal" href="#id14"><span>1</span></a>]</span>.</p>
+<p>Section from <span id="id1">[<a class="reference internal" href="#id18"><span>1</span></a>]</span>.</p>
 <p>Anomaly detection is the process of identifying unexpected items or
 events in datasets, which differ from the norm. In contrast to standard
 classification tasks, anomaly detection is often applied on unlabeled
@@ -585,11 +585,12 @@ covariance matrix is heavily influenced by the outliers. In principle,
 we would like to estimate the covariance using only the clean subset of
 the data.</p>
 <p>One way to solve this problems is to use a robust estimator for the
-covariance matrix called the Minimum Covariance Determinant. The Minimum
-Covariance Determinant estimator is a robust, high-breakdown point (i.e.
-it can be used to estimate the covariance matrix of highly contaminated
-datasets, up to <span class="math notranslate nohighlight">\(\frac{n_\text{samples} - n_\text{features} - 1}{2}\)</span>
-outliers) estimator of covariance. The idea is to find
+covariance matrix called the Minimum Covariance Determinant
+<span id="id2">[<a class="reference internal" href="#id19"><span>2</span></a>]</span>. The Minimum Covariance Determinant estimator is a
+robust, high-breakdown point (i.e. it can be used to estimate the
+covariance matrix of highly contaminated datasets, up to
+<span class="math notranslate nohighlight">\(\frac{n_\text{samples} - n_\text{features} - 1}{2}\)</span> outliers) estimator
+of covariance. The idea is to find
 <span class="math notranslate nohighlight">\(\frac{n_\text{samples}+n_\text{features}+1}{2}\)</span> observations whose
 empirical covariance has the smallest determinant, yielding a “pure”
 subset of observations from which to compute standards estimates of
@@ -691,7 +692,8 @@ easy to select an appropriate threshold, if required.</p>
 nearest neighbors. This implies the calculation of <span class="math notranslate nohighlight">\(N^2\)</span> pairwise
 distances among all observations (rows) of the data matrix. More
 efficient approaches for large datasets employ KDTrees or BallTrees
-(<a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a>). Euclidian
+(see, for example,
+<a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a>). Euclidian
 distance is often used, but other metrics can be employed as well. The
 distance matrix is an <span class="math notranslate nohighlight">\(N\times N\)</span> matrix defined as:</p>
 <div class="math notranslate nohighlight">
@@ -755,9 +757,10 @@ where the circle radius is proportional to the scores of each point:</p>
 </div>
 <div class="section" id="lof">
 <h2>LOF<a class="headerlink" href="#lof" title="Permalink to this headline">¶</a></h2>
-<p>The local outlier factor is the most well-known local anomaly detection
-algorithm and also introduced the idea of local anomalies first. To
-calculate the LOF score, three steps have to be computed:</p>
+<p>The local outlier factor <span id="id3">[<a class="reference internal" href="#id24"><span>3</span></a>]</span>,enwiki:992466888 is the most
+well-known local anomaly detection algorithm and also introduced the
+idea of local anomalies first. To calculate the LOF score, three steps
+have to be computed:</p>
 <ol>
 <li><p>The k-nearest-neighbors have to be found for each record x. In case
 of distance tie of the kth neighbor, more than k neighbors are used.</p></li>
@@ -869,8 +872,9 @@ not symmetric.</p>
 </div>
 <div class="section" id="angle-based-outlier-detection-abod">
 <h2>Angle based outlier detection (ABOD)<a class="headerlink" href="#angle-based-outlier-detection-abod" title="Permalink to this headline">¶</a></h2>
-<p>The main idea behind ABOD is that if <span class="math notranslate nohighlight">\(x\)</span> is an outlier, the variance of
-angles between pairs of the remaining objects becomes small:</p>
+<p>The main idea behind ABOD <span id="id4">[<a class="reference internal" href="#id21"><span>4</span></a>]</span> is that if <span class="math notranslate nohighlight">\(x\)</span> is an
+outlier, the variance of angles between pairs of the remaining objects
+becomes small:</p>
 <p><img alt="" src="_images/abod.png" /></p>
 <p>For a point within a cluster, the angles between difference vectors to
 pairs of other points differ widely. The variance of the angles will
@@ -1011,9 +1015,9 @@ issue.</p>
 <h2>iForest<a class="headerlink" href="#iforest" title="Permalink to this headline">¶</a></h2>
 <p>One efficient way of performing outlier detection in high-dimensional
 datasets is to use random forests. The Isolation Forest algorithm
-‘isolates’ observations by randomly selecting a feature and then
-randomly selecting a split value between the maximum and minimum values
-of the selected feature.</p>
+<span id="id5">[<a class="reference internal" href="#id20"><span>5</span></a>]</span>,enwiki:1005785930 ‘isolates’ observations by
+randomly selecting a feature and then randomly selecting a split value
+between the maximum and minimum values of the selected feature.</p>
 <p>Since recursive partitioning can be represented by a tree structure, the
 number of splittings required to isolate a sample is equivalent to the
 path length from the root node to the terminating node.</p>
@@ -1314,24 +1318,32 @@ the ensemble, an anomaly score is produced by computing <span class="math notran
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id2"><dl class="citation">
-<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id6"><dl class="citation">
+<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Markus Goldstein and Seiichi Uchida. A comparative evaluation of unsupervised anomaly detection algorithms for multivariate data. <em>PloS one</em>, 11(4):e0152173, 2016.</p>
+</dd>
+<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Mia Hubert, Michiel Debruyne, and Peter J Rousseeuw. Minimum covariance determinant and extensions. <em>Wiley Interdisciplinary Reviews: Computational Statistics</em>, 10(3):e1421, 2018.</p>
+</dd>
+<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>Markus M Breunig, Hans-Peter Kriegel, Raymond T Ng, and Jörg Sander. Lof: identifying density-based local outliers. In <em>Proceedings of the 2000 ACM SIGMOD international conference on Management of data</em>, 93–104. 2000.</p>
+</dd>
+<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dd><p>Hans-Peter Kriegel, Matthias Schubert, and Arthur Zimek. Angle-based outlier detection in high-dimensional data. In <em>Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining</em>, 444–452. 2008.</p>
+</dd>
+<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
+<dd><p>Fei Tony Liu, Kai Ming Ting, and Zhi-Hua Zhou. Isolation forest. In <em>2008 eighth ieee international conference on data mining</em>, 413–422. IEEE, 2008.</p>
 </dd>
 </dl>
 </p>
 <p>Further reading:</p>
 <ul class="simple">
+<li><p><a class="reference external" href="https://github.com/yzhao062/anomaly-detection-resources">https://github.com/yzhao062/anomaly-detection-resources</a></p></li>
+</ul>
+<p>Python modules for outlier detection:</p>
+<ul class="simple">
 <li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/outlier_detection.html">https://scikit-learn.org/stable/modules/outlier_detection.html</a></p></li>
 <li><p><a class="reference external" href="https://pyod.readthedocs.io/en/latest/">https://pyod.readthedocs.io/en/latest/</a></p></li>
-<li><p><a class="reference external" href="https://github.com/yzhao062/anomaly-detection-resources">https://github.com/yzhao062/anomaly-detection-resources</a></p></li>
-<li><p><a class="reference external" href="https://arxiv.org/abs/1709.07045">https://arxiv.org/abs/1709.07045</a></p></li>
-<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a></p></li>
-<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Local_outlier_factor">https://en.wikipedia.org/wiki/Local_outlier_factor</a></p></li>
-<li><p>Angle-Based Outlier Detection in High-dimensional Data, Kriegel
-<a class="reference external" href="http://et.al">et.al</a>.</p></li>
-<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Isolation_forest">https://en.wikipedia.org/wiki/Isolation_forest</a></p></li>
-<li><p>Isolation Forest, Liu and Zhou</p></li>
 </ul>
 </div>
 </div>
