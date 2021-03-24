@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Section from @goldstein2016comparative.
+Section from {cite}`goldstein2016comparative`.
 
 Anomaly detection is the process of identifying unexpected items or
 events in datasets, which differ from the norm. In contrast to standard
@@ -231,7 +231,7 @@ def estimateGaussian(X):
 
     mu = np.mean(X, axis=0)
     Xc = X - mu      # broadcasting takes care of substracting the mean from each row
-    Sigma = 1/n * Xc.T @ Xc
+    Sigma = 1/n * Xc.T {cite}`` Xc
 
     return mu, Sigma
 ```
@@ -281,7 +281,7 @@ def multivariateGaussian(X, mu, Sigma):
 
     X = X - mu
     p = (2 * np.pi) ** (- k / 2) * np.linalg.det(Sigma) ** (-0.5)\
-        * np.exp(-0.5 * np.sum(X @ np.linalg.pinv(Sigma) * X, axis=1))
+        * np.exp(-0.5 * np.sum(X {cite}`` np.linalg.pinv(Sigma) * X, axis=1))
     return p
 ```
 
@@ -319,7 +319,7 @@ the data.
 
 One way to solve this problems is to use a robust estimator for the
 covariance matrix called the Minimum Covariance Determinant
-@hubert2018minimum. The Minimum Covariance Determinant estimator is a
+{cite}`hubert2018minimum`. The Minimum Covariance Determinant estimator is a
 robust, high-breakdown point (i.e. it can be used to estimate the
 covariance matrix of highly contaminated datasets, up to
 $\frac{n_\text{samples} - n_\text{features} - 1}{2}$ outliers) estimator
@@ -382,7 +382,7 @@ def MD(X):
     mu, Sigma = estimateGaussianRobust(X)
 
     X = X - mu
-    MD = np.sqrt(np.sum(X @ np.linalg.pinv(Sigma) * X, axis=1))
+    MD = np.sqrt(np.sum(X {cite}`` np.linalg.pinv(Sigma) * X, axis=1))
 
     return MD
 ```
@@ -623,7 +623,7 @@ plt.ylabel('Proline');
 
 ## Angle based outlier detection (ABOD)
 
-The main idea behind ABOD @kriegel2008angle is that if $x$ is an
+The main idea behind ABOD {cite}`kriegel2008angle` is that if $x$ is an
 outlier, the variance of angles between pairs of the remaining objects
 becomes small:
 
