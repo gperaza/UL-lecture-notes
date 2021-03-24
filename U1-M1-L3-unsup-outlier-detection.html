@@ -1,0 +1,1384 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anomaly and Outlier Detection &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/UPY-completo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Lecture Notes in Unsupervised and Reinforcement Learning</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome!
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Unit 1 - Unsupervised Preprocessing
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="U1-M1-L1-prep-normalization.html">
+   Data Normalization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="U1-M1-L2-prep-discretization.html">
+   Discretization
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="freedman-diaconis.html">
+   Freedman-Diaconis Rule
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/U1-M1-L3-unsup-outlier-detection.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/executablebooks/jupyter-book"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FU1-M1-L3-unsup-outlier-detection.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#types-of-anomalies">
+   Types of anomalies
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#statistical-method-gaussian-model-mahalanobis-distance">
+   Statistical Method: Gaussian model (Mahalanobis distance)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#multivariate-gaussian-distribution">
+     Multivariate Gaussian distribution
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#choosing-the-threshold">
+     Choosing the threshold
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#knn">
+   KNN
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#lof">
+   LOF
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#angle-based-outlier-detection-abod">
+   Angle based outlier detection (ABOD)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-angled-based-outlier-factor-abof">
+     The Angled Based Outlier Factor (ABOF)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#iforest">
+   iForest
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-itree">
+     The iTree
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#anomaly-score">
+     Anomaly score
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#training-stage">
+     Training stage
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evaluation-stage">
+     Evaluation stage
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="anomaly-and-outlier-detection">
+<h1>Anomaly and Outlier Detection<a class="headerlink" href="#anomaly-and-outlier-detection" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Section from <span id="id1">[<a class="reference internal" href="#id14"><span>1</span></a>]</span>.</p>
+<p>Anomaly detection is the process of identifying unexpected items or
+events in datasets, which differ from the norm. In contrast to standard
+classification tasks, anomaly detection is often applied on unlabeled
+data, taking only the internal structure of the dataset into account.
+Anomalies are often associated with particular interesting events or
+suspicious data records. Anomalies are known to have two important
+characteristics:</p>
+<ol class="simple">
+<li><p>Anomalies are different from the norm with respect to their features
+and</p></li>
+<li><p>They are rare in a dataset compared to normal instances.</p></li>
+</ol>
+<p>Anomaly detection algorithms are now used in many application domains
+and often enhance traditional rule-based detection systems, for example:</p>
+<ul class="simple">
+<li><p>Intrusion detection</p></li>
+<li><p>Fraud detection</p></li>
+<li><p>Data Leakage Prevention</p></li>
+</ul>
+<p>We can distinguish between three main types of anomaly detection:
+Supervised Anomaly Detection, Semi-supervised Anomaly Detection, and
+Unsupervised Anomaly Detection. Unsupervised Anomaly Detection is the
+most flexible setup which does not require any labels. Furthermore,
+there is also no distinction between a training and a test dataset. The
+idea is that an unsupervised anomaly detection algorithm scores the data
+solely based on intrinsic properties of the dataset. Typically,
+distances or densities are used to give an estimation what is normal and
+what is an outlier.</p>
+<p><img alt="Different anomaly detection modes depending on the availability oflabels in the dataset. (a) Supervised anomaly detection uses a fullylabeled dataset for training. (b) Semi-supervised anomaly detection usesan anomaly-free training dataset. Afterwards, deviations in the testdata from that normal model are used to detect anomalies. (c)Unsupervised anomaly detection algorithms use only intrinsic informationof the data in order to detect instances deviating from the majority ofthe data. Source:https://doi.org/10.1371/journal.pone.0152173.g001" src="_images/journal.pone.0152173.g001.PNG" /></p>
+<p>The output of an unsupervised anomaly detection algorithm is often a
+score. Here, we also use scores and rank the results such that the
+ranking can be used for performance evaluation. Of course, a ranking can
+be converted into a label using an appropriate threshold.</p>
+</div>
+<div class="section" id="types-of-anomalies">
+<h2>Types of anomalies<a class="headerlink" href="#types-of-anomalies" title="Permalink to this headline">¶</a></h2>
+<p><img alt="A simple two-dimensional example. It illustrates global anomalies (x1,x2), a local anomaly x3 and a micro-cluster c3. Source:https://doi.org/10.1371/journal.pone.0152173.g002" src="_images/journal.pone.0152173.g002.PNG" /></p>
+<p>In Fig 2 two anomalies can be easily identified by eye: x1 and x2 are
+very different from the dense areas with respect to their attributes and
+are therefore called global anomalies. When looking at the dataset
+globally, x3 can be seen as a normal record since it is not too far away
+from the cluster c2. However, when we focus only on the cluster c2 and
+compare it with x3 while neglecting all the other instances, it can be
+seen as an anomaly. Therefore, x3 is called a local anomaly, since it is
+only anomalous when compared with its close-by neighborhood. It depends
+on the application, whether local anomalies are of interest or not.
+Another interesting question is whether the instances of the cluster c3
+should be seen as three anomalies or as a (small) regular cluster. These
+phenomena is called micro cluster and anomaly detection algorithms
+should assign scores to its members larger than the normal instances,
+but smaller values than the obvious anomalies. This simple example
+already illustrates that anomalies are not always obvious and a score is
+much more useful than a binary label assignment.</p>
+<p>To this end, an anomaly is always referred to a single instance in a
+dataset only occurring rarely. In reality, this is often not true. For
+example, in intrusion detection, anomalies are often referred to many
+(suspicious) access patterns, which may be observed at a larger amount
+as the normal accesses. In this case, an unsupervised anomaly detection
+algorithm directly applied on the raw data will fail. The task of
+detecting single anomalous instances in a larger dataset (as introduced
+so far) is called point anomaly detection. Nearly all available
+unsupervised anomaly detection algorithms today are from this type. If
+an anomalous situation is represented as a set of many instances, this
+is called a collective anomaly. Each of these instances is not
+necessarily a point anomaly, but only a specific combination thereof
+defines the anomaly. The previous given example of occurring multiple
+specific access patterns in intrusion detection is such a collective
+anomaly. A third kind are contextual anomalies, which describe the
+effect that a point can be seen as normal, but when a given context is
+taken into account, the point turns out to be an anomaly. The most
+commonly occurring context is time. As an example, suppose we measure
+temperature in a range of 0°to 35°C during the year. Thus, a temperature
+of 26°C seems pretty normal, but when we take the context time into
+account (e.g. the month), such a high temperature of 26°C during winter
+would definitively be considered as an anomaly.</p>
+<p><img alt="A taxonomy of unsupervised anomaly detection algorithms comprising offour main groups. Note that CMGOS can be categorized in two groups: Itis a clustering-based algorithm as well as estimating a subspace of eachcluster." src="_images/journal.pone.0152173.g003.PNG" /></p>
+</div>
+<div class="section" id="statistical-method-gaussian-model-mahalanobis-distance">
+<h2>Statistical Method: Gaussian model (Mahalanobis distance)<a class="headerlink" href="#statistical-method-gaussian-model-mahalanobis-distance" title="Permalink to this headline">¶</a></h2>
+<p>One of the simplest approach to anomaly detection is to model the data
+as being generated from a multivariate normal distribution. The model
+assigns each observation a probability, which then can be used to asses
+if a particular observation is rare (unlikely) or not (high
+probability). Of course, if the assumption that the data comes from a
+normal distribution is not valid, this method does not perform well. In
+particular, multi-modal datasets, clustered data, etc. are not well
+suited to be modeled as a multivariate Gaussian.</p>
+<p>We will follow an example taken from the course on Machine Learning by
+Andrew Ng on Coursera. We will implement an anomaly detection algorithm
+to detect anomalous behavior in the wine dataset. Among the 13 features
+we’ll select 2 to keep the data two dimensional and explore how the
+algorithm works. We suspect that the vast majority of these examples are
+“normal” (non-anomalous) examples of wine types, but there might also be
+some examples of anomalous wines within this dataset, (whatever that
+means).</p>
+<p>We will use a Gaussian model to detect anomalous examples in your
+dataset. On the 2D dataset we will fit a Gaussian distribution and then
+find values that have very low probability and hence can be considered
+anomalies. After that, we will apply the anomaly detection algorithm to
+a larger dataset with many dimensions.</p>
+<p>Let’s begin with some standard imports:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># used for manipulating directory paths</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Scientific and vector computation for python</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Plotting library</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+
+<span class="c1"># Optimization module in scipy</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">optimize</span>
+
+<span class="c1"># will be used to load MATLAB mat datafile format</span>
+<span class="kn">from</span> <span class="nn">scipy.io</span> <span class="kn">import</span> <span class="n">loadmat</span>
+
+<span class="c1"># tells matplotlib to embed plots within the notebook</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+</div>
+<p>And import our data set:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  The following command loads the dataset.</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_wine</span>
+
+<span class="c1"># Select the first class (59 elements), columns &#39;Malic acid&#39; and &#39;Proline&#39; (see DESCR)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">load_wine</span><span class="p">()[</span><span class="s1">&#39;data&#39;</span><span class="p">][:</span><span class="mi">59</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">12</span><span class="p">]]</span>
+
+<span class="c1">#  Visualize the example dataset</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bx&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">1900</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Malic acid&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/ffec72bb023e89de92e16b8fc7e43108e9c50bc8.png" /></p>
+<div class="section" id="multivariate-gaussian-distribution">
+<h3>Multivariate Gaussian distribution<a class="headerlink" href="#multivariate-gaussian-distribution" title="Permalink to this headline">¶</a></h3>
+<p>To perform anomaly detection, we will first need to fit a model to the
+data distribution. The Multivariate Gaussian distribution is given by</p>
+<div class="math notranslate nohighlight">
+\[
+p\left( x; \mu, \Sigma \right)  = \frac{1}{  \sqrt{  \left( 2\pi\right)^k  \left|\Sigma\right|  }}
+\exp\left(-\frac{1}{2} \left(x - \mu \right)^T \Sigma^{-1}\left(x - \mu \right)\right)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> is the mean vector and <span class="math notranslate nohighlight">\(\Sigma\)</span> is the covariance matrix.</p>
+<p>You can estimate the parameters by using the following Maximum
+Likelihood estimators. To estimate the mean, we will use:</p>
+<div class="math notranslate nohighlight">
+\[ \mu_i = \frac{1}{m} \sum_{j=1}^m x_i^{(j)},\]</div>
+<p>and for the covariance you will use:</p>
+<div class="math notranslate nohighlight">
+\[ \Sigma = \frac{1}{n}\left(X - 1 \mu^T \right)^T\left(X - 1 \mu^T \right)\]</div>
+<p>We’ll implement a function which estimates the parameters using the
+equations above. (<code class="docutils literal notranslate"><span class="pre">estimateGaussian</span></code>{.verbatim}). The function takes as
+input the data matrix <code class="docutils literal notranslate"><span class="pre">X</span></code>{.verbatim} and should output an n-dimension
+vector <code class="docutils literal notranslate"><span class="pre">mu</span></code>{.verbatim} that holds the mean for each of the <span class="math notranslate nohighlight">\(n\)</span> features
+and the nxn covariance matrix <code class="docutils literal notranslate"><span class="pre">Sigma</span></code>{.verbatim} that holds the
+variances of each of the features.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>def estimateGaussian(X):
+    &quot;&quot;&quot;
+    This function estimates the parameters of a Gaussian distribution
+    using a provided dataset.
+
+    Parameters
+    ----------
+    X : array_like
+        The dataset of shape (m x n) with each n-dimensional
+        data point in one row, and each total of m data points.
+
+    Returns
+    -------
+    mu : array_like
+        A vector of shape (n,) containing the means of each dimension.
+
+    Sigma : array_like
+        The (n x n) covariance matrix.
+
+    Instructions
+    ------------
+    Compute the mean of the data and the variances
+    In particular, mu[i] should contain the mean of
+    the data for the i-th feature and Sigma[i,j]
+    should contain covariance between the i-th and
+    the j-th feature.
+    &quot;&quot;&quot;
+    # Useful variables
+    m, n = X.shape
+
+    # You should return these values correctly
+    mu = np.zeros(n)
+    Sigma = np.zeros((n, n))
+
+    mu = np.mean(X, axis=0)
+    Xc = X - mu      # broadcasting takes care of substracting the mean from each row
+    Sigma = 1/n * Xc.T {cite}`` Xc
+
+    return mu, Sigma
+</pre></div>
+</div>
+<p>In the next cell will visualizes the contours of the fitted Gaussian
+distribution, we can use this image to check your results.</p>
+<p>From our plot, we can see that most of the examples are in the region
+with the highest probability, while the anomalous examples are in the
+regions with lower probabilities.</p>
+<p>To do the visualization of the Gaussian fit, we first estimate the
+parameters of our assumed Gaussian distribution, then compute the
+probabilities for each of the points and then visualize both the overall
+distribution and where each of the points falls in terms of that
+distribution.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>def multivariateGaussian(X, mu, Sigma):
+    &quot;&quot;&quot;
+    Computes the probability density function of the multivariate gaussian distribution.
+
+    Parameters
+    ----------
+    X : array_like
+        The dataset of shape (m x n). Where there are m examples of n-dimensions.
+
+    mu : array_like
+        A vector of shape (n,) contains the means for each dimension (feature).
+
+    Sigma : array_like
+        Either a vector of shape (n,) containing the variances of independent features
+        (i.e. it is the diagonal of the correlation matrix), or the full
+        correlation matrix of shape (n x n) which can represent dependent features.
+
+    Returns
+    ------
+    p : array_like
+        A vector of shape (m,) which contains the computed probabilities at each of the
+        provided examples.
+    &quot;&quot;&quot;
+    k = mu.size
+
+    # if sigma is given as a diagonal, compute the matrix
+    if Sigma.ndim == 1:
+        Sigma = np.diag(Sigma)
+
+    X = X - mu
+    p = (2 * np.pi) ** (- k / 2) * np.linalg.det(Sigma) ** (-0.5)\
+        * np.exp(-0.5 * np.sum(X {cite}`` np.linalg.pinv(Sigma) * X, axis=1))
+    return p
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Estimate my and sigma2</span>
+<span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span> <span class="o">=</span> <span class="n">estimateGaussian</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1">#  Returns the density of the multivariate normal at each data point (row)</span>
+<span class="c1">#  of X</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">multivariateGaussian</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">)</span>
+
+<span class="c1">#  Visualize the fit</span>
+<span class="n">X1</span><span class="p">,</span> <span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">1900</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">multivariateGaussian</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">X1</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">X2</span><span class="o">.</span><span class="n">ravel</span><span class="p">()],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">Z</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bx&#39;</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">geomspace</span><span class="p">(</span><span class="mf">1e-10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Malic acid&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/45328740638fa58fabeab0a1676e2dc54b2a45e6.png" /></p>
+<p>There is a problem with the previous estimation of our normal
+distribution. By inspecting the plot, it is clear that if outliers where
+removed the shape of the distribution should be an ellipse almost
+aligned with the y-axis. The problem is that the estimation of the
+covariance matrix is heavily influenced by the outliers. In principle,
+we would like to estimate the covariance using only the clean subset of
+the data.</p>
+<p>One way to solve this problems is to use a robust estimator for the
+covariance matrix called the Minimum Covariance Determinant. The Minimum
+Covariance Determinant estimator is a robust, high-breakdown point (i.e.
+it can be used to estimate the covariance matrix of highly contaminated
+datasets, up to <span class="math notranslate nohighlight">\(\frac{n_\text{samples} - n_\text{features} - 1}{2}\)</span>
+outliers) estimator of covariance. The idea is to find
+<span class="math notranslate nohighlight">\(\frac{n_\text{samples}+n_\text{features}+1}{2}\)</span> observations whose
+empirical covariance has the smallest determinant, yielding a “pure”
+subset of observations from which to compute standards estimates of
+location and covariance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <span class="n">MinCovDet</span>
+
+<span class="k">def</span> <span class="nf">estimateGaussianRobust</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+
+    <span class="n">robust_cov</span> <span class="o">=</span> <span class="n">MinCovDet</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">robust_cov</span><span class="o">.</span><span class="n">location_</span>
+    <span class="n">Sigma</span> <span class="o">=</span> <span class="n">robust_cov</span><span class="o">.</span><span class="n">covariance_</span>
+
+    <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Estimate my and sigma2</span>
+<span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span> <span class="o">=</span> <span class="n">estimateGaussianRobust</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1">#  Returns the density of the multivariate normal at each data point (row)</span>
+<span class="c1">#  of X</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">multivariateGaussian</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">)</span>
+
+<span class="c1">#  Visualize the fit</span>
+<span class="n">X1</span><span class="p">,</span> <span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">1900</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">multivariateGaussian</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">X1</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">X2</span><span class="o">.</span><span class="n">ravel</span><span class="p">()],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">Z</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bx&#39;</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span> <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">geomspace</span><span class="p">(</span><span class="mf">1e-10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Malic acid&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/6eb740f5f689c2dfa6d29cd97e5f1adeb43e1f07.png" /></p>
+</div>
+<div class="section" id="choosing-the-threshold">
+<h3>Choosing the threshold<a class="headerlink" href="#choosing-the-threshold" title="Permalink to this headline">¶</a></h3>
+<p>Now, the outliers are identified as the points having the lowest
+probability according to the fitted model. This probabilities can serve
+as the scores of our method. Because of the “squashing” effect of the
+exponential, its much clearer to use the Mahalanobis distance, which is
+just the exponent of the multivariate Gaussian.</p>
+<div class="math notranslate nohighlight">
+\[
+MD(x) = \sqrt{\left(x - \mu \right)^T\Sigma^{-1}\left(x - \mu\right)}
+\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>def MD(X):
+    mu, Sigma = estimateGaussianRobust(X)
+
+    X = X - mu
+    MD = np.sqrt(np.sum(X {cite}`` np.linalg.pinv(Sigma) * X, axis=1))
+
+    return MD
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the MD for each point, the plot the scores to identify possible outliers.</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">MD</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Index&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Mahalanobis distance&#39;</span><span class="p">)</span>
+
+<span class="n">n_outliers</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">top_outliers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">scores</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="n">n_outliers</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Top outliers: &#39;</span><span class="p">,</span> <span class="n">top_outliers</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-{.RESULTS notranslate"><div class="highlight"><pre><span></span>``` example
+Top outliers:  [45 39 43 41 21 46 19  4]
+```
+
+![](./.ob-jupyter/2cc8f2832388230de8856da27ff848207e841e2f.png)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="knn">
+<h2>KNN<a class="headerlink" href="#knn" title="Permalink to this headline">¶</a></h2>
+<p>A method that does not assume any distribution (non-parametric), but
+employs the whole set of observations is the k-nearest neighbors
+algorithm.</p>
+<p>First, for every record in the dataset, the k-nearest-neighbors have to
+be found. Then, an anomaly score is computed using these neighbors,
+whereas two possibilities have been proposed: Either the distance to the
+kth-nearest-neighbor is used (a single one) or the average distance to
+all of the k-nearest-neighbors is computed. In the following, we refer
+to the first method as kth-NN and the latter as k-NN. In practical
+applications, the k-NN method is often preferred. However, the absolute
+value of the score depends very much on the dataset itself, the number
+of dimensions, and on normalization. As a result, it is in practice not
+easy to select an appropriate threshold, if required.</p>
+<p>Our KNN algorithm will use a brute force approach to calculate the
+nearest neighbors. This implies the calculation of <span class="math notranslate nohighlight">\(N^2\)</span> pairwise
+distances among all observations (rows) of the data matrix. More
+efficient approaches for large datasets employ KDTrees or BallTrees
+(<a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a>). Euclidian
+distance is often used, but other metrics can be employed as well. The
+distance matrix is an <span class="math notranslate nohighlight">\(N\times N\)</span> matrix defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+D = \begin{pmatrix}
+d(x_1,x_1) &amp; d(x_1,x_2) &amp; \dots &amp; d(x_1,x_n)\\
+d(x_2,x_1) &amp; d(x_2,x_2) &amp; \dots &amp; d(x_2,x_n)\\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
+d(x_n,x_1) &amp; d(x_n,x_2) &amp; \dots &amp; d(x_n,x_n)
+\end{pmatrix}
+\end{split}\]</div>
+<p>You will implement the distance matrix calculation in the assignment.
+There exists an efficient way to calculate this matrix using Numpy
+broadcasting. To do this, we need to transform our original data matrix
+<span class="math notranslate nohighlight">\(X\)</span> into new 3D arrays that repeat X along a given dimension. The
+purpose is to obtain 3D array with all elements of the form
+<span class="math notranslate nohighlight">\(x_{ik} - x_{jk}\)</span> indexed as <span class="math notranslate nohighlight">\(ijk\)</span>. If you are unfamiliar with
+broadcasting operations, you may wish to implement this as a nested for
+loop, at the cost of being slower.</p>
+<p>There are two variants of this algorithm, the K$^th^$NN and the KNN
+algorithm. The K$^th^$NN algorithm finds the distance to the kth
+neighbor, while the KNN algorithm uses the average distance from the
+first k neighbors. This distances are called scores. For both algorithm
+we need to find the scores, then sort according to those scores. The
+larger the score, the more likely a point is to be an outlier. You’ll
+be ask to implement this functionality in the <code class="docutils literal notranslate"><span class="pre">scores_kthnn</span></code> and
+<code class="docutils literal notranslate"><span class="pre">scores_knn</span></code> functions in the assignment.</p>
+<p>The choice of the parameter <span class="math notranslate nohighlight">\(k\)</span> is of course important for the results.
+If it is chosen too low, the density estimation for the records might be
+not reliable. On the other hand, if it is too large, density estimation
+may be too coarse. As a rule of thumb, k should be in the range 10 &lt; k
+&lt; 50.</p>
+<p>Testing KNN in the wine dataset should output the following result,
+where the circle radius is proportional to the scores of each point:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize the data matrix, this step is important</span>
+<span class="c1"># since the scale of the two columns differs significantly</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+
+<span class="n">X_scaled</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">kthnn_scores</span> <span class="o">=</span> <span class="n">scores_kthnn</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">knn_scores</span> <span class="o">=</span> <span class="n">scores_knn</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">})</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">1000</span><span class="o">*</span><span class="n">kthnn_scores</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span>
+            <span class="n">facecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Outlier scores kthnn&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">1000</span><span class="o">*</span><span class="n">knn_scores</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span>
+            <span class="n">facecolors</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Outlier scores knn&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Data points&#39;</span><span class="p">)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">legend</span><span class="o">.</span><span class="n">legendHandles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">]</span>
+<span class="n">legend</span><span class="o">.</span><span class="n">legendHandles</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Malic acid&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lof">
+<h2>LOF<a class="headerlink" href="#lof" title="Permalink to this headline">¶</a></h2>
+<p>The local outlier factor is the most well-known local anomaly detection
+algorithm and also introduced the idea of local anomalies first. To
+calculate the LOF score, three steps have to be computed:</p>
+<ol>
+<li><p>The k-nearest-neighbors have to be found for each record x. In case
+of distance tie of the kth neighbor, more than k neighbors are used.</p></li>
+<li><p>Using these k-nearest-neighbors <span class="math notranslate nohighlight">\(N_k\)</span>, the local density for a
+record is estimated by computing the local reachability density
+(LRD):</p>
+<div class="math notranslate nohighlight">
+\[
+      LRD_k(x) = 1/\left(  \frac{\sum\limits_{o\in N_k(x)} d_k(x,o)}{\left|N_k(x)\right|} \right)
+      \]</div>
+<p>whereas dk(·) is the reachability distance. Except for some very
+rare situations in highly dense clusters, this is the Euclidean
+distance.</p>
+</li>
+<li><p>Finally, the LOF score is computed by comparing the LRD of a record
+with the LRDs of its k neighbors:</p>
+<div class="math notranslate nohighlight">
+\[
+      LOF(x) = \frac{\sum\limits_{o\in N_k(x)}\frac{LRD_k(o)}{LRD_k(x)}}{\left|N_k(x)\right|}
+      \]</div>
+</li>
+</ol>
+<p>The LOF score is thus basically a ratio of local densities. This results
+in the nice property of LOF, that normal instances, which densities are
+as big as the densities of their neighbors, get a score of about 1.0.
+Anomalies, which have a low local density, will result in larger scores.
+At this point it is also clear why this algorithm is local: It only
+relies on its direct neighborhood and the score is a ratio mainly based
+on the k neighbors only. Of course, global anomalies can also be
+detected since they also have a low LRD when comparing with their
+neighbors. It is important to note that in anomaly detection tasks,
+where local anomalies are not of interest, this algorithm will generate
+a lot of false alarms.</p>
+<p>The reachability distance is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+d_k(x, o) = \max\left( k-distance(o), d(x,o)  \right)
+\]</div>
+<p>In words, the reachability distance of an object <span class="math notranslate nohighlight">\(x\)</span> from <span class="math notranslate nohighlight">\(o\)</span> is the
+true distance of the two objects, but at least the k-distance of <span class="math notranslate nohighlight">\(o\)</span>.
+Objects that belong to the k nearest neighbors of <span class="math notranslate nohighlight">\(o\)</span> (the “core” of
+<span class="math notranslate nohighlight">\(o\)</span>) are considered to be equally distant, i.e., equally reachable from
+<span class="math notranslate nohighlight">\(o\)</span>. The reason for this distance is to get more stable results. Note
+that this is not a distance in the mathematical definition, since it is
+not symmetric.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lof</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="c1"># Find the distance matrix</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="c1">### END SOLUTION</span>
+
+    <span class="c1"># Sort the distance matrix row by row to obtain the k neighborhood of each row.</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">Nk_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">D</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1">### END SOLUTION</span>
+
+    <span class="c1"># Store the k-distance of each observation</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">k_dist</span> <span class="o">=</span> <span class="n">Nk_distances</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1">### END SOLUTION</span>
+
+    <span class="c1"># Also store the indices of the neighbors to find the k-distance of each point o.</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">Nk_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">D</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1">### END SOLUTION</span>
+
+    <span class="c1"># Find the reachability distances of each neighborhood</span>
+    <span class="c1"># Note: Numpy fancy indexing is your friend</span>
+    <span class="n">r_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">k</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Nk_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+            <span class="n">r_dist</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">o</span><span class="p">],</span> <span class="n">k_dist</span><span class="p">[</span><span class="n">o</span><span class="p">])</span>
+
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">r_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">Nk_distances</span><span class="p">,</span> <span class="n">k_dist</span><span class="p">[</span><span class="n">Nk_idx</span><span class="p">])</span>
+    <span class="c1">### END SOLUTION</span>
+
+    <span class="c1"># Find LDR for each observation</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">ldr</span> <span class="o">=</span> <span class="n">k</span><span class="o">/</span><span class="n">r_dist</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1">### END SOLUTION</span>
+
+    <span class="c1">#Find LOF scores</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">ldr</span><span class="p">[</span><span class="n">Nk_idx</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">ldr</span><span class="o">/</span><span class="n">k</span>
+    <span class="c1">### END SOLUTION</span>
+
+    <span class="k">return</span> <span class="n">scores</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize the data matrix, this step is important</span>
+<span class="c1"># since the scale of the two columns differs significantly</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+
+<span class="n">X_scaled</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">lof_scores</span> <span class="o">=</span> <span class="n">lof</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">lof_scores</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">1900</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Malic acid&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="60b94d56a822659bca1591ccce1bb1a9fb52206b.png" /></p>
+</div>
+<div class="section" id="angle-based-outlier-detection-abod">
+<h2>Angle based outlier detection (ABOD)<a class="headerlink" href="#angle-based-outlier-detection-abod" title="Permalink to this headline">¶</a></h2>
+<p>The main idea behind ABOD is that if <span class="math notranslate nohighlight">\(x\)</span> is an outlier, the variance of
+angles between pairs of the remaining objects becomes small:</p>
+<p><img alt="" src="_images/abod.png" /></p>
+<p>For a point within a cluster, the angles between difference vectors to
+pairs of other points differ widely. The variance of the angles will
+become smaller for points at the border of a cluster. However, even here
+the variance is still relatively high compared to the variance of angles
+for real outliers. Here, the angles to most pairs of points will be
+small since most points are clustered in some directions.</p>
+<p>As a result of these considerations, an angle-based outlier factor
+(ABOF) can describe the divergence in directions of objects relatively
+to one another. If the spectrum of observed angles for a point is broad,
+the point will be surrounded by other points in all possible directions
+meaning the point is positioned inside a cluster. If the spectrum of
+observed angles for a point is rather small, other points will be
+positioned only in certain directions. This means, the point is
+positioned outside of some sets of points that are grouped together.
+Thus, rather small angles for a point that are rather similar to one
+another imply that such point is an outlier.</p>
+<p>ABOD has been proposed as able to perform outlier detection more
+reliably in high dimensional data sets than distance based methods.</p>
+<p>A problem of the basic approach ABOD is obvious: since for each point
+all pairs of points must be considered, the time-complexity is in
+O(<span class="math notranslate nohighlight">\(n^3\)</span>), the original ABOD paper proposes two approximations to address
+this problem: FastABOD and LB-ABOD. These will not be discussed here.</p>
+<div class="section" id="the-angled-based-outlier-factor-abof">
+<h3>The Angled Based Outlier Factor (ABOF)<a class="headerlink" href="#the-angled-based-outlier-factor-abof" title="Permalink to this headline">¶</a></h3>
+<p>As an approach to assign the ABOF value to any object in the database
+<span class="math notranslate nohighlight">\(\mathcal{D}\)</span>, we compute the scalar product of the difference vectors
+of any triple of points (i.e. a query point <span class="math notranslate nohighlight">\(\vec{A} \in \mathcal{D}\)</span>
+and all pairs <span class="math notranslate nohighlight">\((\vec{B},\vec{C})\)</span> of all remaining points in
+<span class="math notranslate nohighlight">\(\mathcal{D} \backslash \{\vec{A}\})\)</span> normalized by the quadratic
+product of the length of the difference vectors, i.e. the angle is
+weighted less if the corresponding points are far from the query point.
+By this weighting factor, the distance influences the value after all,
+but only to a minor part. Nevertheless, this weighting of the variance
+is important since the angle to a pair of points varies naturally
+stronger for a bigger distance. The variance of this value over all
+pairs for the query point <span class="math notranslate nohighlight">\(\vec{A}\)</span> constitutes the angle-based outlier
+factor (ABOF) of <span class="math notranslate nohighlight">\(\vec{A}\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overline{AB}, \overline{AC}\right&gt;}
+{\left\Vert \overline{AB}  \right\Vert^2 \cdot \left\Vert \overline{AC}  \right\Vert^2} \right)\\
+= \frac
+{\sum_B\sum_C\left(
+\frac{1}{\left\Vert \overline{AB}  \right\Vert \cdot \left\Vert \overline{AC}  \right\Vert}
+\frac{\left&lt;\overline{AB}, \overline{AC}\right&gt;}{\left\Vert \overline{AB}  \right\Vert^2 \cdot \left\Vert \overline{AC}  \right\Vert^2}
+\right)^2}
+{\sum_B\sum_C\frac{1}{\left\Vert \overline{AB}  \right\Vert \cdot \left\Vert \overline{AC}  \right\Vert}} -
+\left(\frac
+{\sum_B\sum_C
+\frac{1}{\left\Vert \overline{AB}  \right\Vert \cdot \left\Vert \overline{AC}  \right\Vert}
+\frac{\left&lt;\overline{AB}, \overline{AC}\right&gt;}{\left\Vert \overline{AB}  \right\Vert^2 \cdot \left\Vert \overline{AC}  \right\Vert^2}
+}
+{\sum_B\sum_C\frac{1}{\left\Vert \overline{AB}  \right\Vert \cdot \left\Vert \overline{AC}  \right\Vert}}\right)^2
+\end{split}\]</div>
+<p><strong>NOTE</strong>: This way of weighting the cosine similar is weird in my
+opinion. In fact, the pyod package implements ABOD without these
+weights. I’m not sure which way is the correct one, or even is one can
+say that either can be wrong, since the constructions of the algorithm
+is not based in any formalism. I have yet yo find a discussion about the
+issue.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">abof</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns abof score for X[a] &quot;&quot;&quot;</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="c1"># Variablea to store the first and second terms of the varince</span>
+    <span class="n">var1</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">var2</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># variable to store the normalization constant (sum of weights)</span>
+    <span class="n">norm_c</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Loop over all pairs of points</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1">### BEGIN SOLUTION</span>
+            <span class="n">vec_ab</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+            <span class="n">vec_ac</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+            <span class="n">d_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec_ab</span><span class="p">)</span>
+            <span class="n">d_ac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec_ac</span><span class="p">)</span>
+            <span class="n">scalar_prod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vec_ab</span><span class="p">,</span> <span class="n">vec_ac</span><span class="p">)</span>
+
+            <span class="n">d_product</span> <span class="o">=</span> <span class="n">d_ab</span><span class="o">*</span><span class="n">d_ac</span>
+            <span class="c1"># If duplicates are present, some of these might be zero</span>
+            <span class="c1"># In such case, omit. Not sure this is the correct behaviour.</span>
+            <span class="k">if</span> <span class="n">d_product</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">var_temp</span> <span class="o">=</span> <span class="n">scalar_prod</span><span class="o">/</span><span class="p">(</span><span class="n">d_product</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+            <span class="c1"># Note: pyod implements this as var_temp = scalar_prod/(d_product**2)</span>
+            <span class="c1"># The original paper wighting scheme seems weird to me, pyod implementation seems more natural.</span>
+            <span class="c1"># but i haven&#39;t found any discussion about it.</span>
+            <span class="n">var1</span> <span class="o">+=</span> <span class="n">var_temp</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">var2</span> <span class="o">+=</span> <span class="n">var_temp</span>
+            <span class="n">norm_c</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">/</span><span class="n">d_product</span>
+            <span class="c1"># Note: pyod implements this as norm_c += 1</span>
+
+            <span class="c1">### END SOLUTION</span>
+
+    <span class="n">var</span> <span class="o">=</span> <span class="n">var1</span><span class="o">/</span><span class="n">norm_c</span> <span class="o">-</span> <span class="p">(</span><span class="n">var2</span><span class="o">/</span><span class="n">norm_c</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="k">return</span> <span class="n">var</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">abod</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Retrun abof scores for X &quot;&quot;&quot;</span>
+
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">abof</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize the data matrix, this step is important</span>
+<span class="c1"># since the scale of the two columns differs significantly</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+
+<span class="n">X_scaled</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">abod_scores</span> <span class="o">=</span> <span class="n">abod</span><span class="p">(</span><span class="n">X_scaled</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">abod_scores</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">1900</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Malic acid&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="c05df94848e0f252a72b26bbbf6b9890099625ad.png" /></p>
+</div>
+</div>
+<div class="section" id="iforest">
+<h2>iForest<a class="headerlink" href="#iforest" title="Permalink to this headline">¶</a></h2>
+<p>One efficient way of performing outlier detection in high-dimensional
+datasets is to use random forests. The Isolation Forest algorithm
+‘isolates’ observations by randomly selecting a feature and then
+randomly selecting a split value between the maximum and minimum values
+of the selected feature.</p>
+<p>Since recursive partitioning can be represented by a tree structure, the
+number of splittings required to isolate a sample is equivalent to the
+path length from the root node to the terminating node.</p>
+<p>This path length, averaged over a forest of such random trees, is a
+measure of normality and our decision function.</p>
+<p>Random partitioning produces noticeably shorter paths for anomalies.
+Hence, when a forest of random trees collectively produce shorter path
+lengths for particular samples, they are highly likely to be anomalies.</p>
+<p>An example of random partitioning in a 2D dataset of normally
+distributed points is given below for a non-anomalous point:</p>
+<p><img alt="" src="_images/Isolating_a_Non-Anomalous_Point.png" /></p>
+<p>Another example for a point that’s more likely to be an anomaly is now
+shown:</p>
+<p><img alt="" src="_images/Isolating_an_Anomalous_Point.png" /></p>
+<p>It is apparent from the pictures how anomalies require fewer random
+partitions to be isolated, compared to normal points.</p>
+<p>From a mathematical point of view, recursive partitioning can be
+represented by a tree structure named Isolation Tree, while the number
+of partitions required to isolate a point can be interpreted as the
+length of the path, within the tree, to reach a terminating node
+starting from the root.</p>
+<div class="section" id="the-itree">
+<h3>The iTree<a class="headerlink" href="#the-itree" title="Permalink to this headline">¶</a></h3>
+<p>More formally, let <span class="math notranslate nohighlight">\(X = \{ x_1, \ldots, x_n \}\)</span> be a set of
+d-dimensional points and <span class="math notranslate nohighlight">\(X' \subset X\)</span> a subset of <span class="math notranslate nohighlight">\(X\)</span>. An Isolation
+Tree (iTree) is defined as a data structure with the following
+properties:</p>
+<ol class="simple">
+<li><p>for each node <span class="math notranslate nohighlight">\(T\)</span> in the Tree, <span class="math notranslate nohighlight">\(T\)</span> is either an external-node with
+no child, or an internal-node with one “test” and exactly two
+daughter nodes (<span class="math notranslate nohighlight">\(T_l\)</span>, <span class="math notranslate nohighlight">\(T_r\)</span>)</p></li>
+<li><p>a test at node <span class="math notranslate nohighlight">\(T\)</span> consists of an attribute <span class="math notranslate nohighlight">\(q\)</span> and a split value
+<span class="math notranslate nohighlight">\(p\)</span> such that the test <span class="math notranslate nohighlight">\(q &lt; p\)</span> determines the traversal of a data
+point to either <span class="math notranslate nohighlight">\(T_l\)</span> or <span class="math notranslate nohighlight">\(T_r\)</span>.</p></li>
+</ol>
+<p>In order to build an iTree, the algorithm recursively divides <span class="math notranslate nohighlight">\(X'\)</span> by
+randomly selecting an attribute <span class="math notranslate nohighlight">\(q\)</span> and a split value <span class="math notranslate nohighlight">\(p\)</span>, until either
+(i) the node has only one instance or (ii) all data at the node have the
+same values.</p>
+<p>When the iTree is fully grown, each point in <span class="math notranslate nohighlight">\(X\)</span> is isolated at one of
+the external nodes. Intuitively, the anomalous points are those (easier
+to isolate, hence) with the smaller path length in the tree, where the
+path length <span class="math notranslate nohighlight">\(h(x_i)\)</span> of point <span class="math notranslate nohighlight">\(x_{i}\in X\)</span> is defined as the number of
+edges <span class="math notranslate nohighlight">\(x_i\)</span> traverses from the root node to get to an external node.</p>
+<p>Since iForest does not need to isolate all of normal instances – the
+majority of the training sample, iForest is able to work well with a
+partial model without isolating all normal points and builds models
+using a small sample size. Swamping refers to wrongly identifying normal
+instances as anomalies. When normal instances are too close to
+anomalies, the number of partitions required to separate anomalies
+increases – which makes it harder to distinguish anomalies from normal
+in- stances. Masking is the existence of too many anomalies concealing
+their own presence. When an anomaly cluster is large and dense, it also
+increases the number of partitions to isolate each anomaly. Under these
+circumstances, evaluations using these trees have longer path lengths
+making anomalies more difficult to detect. Note that both swamping and
+masking are a result of too many data for the purpose of anomaly
+detection. The unique characteristic of isolation trees allows iForest
+to build a partial model by sub-sampling which incidentally alleviates
+the effects of swamping and masking. It is because: 1) sub-sampling con-
+trols data size, which helps iForest better isolate examples of
+anomalies and 2) each isolation tree can be specialised, as each
+sub-sample includes different set of anomalies or even no anomaly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rn</span>
+
+<span class="k">class</span> <span class="nc">Node</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">s_value</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">node_type</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>      <span class="c1"># The path depth of the node in the tree.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>      <span class="c1"># Initial number of observations in the node</span>
+        <span class="c1">#self.X = X              # Initial split of the observations in this node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span>  <span class="c1"># Feature along which to split the observations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_value</span> <span class="o">=</span> <span class="n">s_value</span>  <span class="c1"># Value the separates the split</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>        <span class="c1"># Left node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>      <span class="c1"># Right node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntype</span> <span class="o">=</span> <span class="n">node_type</span>  <span class="c1"># Type: either internal or external.</span>
+
+
+<span class="k">class</span> <span class="nc">iTree</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">max_height</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes the root node and parameters. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_h</span> <span class="o">=</span> <span class="n">max_height</span>      <span class="c1"># Max depth of the tree</span>
+        <span class="c1">#self.curr_h = 0              # Current depth of the iTree</span>
+        <span class="c1">#self.X = X                   # Data to split along the tree</span>
+        <span class="c1">#self.size = len(X)           # Number of observations in the tree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nFeatures</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Number of features in the data matrix</span>
+        <span class="c1">#self.feature = None          # Current feature being used to split</span>
+        <span class="c1">#self.s_value = None          # Current split value</span>
+        <span class="c1">#self.exnodes = 0             # Number of external nodes in the tree</span>
+
+        <span class="c1"># Initialize the tree with the root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_tree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">make_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">current_height</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Recursivele builds the iTree. &quot;&quot;&quot;</span>
+        <span class="c1">#self.curr_h = current_height</span>
+        <span class="k">if</span> <span class="n">current_height</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_h</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Return an external node</span>
+            <span class="c1">#self.exnodes += 1</span>
+            <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">current_height</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;exNode&#39;</span><span class="p">)</span>
+        <span class="c1"># Choose a random feature</span>
+        <span class="c1">#self.feature = rn.randint(0, self.nFeatures - 1)</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="n">rn</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nFeatures</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">fmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">feature</span><span class="p">])</span>
+        <span class="n">fmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">feature</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">fmin</span> <span class="o">==</span> <span class="n">fmax</span><span class="p">:</span>
+            <span class="c1"># Many instances of the same value, return exNode</span>
+            <span class="c1">#self.exnodes += 1</span>
+            <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">current_height</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;exNode&#39;</span><span class="p">)</span>
+        <span class="c1"># Choose a random split value</span>
+        <span class="c1">#self.s_value = rn.uniform(fmin, fmax)</span>
+        <span class="n">s_value</span> <span class="o">=</span> <span class="n">rn</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="p">)</span>
+        <span class="c1"># Find mask for X</span>
+        <span class="n">s_mask</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">feature</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">s_value</span>
+        <span class="c1"># Return node only after recursively calculating its children</span>
+        <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">s_value</span><span class="p">,</span> <span class="n">current_height</span><span class="p">,</span>
+                   <span class="bp">self</span><span class="o">.</span><span class="n">make_tree</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">s_mask</span><span class="p">],</span> <span class="n">current_height</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                   <span class="bp">self</span><span class="o">.</span><span class="n">make_tree</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="o">~</span><span class="n">s_mask</span><span class="p">],</span> <span class="n">current_height</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                   <span class="s1">&#39;inNode&#39;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;L&#39;</span> <span class="p">:</span> <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;R&#39;</span> <span class="p">:</span> <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span>
+        <span class="k">return</span> <span class="n">node</span>
+</pre></div>
+</div>
+<p>Lets build a single iTree and visualize the partition obtained in our
+sample data set:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_tree</span> <span class="o">=</span> <span class="n">iTree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_splits</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">[(</span><span class="n">node</span><span class="o">.</span><span class="n">s_value</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">feature</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">splits</span> <span class="o">+=</span> <span class="n">get_splits</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">splits</span> <span class="o">+=</span> <span class="n">get_splits</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">splits</span>
+
+<span class="n">splits</span> <span class="o">=</span> <span class="n">get_splits</span><span class="p">(</span><span class="n">test_tree</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bx&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="n">splits</span> <span class="k">if</span> <span class="n">m</span><span class="o">==</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="p">[</span><span class="n">y</span> <span class="k">for</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="n">splits</span> <span class="k">if</span> <span class="n">m</span><span class="o">==</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="b30ea676ea73ff6f2c4c6706b24e23a38decb513.png" /></p>
+<p>Now let’s try to isolate a single observation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_tree</span> <span class="o">=</span> <span class="n">iTree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">isolate_x</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">iTree</span><span class="p">):</span>
+    <span class="n">splits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">iTree</span><span class="o">.</span><span class="n">root</span>
+    <span class="k">while</span> <span class="n">node</span><span class="o">.</span><span class="n">ntype</span> <span class="o">!=</span> <span class="s1">&#39;exNode&#39;</span><span class="p">:</span>
+        <span class="n">splits</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">node</span><span class="o">.</span><span class="n">s_value</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">feature</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">feature</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">node</span><span class="o">.</span><span class="n">s_value</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span>
+    <span class="k">return</span> <span class="n">splits</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">45</span><span class="p">]</span>
+<span class="n">splits</span> <span class="o">=</span> <span class="n">isolate_x</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">test_tree</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bx&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="n">splits</span> <span class="k">if</span> <span class="n">m</span><span class="o">==</span><span class="mi">0</span><span class="p">]:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="p">[</span><span class="n">y</span> <span class="k">for</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span> <span class="ow">in</span> <span class="n">splits</span> <span class="k">if</span> <span class="n">m</span><span class="o">==</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="e3fde9aa6945cc28ec1c18d2ca2be80c2d259fb7.png" /></p>
+</div>
+<div class="section" id="anomaly-score">
+<h3>Anomaly score<a class="headerlink" href="#anomaly-score" title="Permalink to this headline">¶</a></h3>
+<p>Since iTrees have an equivalent structure to Binary Search Tree or BST,
+the estimation of average <span class="math notranslate nohighlight">\(h(x)\)</span> for external node terminations is the
+same as the unsuccessful search in BST, this is: $<span class="math notranslate nohighlight">\(
+c(n) = 2H(n-1)-2(n-1)/n,
+\)</span><span class="math notranslate nohighlight">\( where \)</span>H(i)<span class="math notranslate nohighlight">\( is the harmonic number and it can be estimated by
+\)</span>\ln(i) + 0.5772156649<span class="math notranslate nohighlight">\( . As \)</span>c(n)<span class="math notranslate nohighlight">\( is the average of \)</span>h(x)<span class="math notranslate nohighlight">\( given \)</span>n<span class="math notranslate nohighlight">\(,
+we use it to normalize \)</span>h(x)<span class="math notranslate nohighlight">\(. The anomaly score \)</span>s<span class="math notranslate nohighlight">\( of an instance \)</span>x<span class="math notranslate nohighlight">\(
+is defined as: \)</span><span class="math notranslate nohighlight">\(
+s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
+\)</span><span class="math notranslate nohighlight">\( where \)</span>E(h(x))<span class="math notranslate nohighlight">\( is the average of \)</span>h(x)$ from a collection of
+isolation trees. Using the anomaly score s, we are able to make the
+following assessment:</p>
+<ul class="simple">
+<li><p>(a) if instances return s very close to 1, then they are
+definitely anomalies,</p></li>
+<li><p>(b) if instances have s much smaller than 0.5, then they are quite
+safe to be regarded as normal instances, and</p></li>
+<li><p>(c) if all the instances return <span class="math notranslate nohighlight">\(s \approx 0.5\)</span>, then the entire
+sample does not really have any distinct anomaly.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c_factor</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">2.0</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5772156649</span><span class="p">)</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">n</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="training-stage">
+<h3>Training stage<a class="headerlink" href="#training-stage" title="Permalink to this headline">¶</a></h3>
+<p>In the training stage, iTrees are constructed by recursively
+partitioning the given training set until instances are isolated or a
+specific tree height is reached of which results a partial model. Note
+that the tree height limit l is automatically set by the sub-sampling
+size <span class="math notranslate nohighlight">\(\psi\)</span>: <span class="math notranslate nohighlight">\(l = ceiling(\log_2 \psi)\)</span>, which is approximately the
+average tree height. The rationale of growing trees up to the average
+tree height is that we are only interested in data points that have
+shorter-than- average path lengths, as those points are more likely to
+be anomalies.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">iForest</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Trains an iForest as an ensemble of iTrees.</span>
+<span class="sd">    Inputs:</span>
+<span class="sd">        X: input data</span>
+<span class="sd">        n_trees: Ensemble size, number of iTrees to build. Default of 100 taken from original paper.</span>
+<span class="sd">        sampling_size: Size of the random samples taken from X. Dafault of 256 taken from original paper.</span>
+<span class="sd">    Output: a list of iTrees.&quot;&quot;&quot;</span>
+
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">sample_size</span><span class="p">:</span>
+        <span class="n">sample_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">max_depth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">max_depth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)))</span>
+
+    <span class="n">cn</span> <span class="o">=</span> <span class="n">c_factor</span><span class="p">(</span><span class="n">sample_size</span><span class="p">)</span>
+
+    <span class="n">forest</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_trees</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">rn</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">sample_size</span><span class="p">)</span>
+        <span class="n">forest</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">iTree</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">sample</span><span class="p">],</span> <span class="n">max_depth</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">cn</span><span class="p">,</span> <span class="n">forest</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">forest</span> <span class="o">=</span> <span class="n">iForest</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evaluation-stage">
+<h3>Evaluation stage<a class="headerlink" href="#evaluation-stage" title="Permalink to this headline">¶</a></h3>
+<p>In the evaluating stage, an anomaly score <span class="math notranslate nohighlight">\(s\)</span> is derived from the
+expected path length <span class="math notranslate nohighlight">\(E(h(x))\)</span> for each test instance. <span class="math notranslate nohighlight">\(E(h(x))\)</span> are
+derived by passing instances through each iTree in an iForest. Using
+<code class="docutils literal notranslate"><span class="pre">PathLength</span></code>{.verbatim} function, a single path length <span class="math notranslate nohighlight">\(h(x)\)</span> is derived
+by counting the number of edges e from the root node to a terminating
+node as instance <span class="math notranslate nohighlight">\(x\)</span> traverses through an iTree. When <span class="math notranslate nohighlight">\(x\)</span> is terminated
+at an external node, where <span class="math notranslate nohighlight">\(Size &gt; 1\)</span>, the return value is <span class="math notranslate nohighlight">\(e\)</span> plus an
+adjustment <span class="math notranslate nohighlight">\(c(Size)\)</span>. The adjustment accounts for an unbuilt subtree
+beyond the tree height limit. When <span class="math notranslate nohighlight">\(h(x)\)</span> is obtained for each tree of
+the ensemble, an anomaly score is produced by computing <span class="math notranslate nohighlight">\(s(x, \psi)\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">path_length</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">ntype</span> <span class="o">==</span> <span class="s1">&#39;exNode&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">depth</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">depth</span> <span class="o">+</span> <span class="n">c_factor</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">feature</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">node</span><span class="o">.</span><span class="n">s_value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">path_length</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">path_length</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">score_forest</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">forest</span><span class="p">):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">forest</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">h</span> <span class="o">+=</span> <span class="n">path_length</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">forest</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">h</span><span class="o">/</span><span class="n">forest</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">iforest_scores</span> <span class="o">=</span> <span class="n">score_forest</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">forest</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">iforest_scores</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">1900</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Malic acid&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="c0acc826896afb90566192a04a088ad949a753fc.png" /></p>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="id2"><dl class="citation">
+<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Markus Goldstein and Seiichi Uchida. A comparative evaluation of unsupervised anomaly detection algorithms for multivariate data. <em>PloS one</em>, 11(4):e0152173, 2016.</p>
+</dd>
+</dl>
+</p>
+<p>Further reading:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/outlier_detection.html">https://scikit-learn.org/stable/modules/outlier_detection.html</a></p></li>
+<li><p><a class="reference external" href="https://pyod.readthedocs.io/en/latest/">https://pyod.readthedocs.io/en/latest/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/yzhao062/anomaly-detection-resources">https://github.com/yzhao062/anomaly-detection-resources</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1709.07045">https://arxiv.org/abs/1709.07045</a></p></li>
+<li><p><a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a></p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Local_outlier_factor">https://en.wikipedia.org/wiki/Local_outlier_factor</a></p></li>
+<li><p>Angle-Based Outlier Detection in High-dimensional Data, Kriegel
+<a class="reference external" href="http://et.al">et.al</a>.</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Isolation_forest">https://en.wikipedia.org/wiki/Isolation_forest</a></p></li>
+<li><p>Isolation Forest, Liu and Zhou</p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Gonzalo G. Peraza Mues<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
