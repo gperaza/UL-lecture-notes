@@ -1053,10 +1053,10 @@ forest = iForest(X)
 In the evaluating stage, an anomaly score $s$ is derived from the
 expected path length $E(h(x))$ for each test instance. $E(h(x))$ are
 derived by passing instances through each iTree in an iForest. Using
-`PathLength`{.verbatim} function, a single path length $h(x)$ is derived
-by counting the number of edges e from the root node to a terminating
-node as instance $x$ traverses through an iTree. When $x$ is terminated
-at an external node, where $Size > 1$, the return value is $e$ plus an
+`PathLength` function, a single path length $h(x)$ is derived by
+counting the number of edges e from the root node to a terminating node
+as instance $x$ traverses through an iTree. When $x$ is terminated at an
+external node, where $Size > 1$, the return value is $e$ plus an
 adjustment $c(Size)$. The adjustment accounts for an unbuilt subtree
 beyond the tree height limit. When $h(x)$ is obtained for each tree of
 the ensemble, an anomaly score is produced by computing $s(x, \psi)$.

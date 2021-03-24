@@ -1271,10 +1271,10 @@ be anomalies.</p>
 <p>In the evaluating stage, an anomaly score <span class="math notranslate nohighlight">\(s\)</span> is derived from the
 expected path length <span class="math notranslate nohighlight">\(E(h(x))\)</span> for each test instance. <span class="math notranslate nohighlight">\(E(h(x))\)</span> are
 derived by passing instances through each iTree in an iForest. Using
-<code class="docutils literal notranslate"><span class="pre">PathLength</span></code>{.verbatim} function, a single path length <span class="math notranslate nohighlight">\(h(x)\)</span> is derived
-by counting the number of edges e from the root node to a terminating
-node as instance <span class="math notranslate nohighlight">\(x\)</span> traverses through an iTree. When <span class="math notranslate nohighlight">\(x\)</span> is terminated
-at an external node, where <span class="math notranslate nohighlight">\(Size &gt; 1\)</span>, the return value is <span class="math notranslate nohighlight">\(e\)</span> plus an
+<code class="docutils literal notranslate"><span class="pre">PathLength</span></code> function, a single path length <span class="math notranslate nohighlight">\(h(x)\)</span> is derived by
+counting the number of edges e from the root node to a terminating node
+as instance <span class="math notranslate nohighlight">\(x\)</span> traverses through an iTree. When <span class="math notranslate nohighlight">\(x\)</span> is terminated at an
+external node, where <span class="math notranslate nohighlight">\(Size &gt; 1\)</span>, the return value is <span class="math notranslate nohighlight">\(e\)</span> plus an
 adjustment <span class="math notranslate nohighlight">\(c(Size)\)</span>. The adjustment accounts for an unbuilt subtree
 beyond the tree height limit. When <span class="math notranslate nohighlight">\(h(x)\)</span> is obtained for each tree of
 the ensemble, an anomaly score is produced by computing <span class="math notranslate nohighlight">\(s(x, \psi)\)</span>.</p>
