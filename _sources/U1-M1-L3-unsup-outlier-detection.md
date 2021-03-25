@@ -4,126 +4,46 @@
 
 Section from {cite}`goldstein2016comparative`.
 
-Anomaly detection is the process of identifying unexpected items or
-events in datasets, which differ from the norm. In contrast to standard
-classification tasks, anomaly detection is often applied on unlabeled
-data, taking only the internal structure of the dataset into account.
-Anomalies are often associated with particular interesting events or
-suspicious data records. Anomalies are known to have two important
-characteristics:
+Anomaly detection is the process of identifying unexpected items or events in datasets, which differ from the norm. In contrast to standard classification tasks, anomaly detection is often applied on unlabeled data, taking only the internal structure of the dataset into account. Anomalies are often associated with particular interesting events or suspicious data records. Anomalies are known to have two important characteristics:
 
-1.  Anomalies are different from the norm with respect to their features
-    and
+1.  Anomalies are different from the norm with respect to their features and
 2.  They are rare in a dataset compared to normal instances.
 
-Anomaly detection algorithms are now used in many application domains
-and often enhance traditional rule-based detection systems, for example:
+Anomaly detection algorithms are now used in many application domains and often enhance traditional rule-based detection systems, for example:
 
 -   Intrusion detection
 -   Fraud detection
 -   Data Leakage Prevention
 
-We can distinguish between three main types of anomaly detection:
-Supervised Anomaly Detection, Semi-supervised Anomaly Detection, and
-Unsupervised Anomaly Detection. Unsupervised Anomaly Detection is the
-most flexible setup which does not require any labels. Furthermore,
-there is also no distinction between a training and a test dataset. The
-idea is that an unsupervised anomaly detection algorithm scores the data
-solely based on intrinsic properties of the dataset. Typically,
-distances or densities are used to give an estimation what is normal and
-what is an outlier.
+We can distinguish between three main types of anomaly detection: Supervised Anomaly Detection, Semi-supervised Anomaly Detection, and Unsupervised Anomaly Detection. Unsupervised Anomaly Detection is the most flexible setup which does not require any labels. Furthermore, there is also no distinction between a training and a test dataset. The idea is that an unsupervised anomaly detection algorithm scores the data solely based on intrinsic properties of the dataset. Typically, distances or densities are used to give an estimation what is normal and what is an outlier.
 
-![Different anomaly detection modes depending on the availability of
-labels in the dataset. (a) Supervised anomaly detection uses a fully
-labeled dataset for training. (b) Semi-supervised anomaly detection uses
-an anomaly-free training dataset. Afterwards, deviations in the test
-data from that normal model are used to detect anomalies. (c)
-Unsupervised anomaly detection algorithms use only intrinsic information
-of the data in order to detect instances deviating from the majority of
-the data. Source:
-<https://doi.org/10.1371/journal.pone.0152173.g001>](Figures/journal.pone.0152173.g001.PNG)
+```{figure} Figures/journal.pone.0152173.g001.PNG
+Different anomaly detection modes depending on the availability of labels in the dataset. (a) Supervised anomaly detection uses a fully labeled dataset for training. (b) Semi-supervised anomaly detection uses an anomaly-free training dataset. Afterwards, deviations in the test data from that normal model are used to detect anomalies. (c) Unsupervised anomaly detection algorithms use only intrinsic information of the data in order to detect instances deviating from the majority of the data. Source: <https://doi.org/10.1371/journal.pone.0152173.g001>
+```
 
-The output of an unsupervised anomaly detection algorithm is often a
-score. Here, we also use scores and rank the results such that the
-ranking can be used for performance evaluation. Of course, a ranking can
-be converted into a label using an appropriate threshold.
+The output of an unsupervised anomaly detection algorithm is often a score. Here, we also use scores and rank the results such that the ranking can be used for performance evaluation. Of course, a ranking can be converted into a label using an appropriate threshold.
 
 ## Types of anomalies
 
-![A simple two-dimensional example. It illustrates global anomalies (x1,
-x2), a local anomaly x3 and a micro-cluster c3. Source:
-<https://doi.org/10.1371/journal.pone.0152173.g002>](Figures/journal.pone.0152173.g002.PNG)
+```{figure} Figures/journal.pone.0152173.g002.PNG
+A simple two-dimensional example. It illustrates global anomalies (x1, x2), a local anomaly x3 and a micro-cluster c3. Source: <https://doi.org/10.1371/journal.pone.0152173.g002>
+```
 
-In Fig 2 two anomalies can be easily identified by eye: x1 and x2 are
-very different from the dense areas with respect to their attributes and
-are therefore called global anomalies. When looking at the dataset
-globally, x3 can be seen as a normal record since it is not too far away
-from the cluster c2. However, when we focus only on the cluster c2 and
-compare it with x3 while neglecting all the other instances, it can be
-seen as an anomaly. Therefore, x3 is called a local anomaly, since it is
-only anomalous when compared with its close-by neighborhood. It depends
-on the application, whether local anomalies are of interest or not.
-Another interesting question is whether the instances of the cluster c3
-should be seen as three anomalies or as a (small) regular cluster. These
-phenomena is called micro cluster and anomaly detection algorithms
-should assign scores to its members larger than the normal instances,
-but smaller values than the obvious anomalies. This simple example
-already illustrates that anomalies are not always obvious and a score is
-much more useful than a binary label assignment.
+In Fig 2 two anomalies can be easily identified by eye: x1 and x2 are very different from the dense areas with respect to their attributes and are therefore called global anomalies. When looking at the dataset globally, x3 can be seen as a normal record since it is not too far away from the cluster c2. However, when we focus only on the cluster c2 and compare it with x3 while neglecting all the other instances, it can be seen as an anomaly. Therefore, x3 is called a local anomaly, since it is only anomalous when compared with its close-by neighborhood. It depends on the application, whether local anomalies are of interest or not. Another interesting question is whether the instances of the cluster c3 should be seen as three anomalies or as a (small) regular cluster. These phenomena is called micro cluster and anomaly detection algorithms should assign scores to its members larger than the normal instances, but smaller values than the obvious anomalies. This simple example already illustrates that anomalies are not always obvious and a score is much more useful than a binary label assignment.
 
-To this end, an anomaly is always referred to a single instance in a
-dataset only occurring rarely. In reality, this is often not true. For
-example, in intrusion detection, anomalies are often referred to many
-(suspicious) access patterns, which may be observed at a larger amount
-as the normal accesses. In this case, an unsupervised anomaly detection
-algorithm directly applied on the raw data will fail. The task of
-detecting single anomalous instances in a larger dataset (as introduced
-so far) is called point anomaly detection. Nearly all available
-unsupervised anomaly detection algorithms today are from this type. If
-an anomalous situation is represented as a set of many instances, this
-is called a collective anomaly. Each of these instances is not
-necessarily a point anomaly, but only a specific combination thereof
-defines the anomaly. The previous given example of occurring multiple
-specific access patterns in intrusion detection is such a collective
-anomaly. A third kind are contextual anomalies, which describe the
-effect that a point can be seen as normal, but when a given context is
-taken into account, the point turns out to be an anomaly. The most
-commonly occurring context is time. As an example, suppose we measure
-temperature in a range of 0°to 35°C during the year. Thus, a temperature
-of 26°C seems pretty normal, but when we take the context time into
-account (e.g. the month), such a high temperature of 26°C during winter
-would definitively be considered as an anomaly.
+To this end, an anomaly is always referred to a single instance in a dataset only occurring rarely. In reality, this is often not true. For example, in intrusion detection, anomalies are often referred to many (suspicious) access patterns, which may be observed at a larger amount as the normal accesses. In this case, an unsupervised anomaly detection algorithm directly applied on the raw data will fail. The task of detecting single anomalous instances in a larger dataset (as introduced so far) is called point anomaly detection. Nearly all available unsupervised anomaly detection algorithms today are from this type. If an anomalous situation is represented as a set of many instances, this is called a collective anomaly. Each of these instances is not necessarily a point anomaly, but only a specific combination thereof defines the anomaly. The previous given example of occurring multiple specific access patterns in intrusion detection is such a collective anomaly. A third kind are contextual anomalies, which describe the effect that a point can be seen as normal, but when a given context is taken into account, the point turns out to be an anomaly. The most commonly occurring context is time. As an example, suppose we measure temperature in a range of 0°to 35°C during the year. Thus, a temperature of 26°C seems pretty normal, but when we take the context time into account (e.g. the month), such a high temperature of 26°C during winter would definitively be considered as an anomaly.
 
-![A taxonomy of unsupervised anomaly detection algorithms comprising of
-four main groups. Note that CMGOS can be categorized in two groups: It
-is a clustering-based algorithm as well as estimating a subspace of each
-cluster.](Figures/journal.pone.0152173.g003.PNG)
+```{figure} Figures/journal.pone.0152173.g003.PNG
+A taxonomy of unsupervised anomaly detection algorithms comprising of four main groups. Note that CMGOS can be categorized in two groups: It is a clustering-based algorithm as well as estimating a subspace of each cluster.
+```
 
 ## Statistical Method: Gaussian model (Mahalanobis distance)
 
-One of the simplest approach to anomaly detection is to model the data
-as being generated from a multivariate normal distribution. The model
-assigns each observation a probability, which then can be used to asses
-if a particular observation is rare (unlikely) or not (high
-probability). Of course, if the assumption that the data comes from a
-normal distribution is not valid, this method does not perform well. In
-particular, multi-modal datasets, clustered data, etc. are not well
-suited to be modeled as a multivariate Gaussian.
+One of the simplest approach to anomaly detection is to model the data as being generated from a multivariate normal distribution. The model assigns each observation a probability, which then can be used to asses if a particular observation is rare (unlikely) or not (high probability). Of course, if the assumption that the data comes from a normal distribution is not valid, this method does not perform well. In particular, multi-modal datasets, clustered data, etc. are not well suited to be modeled as a multivariate Gaussian.
 
-We will follow an example taken from the course on Machine Learning by
-Andrew Ng on Coursera. We will implement an anomaly detection algorithm
-to detect anomalous behavior in the wine dataset. Among the 13 features
-we\'ll select 2 to keep the data two dimensional and explore how the
-algorithm works. We suspect that the vast majority of these examples are
-"normal" (non-anomalous) examples of wine types, but there might also be
-some examples of anomalous wines within this dataset, (whatever that
-means).
+We will follow an example taken from the course on Machine Learning by Andrew Ng on Coursera. We will implement an anomaly detection algorithm to detect anomalous behavior in the wine dataset. Among the 13 features we\'ll select 2 to keep the data two dimensional and explore how the algorithm works. We suspect that the vast majority of these examples are "normal" (non-anomalous) examples of wine types, but there might also be some examples of anomalous wines within this dataset, (whatever that means).
 
-We will use a Gaussian model to detect anomalous examples in your
-dataset. On the 2D dataset we will fit a Gaussian distribution and then
-find values that have very low probability and hence can be considered
-anomalies. After that, we will apply the anomaly detection algorithm to
-a larger dataset with many dimensions.
+We will use a Gaussian model to detect anomalous examples in your dataset. On the 2D dataset we will fit a Gaussian distribution and then find values that have very low probability and hence can be considered anomalies. After that, we will apply the anomaly detection algorithm to a larger dataset with many dimensions.
 
 Let\'s begin with some standard imports:
 
@@ -168,8 +88,7 @@ plt.ylabel('Proline');
 
 ### Multivariate Gaussian distribution
 
-To perform anomaly detection, we will first need to fit a model to the
-data distribution. The Multivariate Gaussian distribution is given by
+To perform anomaly detection, we will first need to fit a model to the data distribution. The Multivariate Gaussian distribution is given by
 
 $$
 p\left( x; \mu, \Sigma \right)  = \frac{1}{  \sqrt{  \left( 2\pi\right)^k  \left|\Sigma\right|  }}
@@ -178,8 +97,7 @@ $$
 
 where $\mu$ is the mean vector and $\Sigma$ is the covariance matrix.
 
-You can estimate the parameters by using the following Maximum
-Likelihood estimators. To estimate the mean, we will use:
+You can estimate the parameters by using the following Maximum Likelihood estimators. To estimate the mean, we will use:
 
 $$ \mu_i = \frac{1}{m} \sum_{j=1}^m x_i^{(j)},$$
 
@@ -187,11 +105,7 @@ and for the covariance you will use:
 
 $$ \Sigma = \frac{1}{n}\left(X - 1 \mu^T \right)^T\left(X - 1 \mu^T \right)$$
 
-We\'ll implement a function which estimates the parameters using the
-equations above. (`estimateGaussian`). The function takes as input the
-data matrix `X` and should output an n-dimension vector `mu` that holds
-the mean for each of the $n$ features and the nxn covariance matrix
-`Sigma` that holds the variances of each of the features.
+We\'ll implement a function which estimates the parameters using the equations above. (`estimateGaussian`). The function takes as input the data matrix `X` and should output an n-dimension vector `mu` that holds the mean for each of the $n$ features and the nxn covariance matrix `Sigma` that holds the variances of each of the features.
 
 ``` python
 def estimateGaussian(X):
@@ -230,23 +144,16 @@ def estimateGaussian(X):
 
     mu = np.mean(X, axis=0)
     Xc = X - mu      # broadcasting takes care of substracting the mean from each row
-    Sigma = 1/n * Xc.T {cite}`` Xc
+    Sigma = 1/n * Xc.T @ Xc
 
     return mu, Sigma
 ```
 
-In the next cell will visualizes the contours of the fitted Gaussian
-distribution, we can use this image to check your results.
+In the next cell will visualizes the contours of the fitted Gaussian distribution, we can use this image to check your results.
 
-From our plot, we can see that most of the examples are in the region
-with the highest probability, while the anomalous examples are in the
-regions with lower probabilities.
+From our plot, we can see that most of the examples are in the region with the highest probability, while the anomalous examples are in the regions with lower probabilities.
 
-To do the visualization of the Gaussian fit, we first estimate the
-parameters of our assumed Gaussian distribution, then compute the
-probabilities for each of the points and then visualize both the overall
-distribution and where each of the points falls in terms of that
-distribution.
+To do the visualization of the Gaussian fit, we first estimate the parameters of our assumed Gaussian distribution, then compute the probabilities for each of the points and then visualize both the overall distribution and where each of the points falls in terms of that distribution.
 
 ``` python
 def multivariateGaussian(X, mu, Sigma):
@@ -280,7 +187,7 @@ def multivariateGaussian(X, mu, Sigma):
 
     X = X - mu
     p = (2 * np.pi) ** (- k / 2) * np.linalg.det(Sigma) ** (-0.5)\
-        * np.exp(-0.5 * np.sum(X {cite}`` np.linalg.pinv(Sigma) * X, axis=1))
+        * np.exp(-0.5 * np.sum(X @ np.linalg.pinv(Sigma) * X, axis=1))
     return p
 ```
 
@@ -308,25 +215,9 @@ plt.tight_layout();
 
 ![](./.ob-jupyter/45328740638fa58fabeab0a1676e2dc54b2a45e6.png)
 
-There is a problem with the previous estimation of our normal
-distribution. By inspecting the plot, it is clear that if outliers where
-removed the shape of the distribution should be an ellipse almost
-aligned with the y-axis. The problem is that the estimation of the
-covariance matrix is heavily influenced by the outliers. In principle,
-we would like to estimate the covariance using only the clean subset of
-the data.
+There is a problem with the previous estimation of our normal distribution. By inspecting the plot, it is clear that if outliers where removed the shape of the distribution should be an ellipse almost aligned with the y-axis. The problem is that the estimation of the covariance matrix is heavily influenced by the outliers. In principle, we would like to estimate the covariance using only the clean subset of the data.
 
-One way to solve this problems is to use a robust estimator for the
-covariance matrix called the Minimum Covariance Determinant
-{cite}`hubert2018minimum`. The Minimum Covariance Determinant estimator is a
-robust, high-breakdown point (i.e. it can be used to estimate the
-covariance matrix of highly contaminated datasets, up to
-$\frac{n_\text{samples} - n_\text{features} - 1}{2}$ outliers) estimator
-of covariance. The idea is to find
-$\frac{n_\text{samples}+n_\text{features}+1}{2}$ observations whose
-empirical covariance has the smallest determinant, yielding a \"pure\"
-subset of observations from which to compute standards estimates of
-location and covariance.
+One way to solve this problems is to use a robust estimator for the covariance matrix called the Minimum Covariance Determinant {cite}`hubert2018minimum`. The Minimum Covariance Determinant estimator is a robust, high-breakdown point (i.e. it can be used to estimate the covariance matrix of highly contaminated datasets, up to $\frac{n_\text{samples} - n_\text{features} - 1}{2}$ outliers) estimator of covariance. The idea is to find $\frac{n_\text{samples}+n_\text{features}+1}{2}$ observations whose empirical covariance has the smallest determinant, yielding a \"pure\" subset of observations from which to compute standards estimates of location and covariance.
 
 ``` python
 from sklearn.covariance import MinCovDet
@@ -366,11 +257,7 @@ plt.tight_layout();
 
 ### Choosing the threshold
 
-Now, the outliers are identified as the points having the lowest
-probability according to the fitted model. This probabilities can serve
-as the scores of our method. Because of the \"squashing\" effect of the
-exponential, its much clearer to use the Mahalanobis distance, which is
-just the exponent of the multivariate Gaussian.
+Now, the outliers are identified as the points having the lowest probability according to the fitted model. This probabilities can serve as the scores of our method. Because of the \"squashing\" effect of the exponential, its much clearer to use the Mahalanobis distance, which is just the exponent of the multivariate Gaussian.
 
 $$
 MD(x) = \sqrt{\left(x - \mu \right)^T\Sigma^{-1}\left(x - \mu\right)}
@@ -381,7 +268,7 @@ def MD(X):
     mu, Sigma = estimateGaussianRobust(X)
 
     X = X - mu
-    MD = np.sqrt(np.sum(X {cite}`` np.linalg.pinv(Sigma) * X, axis=1))
+    MD = np.sqrt(np.sum(X @ np.linalg.pinv(Sigma) * X, axis=1))
 
     return MD
 ```
@@ -402,39 +289,38 @@ top_outliers = np.argsort(scores)[::-1][:n_outliers]
 print('Top outliers: ', top_outliers)
 ```
 
-::: {.RESULTS .drawer}
+
 ``` example
 Top outliers:  [45 39 43 41 21 46 19  4]
 ```
 
 ![](./.ob-jupyter/2cc8f2832388230de8856da27ff848207e841e2f.png)
-:::
 
-## KNN
 
-A method that does not assume any distribution (non-parametric), but
-employs the whole set of observations is the k-nearest neighbors
-algorithm.
+## Distance based OD
 
-First, for every record in the dataset, the k-nearest-neighbors have to
-be found. Then, an anomaly score is computed using these neighbors,
-whereas two possibilities have been proposed: Either the distance to the
-kth-nearest-neighbor is used (a single one) or the average distance to
-all of the k-nearest-neighbors is computed. In the following, we refer
-to the first method as kth-NN and the latter as k-NN. In practical
-applications, the k-NN method is often preferred. However, the absolute
-value of the score depends very much on the dataset itself, the number
-of dimensions, and on normalization. As a result, it is in practice not
-easy to select an appropriate threshold, if required.
+In a modern distance based approach, an outlier is an observation far away from its neighbors. A distance based methods do not assume any distribution (non-parametric), but employ the whole set of observations.
 
-Our KNN algorithm will use a brute force approach to calculate the
-nearest neighbors. This implies the calculation of $N^2$ pairwise
-distances among all observations (rows) of the data matrix. More
-efficient approaches for large datasets employ KDTrees or BallTrees
-(see, for example,
-<https://scikit-learn.org/stable/modules/neighbors.html>). Euclidian
-distance is often used, but other metrics can be employed as well. The
-distance matrix is an $N\times N$ matrix defined as:
+The approach was first formalized by Knorr and Ng {cite}`knorr1998algorithms`. The distance based (DB) method labels an observation $x$ as an outlier if the fraction of points farther than a distance $\delta$ from $x$ exceeds a specified threshold $\alpha$, i.e, if the following condition is satisfied
+
+$$
+\left|\left\{ x' \in X \mid d(x,x') > \delta \right\}\right| \geq \alpha,
+$$
+
+where $n$ is the number of observations, and $\alpha,\delta \in
+\mathbb{R}(0 \leq \alpha \leq1)$ are parameters.
+
+```{figure} Figures/od-1.png
+A DB outlier (left) and a regular observation (right). Source: Mahito Sugiyama course on Data Mining (<https://mahito.nii.ac.jp/lecture>)
+```
+
+The main drawbacks of the $DB(\alpha, \delta)$ methods are that choosing the right value for $\delta$ is hard and that it outputs a binary classification of observations. A point is either an outlier or it is not. It would be nice to have a measure of the *degree* of *outlierness* of a point. The follwing algorithms based on the distance to the k-nearest neighbors offer just that.
+
+### KNN
+
+First, for every record in the dataset, the k-nearest-neighbors have to be found. Then, an anomaly score is computed using these neighbors, whereas two possibilities have been proposed: Either the distance to the kth-nearest-neighbor is used (a single one) or the average distance to all of the k-nearest-neighbors is computed. In the following, we refer to the first method as kth-NN and the latter as k-NN. In practical applications, the k-NN method is often preferred. However, the absolute value of the score depends very much on the dataset itself, the number of dimensions, and on normalization. As a result, it is in practice not easy to select an appropriate threshold, if required.
+
+Our KNN algorithm will use a brute force approach to calculate the nearest neighbors. This implies the calculation of $N^2$ pairwise distances among all observations (rows) of the data matrix. More efficient approaches for large datasets employ KDTrees or BallTrees (see, for example, <https://scikit-learn.org/stable/modules/neighbors.html>). Euclidian distance is often used, but other metrics can be employed as well. The distance matrix is an $N\times N$ matrix defined as:
 
 $$
 D = \begin{pmatrix}
@@ -445,32 +331,13 @@ d(x_n,x_1) & d(x_n,x_2) & \dots & d(x_n,x_n)
 \end{pmatrix}
 $$
 
-You will implement the distance matrix calculation in the assignment.
-There exists an efficient way to calculate this matrix using Numpy
-broadcasting. To do this, we need to transform our original data matrix
-$X$ into new 3D arrays that repeat X along a given dimension. The
-purpose is to obtain 3D array with all elements of the form
-$x_{ik} - x_{jk}$ indexed as $ijk$. If you are unfamiliar with
-broadcasting operations, you may wish to implement this as a nested for
-loop, at the cost of being slower.
+You will implement the distance matrix calculation in the assignment. There exists an efficient way to calculate this matrix using Numpy broadcasting. To do this, we need to transform our original data matrix $X$ into new 3D arrays that repeat X along a given dimension. The purpose is to obtain 3D array with all elements of the form $x_{ik} - x_{jk}$ indexed as $ijk$. If you are unfamiliar with broadcasting operations, you may wish to implement this as a nested for loop, at the cost of being slower.
 
-There are two variants of this algorithm, the K\$^th^\$NN and the KNN
-algorithm. The K\$^th^\$NN algorithm finds the distance to the kth
-neighbor, while the KNN algorithm uses the average distance from the
-first k neighbors. This distances are called scores. For both algorithm
-we need to find the scores, then sort according to those scores. The
-larger the score, the more likely a point is to be an outlier. You\'ll
-be ask to implement this functionality in the `scores_kthnn` and
-`scores_knn` functions in the assignment.
+There are two variants of this algorithm, the K\$^th^\$NN and the KNN algorithm. The K\$^th^\$NN algorithm finds the distance to the kth neighbor, while the KNN algorithm uses the average distance from the first k neighbors. This distances are called scores. For both algorithm we need to find the scores, then sort according to those scores. The larger the score, the more likely a point is to be an outlier. You\'ll be ask to implement this functionality in the `scores_kthnn` and `scores_knn` functions in the assignment.
 
-The choice of the parameter $k$ is of course important for the results.
-If it is chosen too low, the density estimation for the records might be
-not reliable. On the other hand, if it is too large, density estimation
-may be too coarse. As a rule of thumb, k should be in the range 10 \< k
-\< 50.
+The choice of the parameter $k$ is of course important for the results. If it is chosen too low, the density estimation for the records might be not reliable. On the other hand, if it is too large, density estimation may be too coarse. As a rule of thumb, k should be in the range 10 \< k \< 50.
 
-Testing KNN in the wine dataset should output the following result,
-where the circle radius is proportional to the scores of each point:
+Testing KNN in the wine dataset should output the following result, where the circle radius is proportional to the scores of each point:
 
 ``` python
 # Normalize the data matrix, this step is important
@@ -501,44 +368,25 @@ plt.ylabel('Proline');
 
 ## LOF
 
-The local outlier factor {cite}`breunig2000lof,enwiki:992466888` is the most
-well-known local anomaly detection algorithm and also introduced the
-idea of local anomalies first. To calculate the LOF score, three steps
-have to be computed:
+The local outlier factor {cite}`breunig2000lof,enwiki:992466888` is the most well-known local anomaly detection algorithm and also introduced the idea of local anomalies first. To calculate the LOF score, three steps have to be computed:
 
-1.  The k-nearest-neighbors have to be found for each record x. In case
-    of distance tie of the kth neighbor, more than k neighbors are used.
+1.  The k-nearest-neighbors have to be found for each record x. In case of distance tie of the kth neighbor, more than k neighbors are used.
 
-2.  Using these k-nearest-neighbors $N_k$, the local density for a
-    record is estimated by computing the local reachability density
-    (LRD):
+2.  Using these k-nearest-neighbors $N_k$, the local density for a record is estimated by computing the local reachability density (LRD):
 
     $$
       LRD_k(x) = 1/\left(  \frac{\sum\limits_{o\in N_k(x)} d_k(x,o)}{\left|N_k(x)\right|} \right)
       $$
 
-    whereas dk(·) is the reachability distance. Except for some very
-    rare situations in highly dense clusters, this is the Euclidean
-    distance.
+    whereas dk(·) is the reachability distance. Except for some very rare situations in highly dense clusters, this is the Euclidean distance.
 
-3.  Finally, the LOF score is computed by comparing the LRD of a record
-    with the LRDs of its k neighbors:
+3.  Finally, the LOF score is computed by comparing the LRD of a record with the LRDs of its k neighbors:
 
     $$
       LOF(x) = \frac{\sum\limits_{o\in N_k(x)}\frac{LRD_k(o)}{LRD_k(x)}}{\left|N_k(x)\right|}
       $$
 
-The LOF score is thus basically a ratio of local densities. This results
-in the nice property of LOF, that normal instances, which densities are
-as big as the densities of their neighbors, get a score of about 1.0.
-Anomalies, which have a low local density, will result in larger scores.
-At this point it is also clear why this algorithm is local: It only
-relies on its direct neighborhood and the score is a ratio mainly based
-on the k neighbors only. Of course, global anomalies can also be
-detected since they also have a low LRD when comparing with their
-neighbors. It is important to note that in anomaly detection tasks,
-where local anomalies are not of interest, this algorithm will generate
-a lot of false alarms.
+The LOF score is thus basically a ratio of local densities. This results in the nice property of LOF, that normal instances, which densities are as big as the densities of their neighbors, get a score of about 1.0. Anomalies, which have a low local density, will result in larger scores. At this point it is also clear why this algorithm is local: It only relies on its direct neighborhood and the score is a ratio mainly based on the k neighbors only. Of course, global anomalies can also be detected since they also have a low LRD when comparing with their neighbors. It is important to note that in anomaly detection tasks, where local anomalies are not of interest, this algorithm will generate a lot of false alarms.
 
 The reachability distance is defined as:
 
@@ -546,13 +394,7 @@ $$
 d_k(x, o) = \max\left( k-distance(o), d(x,o)  \right)
 $$
 
-In words, the reachability distance of an object $x$ from $o$ is the
-true distance of the two objects, but at least the k-distance of $o$.
-Objects that belong to the k nearest neighbors of $o$ (the \"core\" of
-$o$) are considered to be equally distant, i.e., equally reachable from
-$o$. The reason for this distance is to get more stable results. Note
-that this is not a distance in the mathematical definition, since it is
-not symmetric.
+In words, the reachability distance of an object $x$ from $o$ is the true distance of the two objects, but at least the k-distance of $o$. Objects that belong to the k nearest neighbors of $o$ (the \"core\" of $o$) are considered to be equally distant, i.e., equally reachable from $o$. The reason for this distance is to get more stable results. Note that this is not a distance in the mathematical definition, since it is not symmetric.
 
 ``` python
 def lof(X, k):
@@ -622,53 +464,21 @@ plt.ylabel('Proline');
 
 ## Angle based outlier detection (ABOD)
 
-The main idea behind ABOD {cite}`kriegel2008angle` is that if $x$ is an
-outlier, the variance of angles between pairs of the remaining objects
-becomes small:
+The main idea behind ABOD {cite}`kriegel2008angle` is that if $x$ is an outlier, the variance of angles between pairs of the remaining objects becomes small:
 
 ![](Figures/abod.png)
 
-For a point within a cluster, the angles between difference vectors to
-pairs of other points differ widely. The variance of the angles will
-become smaller for points at the border of a cluster. However, even here
-the variance is still relatively high compared to the variance of angles
-for real outliers. Here, the angles to most pairs of points will be
-small since most points are clustered in some directions.
+For a point within a cluster, the angles between difference vectors to pairs of other points differ widely. The variance of the angles will become smaller for points at the border of a cluster. However, even here the variance is still relatively high compared to the variance of angles for real outliers. Here, the angles to most pairs of points will be small since most points are clustered in some directions.
 
-As a result of these considerations, an angle-based outlier factor
-(ABOF) can describe the divergence in directions of objects relatively
-to one another. If the spectrum of observed angles for a point is broad,
-the point will be surrounded by other points in all possible directions
-meaning the point is positioned inside a cluster. If the spectrum of
-observed angles for a point is rather small, other points will be
-positioned only in certain directions. This means, the point is
-positioned outside of some sets of points that are grouped together.
-Thus, rather small angles for a point that are rather similar to one
-another imply that such point is an outlier.
+As a result of these considerations, an angle-based outlier factor (ABOF) can describe the divergence in directions of objects relatively to one another. If the spectrum of observed angles for a point is broad, the point will be surrounded by other points in all possible directions meaning the point is positioned inside a cluster. If the spectrum of observed angles for a point is rather small, other points will be positioned only in certain directions. This means, the point is positioned outside of some sets of points that are grouped together. Thus, rather small angles for a point that are rather similar to one another imply that such point is an outlier.
 
-ABOD has been proposed as able to perform outlier detection more
-reliably in high dimensional data sets than distance based methods.
+ABOD has been proposed as able to perform outlier detection more reliably in high dimensional data sets than distance based methods.
 
-A problem of the basic approach ABOD is obvious: since for each point
-all pairs of points must be considered, the time-complexity is in
-O($n^3$), the original ABOD paper proposes two approximations to address
-this problem: FastABOD and LB-ABOD. These will not be discussed here.
+A problem of the basic approach ABOD is obvious: since for each point all pairs of points must be considered, the time-complexity is in O($n^3$), the original ABOD paper proposes two approximations to address this problem: FastABOD and LB-ABOD. These will not be discussed here.
 
 ### The Angled Based Outlier Factor (ABOF)
 
-As an approach to assign the ABOF value to any object in the database
-$\mathcal{D}$, we compute the scalar product of the difference vectors
-of any triple of points (i.e. a query point $\vec{A} \in \mathcal{D}$
-and all pairs $(\vec{B},\vec{C})$ of all remaining points in
-$\mathcal{D} \backslash \{\vec{A}\})$ normalized by the quadratic
-product of the length of the difference vectors, i.e. the angle is
-weighted less if the corresponding points are far from the query point.
-By this weighting factor, the distance influences the value after all,
-but only to a minor part. Nevertheless, this weighting of the variance
-is important since the angle to a pair of points varies naturally
-stronger for a bigger distance. The variance of this value over all
-pairs for the query point $\vec{A}$ constitutes the angle-based outlier
-factor (ABOF) of $\vec{A}$.
+As an approach to assign the ABOF value to any object in the database $\mathcal{D}$, we compute the scalar product of the difference vectors of any triple of points (i.e. a query point $\vec{A} \in \mathcal{D}$ and all pairs $(\vec{B},\vec{C})$ of all remaining points in $\mathcal{D} \backslash \{\vec{A}\})$ normalized by the quadratic product of the length of the difference vectors, i.e. the angle is weighted less if the corresponding points are far from the query point. By this weighting factor, the distance influences the value after all, but only to a minor part. Nevertheless, this weighting of the variance is important since the angle to a pair of points varies naturally stronger for a bigger distance. The variance of this value over all pairs for the query point $\vec{A}$ constitutes the angle-based outlier factor (ABOF) of $\vec{A}$.
 
 $$
 ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left<\overline{AB}, \overline{AC}\right>}
@@ -687,12 +497,7 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left<\overline
 {\sum_B\sum_C\frac{1}{\left\Vert \overline{AB}  \right\Vert \cdot \left\Vert \overline{AC}  \right\Vert}}\right)^2
 $$
 
-**NOTE**: This way of weighting the cosine similar is weird in my
-opinion. In fact, the pyod package implements ABOD without these
-weights. I\'m not sure which way is the correct one, or even is one can
-say that either can be wrong, since the constructions of the algorithm
-is not based in any formalism. I have yet yo find a discussion about the
-issue.
+**NOTE**: This way of weighting the cosine similar is weird in my opinion. In fact, the pyod package implements ABOD without these weights. I\'m not sure which way is the correct one, or even is one can say that either can be wrong, since the constructions of the algorithm is not based in any formalism. I have yet yo find a discussion about the issue.
 
 ``` python
 def abof(a, X):
@@ -773,86 +578,38 @@ plt.ylabel('Proline');
 
 ## iForest
 
-One efficient way of performing outlier detection in high-dimensional
-datasets is to use random forests. The Isolation Forest algorithm
-{cite}`liu2008isolation,enwiki:1005785930` \'isolates\' observations by
-randomly selecting a feature and then randomly selecting a split value
-between the maximum and minimum values of the selected feature.
+One efficient way of performing outlier detection in high-dimensional datasets is to use random forests. The Isolation Forest algorithm {cite}`liu2008isolation,enwiki:1005785930` \'isolates\' observations by randomly selecting a feature and then randomly selecting a split value between the maximum and minimum values of the selected feature.
 
-Since recursive partitioning can be represented by a tree structure, the
-number of splittings required to isolate a sample is equivalent to the
-path length from the root node to the terminating node.
+Since recursive partitioning can be represented by a tree structure, the number of splittings required to isolate a sample is equivalent to the path length from the root node to the terminating node.
 
-This path length, averaged over a forest of such random trees, is a
-measure of normality and our decision function.
+This path length, averaged over a forest of such random trees, is a measure of normality and our decision function.
 
-Random partitioning produces noticeably shorter paths for anomalies.
-Hence, when a forest of random trees collectively produce shorter path
-lengths for particular samples, they are highly likely to be anomalies.
+Random partitioning produces noticeably shorter paths for anomalies. Hence, when a forest of random trees collectively produce shorter path lengths for particular samples, they are highly likely to be anomalies.
 
-An example of random partitioning in a 2D dataset of normally
-distributed points is given below for a non-anomalous point:
+An example of random partitioning in a 2D dataset of normally distributed points is given below for a non-anomalous point:
 
 ![](Figures/Isolating_a_Non-Anomalous_Point.png)
 
-Another example for a point that\'s more likely to be an anomaly is now
-shown:
+Another example for a point that\'s more likely to be an anomaly is now shown:
 
 ![](Figures/Isolating_an_Anomalous_Point.png)
 
-It is apparent from the pictures how anomalies require fewer random
-partitions to be isolated, compared to normal points.
+It is apparent from the pictures how anomalies require fewer random partitions to be isolated, compared to normal points.
 
-From a mathematical point of view, recursive partitioning can be
-represented by a tree structure named Isolation Tree, while the number
-of partitions required to isolate a point can be interpreted as the
-length of the path, within the tree, to reach a terminating node
-starting from the root.
+From a mathematical point of view, recursive partitioning can be represented by a tree structure named Isolation Tree, while the number of partitions required to isolate a point can be interpreted as the length of the path, within the tree, to reach a terminating node starting from the root.
 
 ### The iTree
 
-More formally, let $X = \{ x_1, \ldots, x_n \}$ be a set of
-d-dimensional points and $X' \subset X$ a subset of $X$. An Isolation
-Tree (iTree) is defined as a data structure with the following
-properties:
+More formally, let $X = \{ x_1, \ldots, x_n \}$ be a set of d-dimensional points and $X' \subset X$ a subset of $X$. An Isolation Tree (iTree) is defined as a data structure with the following properties:
 
-1.  for each node $T$ in the Tree, $T$ is either an external-node with
-    no child, or an internal-node with one \"test\" and exactly two
-    daughter nodes ($T_l$, $T_r$)
-2.  a test at node $T$ consists of an attribute $q$ and a split value
-    $p$ such that the test $q < p$ determines the traversal of a data
-    point to either $T_l$ or $T_r$.
+1.  for each node $T$ in the Tree, $T$ is either an external-node with no child, or an internal-node with one \"test\" and exactly two daughter nodes ($T_l$, $T_r$)
+2.  a test at node $T$ consists of an attribute $q$ and a split value $p$ such that the test $q < p$ determines the traversal of a data point to either $T_l$ or $T_r$.
 
-In order to build an iTree, the algorithm recursively divides $X'$ by
-randomly selecting an attribute $q$ and a split value $p$, until either
-(i) the node has only one instance or (ii) all data at the node have the
-same values.
+In order to build an iTree, the algorithm recursively divides $X'$ by randomly selecting an attribute $q$ and a split value $p$, until either (i) the node has only one instance or (ii) all data at the node have the same values.
 
-When the iTree is fully grown, each point in $X$ is isolated at one of
-the external nodes. Intuitively, the anomalous points are those (easier
-to isolate, hence) with the smaller path length in the tree, where the
-path length $h(x_i)$ of point $x_{i}\in X$ is defined as the number of
-edges $x_i$ traverses from the root node to get to an external node.
+When the iTree is fully grown, each point in $X$ is isolated at one of the external nodes. Intuitively, the anomalous points are those (easier to isolate, hence) with the smaller path length in the tree, where the path length $h(x_i)$ of point $x_{i}\in X$ is defined as the number of edges $x_i$ traverses from the root node to get to an external node.
 
-Since iForest does not need to isolate all of normal instances -- the
-majority of the training sample, iForest is able to work well with a
-partial model without isolating all normal points and builds models
-using a small sample size. Swamping refers to wrongly identifying normal
-instances as anomalies. When normal instances are too close to
-anomalies, the number of partitions required to separate anomalies
-increases -- which makes it harder to distinguish anomalies from normal
-in- stances. Masking is the existence of too many anomalies concealing
-their own presence. When an anomaly cluster is large and dense, it also
-increases the number of partitions to isolate each anomaly. Under these
-circumstances, evaluations using these trees have longer path lengths
-making anomalies more difficult to detect. Note that both swamping and
-masking are a result of too many data for the purpose of anomaly
-detection. The unique characteristic of isolation trees allows iForest
-to build a partial model by sub-sampling which incidentally alleviates
-the effects of swamping and masking. It is because: 1) sub-sampling con-
-trols data size, which helps iForest better isolate examples of
-anomalies and 2) each isolation tree can be specialised, as each
-sub-sample includes different set of anomalies or even no anomaly.
+Since iForest does not need to isolate all of normal instances -- the majority of the training sample, iForest is able to work well with a partial model without isolating all normal points and builds models using a small sample size. Swamping refers to wrongly identifying normal instances as anomalies. When normal instances are too close to anomalies, the number of partitions required to separate anomalies increases -- which makes it harder to distinguish anomalies from normal in- stances. Masking is the existence of too many anomalies concealing their own presence. When an anomaly cluster is large and dense, it also increases the number of partitions to isolate each anomaly. Under these circumstances, evaluations using these trees have longer path lengths making anomalies more difficult to detect. Note that both swamping and masking are a result of too many data for the purpose of anomaly detection. The unique characteristic of isolation trees allows iForest to build a partial model by sub-sampling which incidentally alleviates the effects of swamping and masking. It is because: 1) sub-sampling con- trols data size, which helps iForest better isolate examples of anomalies and 2) each isolation tree can be specialised, as each sub-sample includes different set of anomalies or even no anomaly.
 
 ``` python
 import random as rn
@@ -921,8 +678,7 @@ class iTree():
         return node
 ```
 
-Lets build a single iTree and visualize the partition obtained in our
-sample data set:
+Lets build a single iTree and visualize the partition obtained in our sample data set:
 
 ``` python
 test_tree = iTree(X, 3)
@@ -978,25 +734,15 @@ plt.plot(x[0], x[1], 'ro');
 
 ### Anomaly score
 
-Since iTrees have an equivalent structure to Binary Search Tree or BST,
-the estimation of average $h(x)$ for external node terminations is the
-same as the unsuccessful search in BST, this is: $$
+Since iTrees have an equivalent structure to Binary Search Tree or BST, the estimation of average $h(x)$ for external node terminations is the same as the unsuccessful search in BST, this is: $$
 c(n) = 2H(n-1)-2(n-1)/n,
-$$ where $H(i)$ is the harmonic number and it can be estimated by
-$\ln(i) + 0.5772156649$ . As $c(n)$ is the average of $h(x)$ given $n$,
-we use it to normalize $h(x)$. The anomaly score $s$ of an instance $x$
-is defined as: $$
+$$ where $H(i)$ is the harmonic number and it can be estimated by $\ln(i) + 0.5772156649$ . As $c(n)$ is the average of $h(x)$ given $n$, we use it to normalize $h(x)$. The anomaly score $s$ of an instance $x$ is defined as: $$
 s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
-$$ where $E(h(x))$ is the average of $h(x)$ from a collection of
-isolation trees. Using the anomaly score s, we are able to make the
-following assessment:
+$$ where $E(h(x))$ is the average of $h(x)$ from a collection of isolation trees. Using the anomaly score s, we are able to make the following assessment:
 
--   \(a\) if instances return s very close to 1, then they are
-    definitely anomalies,
--   \(b\) if instances have s much smaller than 0.5, then they are quite
-    safe to be regarded as normal instances, and
--   \(c\) if all the instances return $s \approx 0.5$, then the entire
-    sample does not really have any distinct anomaly.
+-   \(a\) if instances return s very close to 1, then they are definitely anomalies,
+-   \(b\) if instances have s much smaller than 0.5, then they are quite safe to be regarded as normal instances, and
+-   \(c\) if all the instances return $s \approx 0.5$, then the entire sample does not really have any distinct anomaly.
 
 ``` python
 def c_factor(n):
@@ -1005,15 +751,7 @@ def c_factor(n):
 
 ### Training stage
 
-In the training stage, iTrees are constructed by recursively
-partitioning the given training set until instances are isolated or a
-specific tree height is reached of which results a partial model. Note
-that the tree height limit l is automatically set by the sub-sampling
-size $\psi$: $l = ceiling(\log_2 \psi)$, which is approximately the
-average tree height. The rationale of growing trees up to the average
-tree height is that we are only interested in data points that have
-shorter-than- average path lengths, as those points are more likely to
-be anomalies.
+In the training stage, iTrees are constructed by recursively partitioning the given training set until instances are isolated or a specific tree height is reached of which results a partial model. Note that the tree height limit l is automatically set by the sub-sampling size $\psi$: $l = ceiling(\log_2 \psi)$, which is approximately the average tree height. The rationale of growing trees up to the average tree height is that we are only interested in data points that have shorter-than- average path lengths, as those points are more likely to be anomalies.
 
 ``` python
 def iForest(X, n_trees=100, sample_size=256, max_depth=None):
@@ -1049,16 +787,7 @@ forest = iForest(X)
 
 ### Evaluation stage
 
-In the evaluating stage, an anomaly score $s$ is derived from the
-expected path length $E(h(x))$ for each test instance. $E(h(x))$ are
-derived by passing instances through each iTree in an iForest. Using
-`PathLength` function, a single path length $h(x)$ is derived by
-counting the number of edges e from the root node to a terminating node
-as instance $x$ traverses through an iTree. When $x$ is terminated at an
-external node, where $Size > 1$, the return value is $e$ plus an
-adjustment $c(Size)$. The adjustment accounts for an unbuilt subtree
-beyond the tree height limit. When $h(x)$ is obtained for each tree of
-the ensemble, an anomaly score is produced by computing $s(x, \psi)$.
+In the evaluating stage, an anomaly score $s$ is derived from the expected path length $E(h(x))$ for each test instance. $E(h(x))$ are derived by passing instances through each iTree in an iForest. Using `PathLength` function, a single path length $h(x)$ is derived by counting the number of edges e from the root node to a terminating node as instance $x$ traverses through an iTree. When $x$ is terminated at an external node, where $Size > 1$, the return value is $e$ plus an adjustment $c(Size)$. The adjustment accounts for an unbuilt subtree beyond the tree height limit. When $h(x)$ is obtained for each tree of the ensemble, an anomaly score is produced by computing $s(x, \psi)$.
 
 ``` python
 def path_length(x, node):
@@ -1106,7 +835,6 @@ plt.ylabel('Proline');
 :style: unsrt
 :filter: docname in docnames
 ```
-
 
 Further reading:
 

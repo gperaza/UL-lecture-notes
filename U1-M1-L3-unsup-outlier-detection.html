@@ -241,9 +241,16 @@
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#knn">
-   KNN
+  <a class="reference internal nav-link" href="#distance-based-od">
+   Distance based OD
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#knn">
+     KNN
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#lof">
@@ -309,107 +316,43 @@
 <h1>Anomaly and Outlier Detection<a class="headerlink" href="#anomaly-and-outlier-detection" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>Section from <span id="id1">[<a class="reference internal" href="#id18"><span>1</span></a>]</span>.</p>
-<p>Anomaly detection is the process of identifying unexpected items or
-events in datasets, which differ from the norm. In contrast to standard
-classification tasks, anomaly detection is often applied on unlabeled
-data, taking only the internal structure of the dataset into account.
-Anomalies are often associated with particular interesting events or
-suspicious data records. Anomalies are known to have two important
-characteristics:</p>
+<p>Section from <span id="id1">[<a class="reference internal" href="#id19"><span>1</span></a>]</span>.</p>
+<p>Anomaly detection is the process of identifying unexpected items or events in datasets, which differ from the norm. In contrast to standard classification tasks, anomaly detection is often applied on unlabeled data, taking only the internal structure of the dataset into account. Anomalies are often associated with particular interesting events or suspicious data records. Anomalies are known to have two important characteristics:</p>
 <ol class="simple">
-<li><p>Anomalies are different from the norm with respect to their features
-and</p></li>
+<li><p>Anomalies are different from the norm with respect to their features and</p></li>
 <li><p>They are rare in a dataset compared to normal instances.</p></li>
 </ol>
-<p>Anomaly detection algorithms are now used in many application domains
-and often enhance traditional rule-based detection systems, for example:</p>
+<p>Anomaly detection algorithms are now used in many application domains and often enhance traditional rule-based detection systems, for example:</p>
 <ul class="simple">
 <li><p>Intrusion detection</p></li>
 <li><p>Fraud detection</p></li>
 <li><p>Data Leakage Prevention</p></li>
 </ul>
-<p>We can distinguish between three main types of anomaly detection:
-Supervised Anomaly Detection, Semi-supervised Anomaly Detection, and
-Unsupervised Anomaly Detection. Unsupervised Anomaly Detection is the
-most flexible setup which does not require any labels. Furthermore,
-there is also no distinction between a training and a test dataset. The
-idea is that an unsupervised anomaly detection algorithm scores the data
-solely based on intrinsic properties of the dataset. Typically,
-distances or densities are used to give an estimation what is normal and
-what is an outlier.</p>
-<p><img alt="Different anomaly detection modes depending on the availability oflabels in the dataset. (a) Supervised anomaly detection uses a fullylabeled dataset for training. (b) Semi-supervised anomaly detection usesan anomaly-free training dataset. Afterwards, deviations in the testdata from that normal model are used to detect anomalies. (c)Unsupervised anomaly detection algorithms use only intrinsic informationof the data in order to detect instances deviating from the majority ofthe data. Source:https://doi.org/10.1371/journal.pone.0152173.g001" src="_images/journal.pone.0152173.g001.PNG" /></p>
-<p>The output of an unsupervised anomaly detection algorithm is often a
-score. Here, we also use scores and rank the results such that the
-ranking can be used for performance evaluation. Of course, a ranking can
-be converted into a label using an appropriate threshold.</p>
+<p>We can distinguish between three main types of anomaly detection: Supervised Anomaly Detection, Semi-supervised Anomaly Detection, and Unsupervised Anomaly Detection. Unsupervised Anomaly Detection is the most flexible setup which does not require any labels. Furthermore, there is also no distinction between a training and a test dataset. The idea is that an unsupervised anomaly detection algorithm scores the data solely based on intrinsic properties of the dataset. Typically, distances or densities are used to give an estimation what is normal and what is an outlier.</p>
+<div class="figure align-default" id="id27">
+<img alt="_images/journal.pone.0152173.g001.PNG" src="_images/journal.pone.0152173.g001.PNG" />
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Different anomaly detection modes depending on the availability of labels in the dataset. (a) Supervised anomaly detection uses a fully labeled dataset for training. (b) Semi-supervised anomaly detection uses an anomaly-free training dataset. Afterwards, deviations in the test data from that normal model are used to detect anomalies. (c) Unsupervised anomaly detection algorithms use only intrinsic information of the data in order to detect instances deviating from the majority of the data. Source: <a class="reference external" href="https://doi.org/10.1371/journal.pone.0152173.g001">https://doi.org/10.1371/journal.pone.0152173.g001</a></span><a class="headerlink" href="#id27" title="Permalink to this image">¶</a></p>
+</div>
+<p>The output of an unsupervised anomaly detection algorithm is often a score. Here, we also use scores and rank the results such that the ranking can be used for performance evaluation. Of course, a ranking can be converted into a label using an appropriate threshold.</p>
 </div>
 <div class="section" id="types-of-anomalies">
 <h2>Types of anomalies<a class="headerlink" href="#types-of-anomalies" title="Permalink to this headline">¶</a></h2>
-<p><img alt="A simple two-dimensional example. It illustrates global anomalies (x1,x2), a local anomaly x3 and a micro-cluster c3. Source:https://doi.org/10.1371/journal.pone.0152173.g002" src="_images/journal.pone.0152173.g002.PNG" /></p>
-<p>In Fig 2 two anomalies can be easily identified by eye: x1 and x2 are
-very different from the dense areas with respect to their attributes and
-are therefore called global anomalies. When looking at the dataset
-globally, x3 can be seen as a normal record since it is not too far away
-from the cluster c2. However, when we focus only on the cluster c2 and
-compare it with x3 while neglecting all the other instances, it can be
-seen as an anomaly. Therefore, x3 is called a local anomaly, since it is
-only anomalous when compared with its close-by neighborhood. It depends
-on the application, whether local anomalies are of interest or not.
-Another interesting question is whether the instances of the cluster c3
-should be seen as three anomalies or as a (small) regular cluster. These
-phenomena is called micro cluster and anomaly detection algorithms
-should assign scores to its members larger than the normal instances,
-but smaller values than the obvious anomalies. This simple example
-already illustrates that anomalies are not always obvious and a score is
-much more useful than a binary label assignment.</p>
-<p>To this end, an anomaly is always referred to a single instance in a
-dataset only occurring rarely. In reality, this is often not true. For
-example, in intrusion detection, anomalies are often referred to many
-(suspicious) access patterns, which may be observed at a larger amount
-as the normal accesses. In this case, an unsupervised anomaly detection
-algorithm directly applied on the raw data will fail. The task of
-detecting single anomalous instances in a larger dataset (as introduced
-so far) is called point anomaly detection. Nearly all available
-unsupervised anomaly detection algorithms today are from this type. If
-an anomalous situation is represented as a set of many instances, this
-is called a collective anomaly. Each of these instances is not
-necessarily a point anomaly, but only a specific combination thereof
-defines the anomaly. The previous given example of occurring multiple
-specific access patterns in intrusion detection is such a collective
-anomaly. A third kind are contextual anomalies, which describe the
-effect that a point can be seen as normal, but when a given context is
-taken into account, the point turns out to be an anomaly. The most
-commonly occurring context is time. As an example, suppose we measure
-temperature in a range of 0°to 35°C during the year. Thus, a temperature
-of 26°C seems pretty normal, but when we take the context time into
-account (e.g. the month), such a high temperature of 26°C during winter
-would definitively be considered as an anomaly.</p>
-<p><img alt="A taxonomy of unsupervised anomaly detection algorithms comprising offour main groups. Note that CMGOS can be categorized in two groups: Itis a clustering-based algorithm as well as estimating a subspace of eachcluster." src="_images/journal.pone.0152173.g003.PNG" /></p>
+<div class="figure align-default" id="id28">
+<img alt="_images/journal.pone.0152173.g002.PNG" src="_images/journal.pone.0152173.g002.PNG" />
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">A simple two-dimensional example. It illustrates global anomalies (x1, x2), a local anomaly x3 and a micro-cluster c3. Source: <a class="reference external" href="https://doi.org/10.1371/journal.pone.0152173.g002">https://doi.org/10.1371/journal.pone.0152173.g002</a></span><a class="headerlink" href="#id28" title="Permalink to this image">¶</a></p>
+</div>
+<p>In Fig 2 two anomalies can be easily identified by eye: x1 and x2 are very different from the dense areas with respect to their attributes and are therefore called global anomalies. When looking at the dataset globally, x3 can be seen as a normal record since it is not too far away from the cluster c2. However, when we focus only on the cluster c2 and compare it with x3 while neglecting all the other instances, it can be seen as an anomaly. Therefore, x3 is called a local anomaly, since it is only anomalous when compared with its close-by neighborhood. It depends on the application, whether local anomalies are of interest or not. Another interesting question is whether the instances of the cluster c3 should be seen as three anomalies or as a (small) regular cluster. These phenomena is called micro cluster and anomaly detection algorithms should assign scores to its members larger than the normal instances, but smaller values than the obvious anomalies. This simple example already illustrates that anomalies are not always obvious and a score is much more useful than a binary label assignment.</p>
+<p>To this end, an anomaly is always referred to a single instance in a dataset only occurring rarely. In reality, this is often not true. For example, in intrusion detection, anomalies are often referred to many (suspicious) access patterns, which may be observed at a larger amount as the normal accesses. In this case, an unsupervised anomaly detection algorithm directly applied on the raw data will fail. The task of detecting single anomalous instances in a larger dataset (as introduced so far) is called point anomaly detection. Nearly all available unsupervised anomaly detection algorithms today are from this type. If an anomalous situation is represented as a set of many instances, this is called a collective anomaly. Each of these instances is not necessarily a point anomaly, but only a specific combination thereof defines the anomaly. The previous given example of occurring multiple specific access patterns in intrusion detection is such a collective anomaly. A third kind are contextual anomalies, which describe the effect that a point can be seen as normal, but when a given context is taken into account, the point turns out to be an anomaly. The most commonly occurring context is time. As an example, suppose we measure temperature in a range of 0°to 35°C during the year. Thus, a temperature of 26°C seems pretty normal, but when we take the context time into account (e.g. the month), such a high temperature of 26°C during winter would definitively be considered as an anomaly.</p>
+<div class="figure align-default" id="id29">
+<img alt="_images/journal.pone.0152173.g003.PNG" src="_images/journal.pone.0152173.g003.PNG" />
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">A taxonomy of unsupervised anomaly detection algorithms comprising of four main groups. Note that CMGOS can be categorized in two groups: It is a clustering-based algorithm as well as estimating a subspace of each cluster.</span><a class="headerlink" href="#id29" title="Permalink to this image">¶</a></p>
+</div>
 </div>
 <div class="section" id="statistical-method-gaussian-model-mahalanobis-distance">
 <h2>Statistical Method: Gaussian model (Mahalanobis distance)<a class="headerlink" href="#statistical-method-gaussian-model-mahalanobis-distance" title="Permalink to this headline">¶</a></h2>
-<p>One of the simplest approach to anomaly detection is to model the data
-as being generated from a multivariate normal distribution. The model
-assigns each observation a probability, which then can be used to asses
-if a particular observation is rare (unlikely) or not (high
-probability). Of course, if the assumption that the data comes from a
-normal distribution is not valid, this method does not perform well. In
-particular, multi-modal datasets, clustered data, etc. are not well
-suited to be modeled as a multivariate Gaussian.</p>
-<p>We will follow an example taken from the course on Machine Learning by
-Andrew Ng on Coursera. We will implement an anomaly detection algorithm
-to detect anomalous behavior in the wine dataset. Among the 13 features
-we’ll select 2 to keep the data two dimensional and explore how the
-algorithm works. We suspect that the vast majority of these examples are
-“normal” (non-anomalous) examples of wine types, but there might also be
-some examples of anomalous wines within this dataset, (whatever that
-means).</p>
-<p>We will use a Gaussian model to detect anomalous examples in your
-dataset. On the 2D dataset we will fit a Gaussian distribution and then
-find values that have very low probability and hence can be considered
-anomalies. After that, we will apply the anomaly detection algorithm to
-a larger dataset with many dimensions.</p>
+<p>One of the simplest approach to anomaly detection is to model the data as being generated from a multivariate normal distribution. The model assigns each observation a probability, which then can be used to asses if a particular observation is rare (unlikely) or not (high probability). Of course, if the assumption that the data comes from a normal distribution is not valid, this method does not perform well. In particular, multi-modal datasets, clustered data, etc. are not well suited to be modeled as a multivariate Gaussian.</p>
+<p>We will follow an example taken from the course on Machine Learning by Andrew Ng on Coursera. We will implement an anomaly detection algorithm to detect anomalous behavior in the wine dataset. Among the 13 features we’ll select 2 to keep the data two dimensional and explore how the algorithm works. We suspect that the vast majority of these examples are “normal” (non-anomalous) examples of wine types, but there might also be some examples of anomalous wines within this dataset, (whatever that means).</p>
+<p>We will use a Gaussian model to detect anomalous examples in your dataset. On the 2D dataset we will fit a Gaussian distribution and then find values that have very low probability and hence can be considered anomalies. After that, we will apply the anomaly detection algorithm to a larger dataset with many dimensions.</p>
 <p>Let’s begin with some standard imports:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># used for manipulating directory paths</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -448,110 +391,97 @@ a larger dataset with many dimensions.</p>
 <p><img alt="" src="_images/ffec72bb023e89de92e16b8fc7e43108e9c50bc8.png" /></p>
 <div class="section" id="multivariate-gaussian-distribution">
 <h3>Multivariate Gaussian distribution<a class="headerlink" href="#multivariate-gaussian-distribution" title="Permalink to this headline">¶</a></h3>
-<p>To perform anomaly detection, we will first need to fit a model to the
-data distribution. The Multivariate Gaussian distribution is given by</p>
+<p>To perform anomaly detection, we will first need to fit a model to the data distribution. The Multivariate Gaussian distribution is given by</p>
 <div class="math notranslate nohighlight">
 \[
 p\left( x; \mu, \Sigma \right)  = \frac{1}{  \sqrt{  \left( 2\pi\right)^k  \left|\Sigma\right|  }}
 \exp\left(-\frac{1}{2} \left(x - \mu \right)^T \Sigma^{-1}\left(x - \mu \right)\right)
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\mu\)</span> is the mean vector and <span class="math notranslate nohighlight">\(\Sigma\)</span> is the covariance matrix.</p>
-<p>You can estimate the parameters by using the following Maximum
-Likelihood estimators. To estimate the mean, we will use:</p>
+<p>You can estimate the parameters by using the following Maximum Likelihood estimators. To estimate the mean, we will use:</p>
 <div class="math notranslate nohighlight">
 \[ \mu_i = \frac{1}{m} \sum_{j=1}^m x_i^{(j)},\]</div>
 <p>and for the covariance you will use:</p>
 <div class="math notranslate nohighlight">
 \[ \Sigma = \frac{1}{n}\left(X - 1 \mu^T \right)^T\left(X - 1 \mu^T \right)\]</div>
-<p>We’ll implement a function which estimates the parameters using the
-equations above. (<code class="docutils literal notranslate"><span class="pre">estimateGaussian</span></code>). The function takes as input the
-data matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> and should output an n-dimension vector <code class="docutils literal notranslate"><span class="pre">mu</span></code> that holds
-the mean for each of the <span class="math notranslate nohighlight">\(n\)</span> features and the nxn covariance matrix
-<code class="docutils literal notranslate"><span class="pre">Sigma</span></code> that holds the variances of each of the features.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>def estimateGaussian(X):
-    &quot;&quot;&quot;
-    This function estimates the parameters of a Gaussian distribution
-    using a provided dataset.
+<p>We’ll implement a function which estimates the parameters using the equations above. (<code class="docutils literal notranslate"><span class="pre">estimateGaussian</span></code>). The function takes as input the data matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> and should output an n-dimension vector <code class="docutils literal notranslate"><span class="pre">mu</span></code> that holds the mean for each of the <span class="math notranslate nohighlight">\(n\)</span> features and the nxn covariance matrix <code class="docutils literal notranslate"><span class="pre">Sigma</span></code> that holds the variances of each of the features.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">estimateGaussian</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function estimates the parameters of a Gaussian distribution</span>
+<span class="sd">    using a provided dataset.</span>
 
-    Parameters
-    ----------
-    X : array_like
-        The dataset of shape (m x n) with each n-dimensional
-        data point in one row, and each total of m data points.
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array_like</span>
+<span class="sd">        The dataset of shape (m x n) with each n-dimensional</span>
+<span class="sd">        data point in one row, and each total of m data points.</span>
 
-    Returns
-    -------
-    mu : array_like
-        A vector of shape (n,) containing the means of each dimension.
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mu : array_like</span>
+<span class="sd">        A vector of shape (n,) containing the means of each dimension.</span>
 
-    Sigma : array_like
-        The (n x n) covariance matrix.
+<span class="sd">    Sigma : array_like</span>
+<span class="sd">        The (n x n) covariance matrix.</span>
 
-    Instructions
-    ------------
-    Compute the mean of the data and the variances
-    In particular, mu[i] should contain the mean of
-    the data for the i-th feature and Sigma[i,j]
-    should contain covariance between the i-th and
-    the j-th feature.
-    &quot;&quot;&quot;
-    # Useful variables
-    m, n = X.shape
+<span class="sd">    Instructions</span>
+<span class="sd">    ------------</span>
+<span class="sd">    Compute the mean of the data and the variances</span>
+<span class="sd">    In particular, mu[i] should contain the mean of</span>
+<span class="sd">    the data for the i-th feature and Sigma[i,j]</span>
+<span class="sd">    should contain covariance between the i-th and</span>
+<span class="sd">    the j-th feature.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Useful variables</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
 
-    # You should return these values correctly
-    mu = np.zeros(n)
-    Sigma = np.zeros((n, n))
+    <span class="c1"># You should return these values correctly</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">Sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
 
-    mu = np.mean(X, axis=0)
-    Xc = X - mu      # broadcasting takes care of substracting the mean from each row
-    Sigma = 1/n * Xc.T {cite}`` Xc
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">Xc</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">mu</span>      <span class="c1"># broadcasting takes care of substracting the mean from each row</span>
+    <span class="n">Sigma</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">n</span> <span class="o">*</span> <span class="n">Xc</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">Xc</span>
 
-    return mu, Sigma
+    <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span>
 </pre></div>
 </div>
-<p>In the next cell will visualizes the contours of the fitted Gaussian
-distribution, we can use this image to check your results.</p>
-<p>From our plot, we can see that most of the examples are in the region
-with the highest probability, while the anomalous examples are in the
-regions with lower probabilities.</p>
-<p>To do the visualization of the Gaussian fit, we first estimate the
-parameters of our assumed Gaussian distribution, then compute the
-probabilities for each of the points and then visualize both the overall
-distribution and where each of the points falls in terms of that
-distribution.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>def multivariateGaussian(X, mu, Sigma):
-    &quot;&quot;&quot;
-    Computes the probability density function of the multivariate gaussian distribution.
+<p>In the next cell will visualizes the contours of the fitted Gaussian distribution, we can use this image to check your results.</p>
+<p>From our plot, we can see that most of the examples are in the region with the highest probability, while the anomalous examples are in the regions with lower probabilities.</p>
+<p>To do the visualization of the Gaussian fit, we first estimate the parameters of our assumed Gaussian distribution, then compute the probabilities for each of the points and then visualize both the overall distribution and where each of the points falls in terms of that distribution.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">multivariateGaussian</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the probability density function of the multivariate gaussian distribution.</span>
 
-    Parameters
-    ----------
-    X : array_like
-        The dataset of shape (m x n). Where there are m examples of n-dimensions.
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array_like</span>
+<span class="sd">        The dataset of shape (m x n). Where there are m examples of n-dimensions.</span>
 
-    mu : array_like
-        A vector of shape (n,) contains the means for each dimension (feature).
+<span class="sd">    mu : array_like</span>
+<span class="sd">        A vector of shape (n,) contains the means for each dimension (feature).</span>
 
-    Sigma : array_like
-        Either a vector of shape (n,) containing the variances of independent features
-        (i.e. it is the diagonal of the correlation matrix), or the full
-        correlation matrix of shape (n x n) which can represent dependent features.
+<span class="sd">    Sigma : array_like</span>
+<span class="sd">        Either a vector of shape (n,) containing the variances of independent features</span>
+<span class="sd">        (i.e. it is the diagonal of the correlation matrix), or the full</span>
+<span class="sd">        correlation matrix of shape (n x n) which can represent dependent features.</span>
 
-    Returns
-    ------
-    p : array_like
-        A vector of shape (m,) which contains the computed probabilities at each of the
-        provided examples.
-    &quot;&quot;&quot;
-    k = mu.size
+<span class="sd">    Returns</span>
+<span class="sd">    ------</span>
+<span class="sd">    p : array_like</span>
+<span class="sd">        A vector of shape (m,) which contains the computed probabilities at each of the</span>
+<span class="sd">        provided examples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">mu</span><span class="o">.</span><span class="n">size</span>
 
-    # if sigma is given as a diagonal, compute the matrix
-    if Sigma.ndim == 1:
-        Sigma = np.diag(Sigma)
+    <span class="c1"># if sigma is given as a diagonal, compute the matrix</span>
+    <span class="k">if</span> <span class="n">Sigma</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">Sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">Sigma</span><span class="p">)</span>
 
-    X = X - mu
-    p = (2 * np.pi) ** (- k / 2) * np.linalg.det(Sigma) ** (-0.5)\
-        * np.exp(-0.5 * np.sum(X {cite}`` np.linalg.pinv(Sigma) * X, axis=1))
-    return p
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">mu</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span> <span class="n">k</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">Sigma</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>\
+        <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">Sigma</span><span class="p">)</span> <span class="o">*</span> <span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">p</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Estimate my and sigma2</span>
@@ -576,24 +506,8 @@ distribution.</p>
 </pre></div>
 </div>
 <p><img alt="" src="_images/45328740638fa58fabeab0a1676e2dc54b2a45e6.png" /></p>
-<p>There is a problem with the previous estimation of our normal
-distribution. By inspecting the plot, it is clear that if outliers where
-removed the shape of the distribution should be an ellipse almost
-aligned with the y-axis. The problem is that the estimation of the
-covariance matrix is heavily influenced by the outliers. In principle,
-we would like to estimate the covariance using only the clean subset of
-the data.</p>
-<p>One way to solve this problems is to use a robust estimator for the
-covariance matrix called the Minimum Covariance Determinant
-<span id="id2">[<a class="reference internal" href="#id19"><span>2</span></a>]</span>. The Minimum Covariance Determinant estimator is a
-robust, high-breakdown point (i.e. it can be used to estimate the
-covariance matrix of highly contaminated datasets, up to
-<span class="math notranslate nohighlight">\(\frac{n_\text{samples} - n_\text{features} - 1}{2}\)</span> outliers) estimator
-of covariance. The idea is to find
-<span class="math notranslate nohighlight">\(\frac{n_\text{samples}+n_\text{features}+1}{2}\)</span> observations whose
-empirical covariance has the smallest determinant, yielding a “pure”
-subset of observations from which to compute standards estimates of
-location and covariance.</p>
+<p>There is a problem with the previous estimation of our normal distribution. By inspecting the plot, it is clear that if outliers where removed the shape of the distribution should be an ellipse almost aligned with the y-axis. The problem is that the estimation of the covariance matrix is heavily influenced by the outliers. In principle, we would like to estimate the covariance using only the clean subset of the data.</p>
+<p>One way to solve this problems is to use a robust estimator for the covariance matrix called the Minimum Covariance Determinant <span id="id2">[<a class="reference internal" href="#id20"><span>2</span></a>]</span>. The Minimum Covariance Determinant estimator is a robust, high-breakdown point (i.e. it can be used to estimate the covariance matrix of highly contaminated datasets, up to <span class="math notranslate nohighlight">\(\frac{n_\text{samples} - n_\text{features} - 1}{2}\)</span> outliers) estimator of covariance. The idea is to find <span class="math notranslate nohighlight">\(\frac{n_\text{samples}+n_\text{features}+1}{2}\)</span> observations whose empirical covariance has the smallest determinant, yielding a “pure” subset of observations from which to compute standards estimates of location and covariance.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <span class="n">MinCovDet</span>
 
 <span class="k">def</span> <span class="nf">estimateGaussianRobust</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -630,22 +544,18 @@ location and covariance.</p>
 </div>
 <div class="section" id="choosing-the-threshold">
 <h3>Choosing the threshold<a class="headerlink" href="#choosing-the-threshold" title="Permalink to this headline">¶</a></h3>
-<p>Now, the outliers are identified as the points having the lowest
-probability according to the fitted model. This probabilities can serve
-as the scores of our method. Because of the “squashing” effect of the
-exponential, its much clearer to use the Mahalanobis distance, which is
-just the exponent of the multivariate Gaussian.</p>
+<p>Now, the outliers are identified as the points having the lowest probability according to the fitted model. This probabilities can serve as the scores of our method. Because of the “squashing” effect of the exponential, its much clearer to use the Mahalanobis distance, which is just the exponent of the multivariate Gaussian.</p>
 <div class="math notranslate nohighlight">
 \[
 MD(x) = \sqrt{\left(x - \mu \right)^T\Sigma^{-1}\left(x - \mu\right)}
 \]</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>def MD(X):
-    mu, Sigma = estimateGaussianRobust(X)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">MD</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span> <span class="o">=</span> <span class="n">estimateGaussianRobust</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-    X = X - mu
-    MD = np.sqrt(np.sum(X {cite}`` np.linalg.pinv(Sigma) * X, axis=1))
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="n">mu</span>
+    <span class="n">MD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">Sigma</span><span class="p">)</span> <span class="o">*</span> <span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-    return MD
+    <span class="k">return</span> <span class="n">MD</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the MD for each point, the plot the scores to identify possible outliers.</span>
@@ -663,38 +573,31 @@ MD(x) = \sqrt{\left(x - \mu \right)^T\Sigma^{-1}\left(x - \mu\right)}
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Top outliers: &#39;</span><span class="p">,</span> <span class="n">top_outliers</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-{.RESULTS notranslate"><div class="highlight"><pre><span></span>``` example
-Top outliers:  [45 39 43 41 21 46 19  4]
-```
-
-![](./.ob-jupyter/2cc8f2832388230de8856da27ff848207e841e2f.png)
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Top outliers:  [45 39 43 41 21 46 19  4]
 </pre></div>
 </div>
+<p><img alt="" src="_images/2cc8f2832388230de8856da27ff848207e841e2f.png" /></p>
 </div>
 </div>
+<div class="section" id="distance-based-od">
+<h2>Distance based OD<a class="headerlink" href="#distance-based-od" title="Permalink to this headline">¶</a></h2>
+<p>In a modern distance based approach, an outlier is an observation far away from its neighbors. A distance based methods do not assume any distribution (non-parametric), but employ the whole set of observations.</p>
+<p>The approach was first formalized by Knorr and Ng <span id="id3">[<a class="reference internal" href="#id26"><span>3</span></a>]</span>. The distance based (DB) method labels an observation <span class="math notranslate nohighlight">\(x\)</span> as an outlier if the fraction of points farther than a distance <span class="math notranslate nohighlight">\(\delta\)</span> from <span class="math notranslate nohighlight">\(x\)</span> exceeds a specified threshold <span class="math notranslate nohighlight">\(\alpha\)</span>, i.e, if the following condition is satisfied</p>
+<div class="math notranslate nohighlight">
+\[
+\left|\left\{ x' \in X \mid d(x,x') &gt; \delta \right\}\right| \geq \alpha,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of observations, and <span class="math notranslate nohighlight">\(\alpha,\delta \in
+\mathbb{R}(0 \leq \alpha \leq1)\)</span> are parameters.</p>
+<div class="figure align-default" id="id30">
+<img alt="_images/od-1.png" src="_images/od-1.png" />
+<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">A DB outlier (left) and a regular observation (right). Source: Mahito Sugiyama course on Data Mining (<a class="reference external" href="https://mahito.nii.ac.jp/lecture">https://mahito.nii.ac.jp/lecture</a>)</span><a class="headerlink" href="#id30" title="Permalink to this image">¶</a></p>
+</div>
+<p>The main drawbacks of the <span class="math notranslate nohighlight">\(DB(\alpha, \delta)\)</span> methods are that choosing the right value for <span class="math notranslate nohighlight">\(\delta\)</span> is hard and that it outputs a binary classification of observations. A point is either an outlier or it is not. It would be nice to have a measure of the <em>degree</em> of <em>outlierness</em> of a point. The follwing algorithms based on the distance to the k-nearest neighbors offer just that.</p>
 <div class="section" id="knn">
-<h2>KNN<a class="headerlink" href="#knn" title="Permalink to this headline">¶</a></h2>
-<p>A method that does not assume any distribution (non-parametric), but
-employs the whole set of observations is the k-nearest neighbors
-algorithm.</p>
-<p>First, for every record in the dataset, the k-nearest-neighbors have to
-be found. Then, an anomaly score is computed using these neighbors,
-whereas two possibilities have been proposed: Either the distance to the
-kth-nearest-neighbor is used (a single one) or the average distance to
-all of the k-nearest-neighbors is computed. In the following, we refer
-to the first method as kth-NN and the latter as k-NN. In practical
-applications, the k-NN method is often preferred. However, the absolute
-value of the score depends very much on the dataset itself, the number
-of dimensions, and on normalization. As a result, it is in practice not
-easy to select an appropriate threshold, if required.</p>
-<p>Our KNN algorithm will use a brute force approach to calculate the
-nearest neighbors. This implies the calculation of <span class="math notranslate nohighlight">\(N^2\)</span> pairwise
-distances among all observations (rows) of the data matrix. More
-efficient approaches for large datasets employ KDTrees or BallTrees
-(see, for example,
-<a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a>). Euclidian
-distance is often used, but other metrics can be employed as well. The
-distance matrix is an <span class="math notranslate nohighlight">\(N\times N\)</span> matrix defined as:</p>
+<h3>KNN<a class="headerlink" href="#knn" title="Permalink to this headline">¶</a></h3>
+<p>First, for every record in the dataset, the k-nearest-neighbors have to be found. Then, an anomaly score is computed using these neighbors, whereas two possibilities have been proposed: Either the distance to the kth-nearest-neighbor is used (a single one) or the average distance to all of the k-nearest-neighbors is computed. In the following, we refer to the first method as kth-NN and the latter as k-NN. In practical applications, the k-NN method is often preferred. However, the absolute value of the score depends very much on the dataset itself, the number of dimensions, and on normalization. As a result, it is in practice not easy to select an appropriate threshold, if required.</p>
+<p>Our KNN algorithm will use a brute force approach to calculate the nearest neighbors. This implies the calculation of <span class="math notranslate nohighlight">\(N^2\)</span> pairwise distances among all observations (rows) of the data matrix. More efficient approaches for large datasets employ KDTrees or BallTrees (see, for example, <a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a>). Euclidian distance is often used, but other metrics can be employed as well. The distance matrix is an <span class="math notranslate nohighlight">\(N\times N\)</span> matrix defined as:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 D = \begin{pmatrix}
@@ -704,29 +607,10 @@ d(x_2,x_1) &amp; d(x_2,x_2) &amp; \dots &amp; d(x_2,x_n)\\
 d(x_n,x_1) &amp; d(x_n,x_2) &amp; \dots &amp; d(x_n,x_n)
 \end{pmatrix}
 \end{split}\]</div>
-<p>You will implement the distance matrix calculation in the assignment.
-There exists an efficient way to calculate this matrix using Numpy
-broadcasting. To do this, we need to transform our original data matrix
-<span class="math notranslate nohighlight">\(X\)</span> into new 3D arrays that repeat X along a given dimension. The
-purpose is to obtain 3D array with all elements of the form
-<span class="math notranslate nohighlight">\(x_{ik} - x_{jk}\)</span> indexed as <span class="math notranslate nohighlight">\(ijk\)</span>. If you are unfamiliar with
-broadcasting operations, you may wish to implement this as a nested for
-loop, at the cost of being slower.</p>
-<p>There are two variants of this algorithm, the K$^th^$NN and the KNN
-algorithm. The K$^th^$NN algorithm finds the distance to the kth
-neighbor, while the KNN algorithm uses the average distance from the
-first k neighbors. This distances are called scores. For both algorithm
-we need to find the scores, then sort according to those scores. The
-larger the score, the more likely a point is to be an outlier. You’ll
-be ask to implement this functionality in the <code class="docutils literal notranslate"><span class="pre">scores_kthnn</span></code> and
-<code class="docutils literal notranslate"><span class="pre">scores_knn</span></code> functions in the assignment.</p>
-<p>The choice of the parameter <span class="math notranslate nohighlight">\(k\)</span> is of course important for the results.
-If it is chosen too low, the density estimation for the records might be
-not reliable. On the other hand, if it is too large, density estimation
-may be too coarse. As a rule of thumb, k should be in the range 10 &lt; k
-&lt; 50.</p>
-<p>Testing KNN in the wine dataset should output the following result,
-where the circle radius is proportional to the scores of each point:</p>
+<p>You will implement the distance matrix calculation in the assignment. There exists an efficient way to calculate this matrix using Numpy broadcasting. To do this, we need to transform our original data matrix <span class="math notranslate nohighlight">\(X\)</span> into new 3D arrays that repeat X along a given dimension. The purpose is to obtain 3D array with all elements of the form <span class="math notranslate nohighlight">\(x_{ik} - x_{jk}\)</span> indexed as <span class="math notranslate nohighlight">\(ijk\)</span>. If you are unfamiliar with broadcasting operations, you may wish to implement this as a nested for loop, at the cost of being slower.</p>
+<p>There are two variants of this algorithm, the K$^th^$NN and the KNN algorithm. The K$^th^$NN algorithm finds the distance to the kth neighbor, while the KNN algorithm uses the average distance from the first k neighbors. This distances are called scores. For both algorithm we need to find the scores, then sort according to those scores. The larger the score, the more likely a point is to be an outlier. You’ll be ask to implement this functionality in the <code class="docutils literal notranslate"><span class="pre">scores_kthnn</span></code> and <code class="docutils literal notranslate"><span class="pre">scores_knn</span></code> functions in the assignment.</p>
+<p>The choice of the parameter <span class="math notranslate nohighlight">\(k\)</span> is of course important for the results. If it is chosen too low, the density estimation for the records might be not reliable. On the other hand, if it is too large, density estimation may be too coarse. As a rule of thumb, k should be in the range 10 &lt; k &lt; 50.</p>
+<p>Testing KNN in the wine dataset should output the following result, where the circle radius is proportional to the scores of each point:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize the data matrix, this step is important</span>
 <span class="c1"># since the scale of the two columns differs significantly</span>
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
@@ -754,57 +638,33 @@ where the circle radius is proportional to the scores of each point:</p>
 </pre></div>
 </div>
 </div>
+</div>
 <div class="section" id="lof">
 <h2>LOF<a class="headerlink" href="#lof" title="Permalink to this headline">¶</a></h2>
-<p>The local outlier factor <span id="id3">[<a class="reference internal" href="#id24"><span>3</span></a>,<a class="reference internal" href="#id23"><span>4</span></a>]</span> is the most
-well-known local anomaly detection algorithm and also introduced the
-idea of local anomalies first. To calculate the LOF score, three steps
-have to be computed:</p>
+<p>The local outlier factor <span id="id4">[<a class="reference internal" href="#id25"><span>4</span></a>,<a class="reference internal" href="#id24"><span>5</span></a>]</span> is the most well-known local anomaly detection algorithm and also introduced the idea of local anomalies first. To calculate the LOF score, three steps have to be computed:</p>
 <ol>
-<li><p>The k-nearest-neighbors have to be found for each record x. In case
-of distance tie of the kth neighbor, more than k neighbors are used.</p></li>
-<li><p>Using these k-nearest-neighbors <span class="math notranslate nohighlight">\(N_k\)</span>, the local density for a
-record is estimated by computing the local reachability density
-(LRD):</p>
+<li><p>The k-nearest-neighbors have to be found for each record x. In case of distance tie of the kth neighbor, more than k neighbors are used.</p></li>
+<li><p>Using these k-nearest-neighbors <span class="math notranslate nohighlight">\(N_k\)</span>, the local density for a record is estimated by computing the local reachability density (LRD):</p>
 <div class="math notranslate nohighlight">
 \[
       LRD_k(x) = 1/\left(  \frac{\sum\limits_{o\in N_k(x)} d_k(x,o)}{\left|N_k(x)\right|} \right)
       \]</div>
-<p>whereas dk(·) is the reachability distance. Except for some very
-rare situations in highly dense clusters, this is the Euclidean
-distance.</p>
+<p>whereas dk(·) is the reachability distance. Except for some very rare situations in highly dense clusters, this is the Euclidean distance.</p>
 </li>
-<li><p>Finally, the LOF score is computed by comparing the LRD of a record
-with the LRDs of its k neighbors:</p>
+<li><p>Finally, the LOF score is computed by comparing the LRD of a record with the LRDs of its k neighbors:</p>
 <div class="math notranslate nohighlight">
 \[
       LOF(x) = \frac{\sum\limits_{o\in N_k(x)}\frac{LRD_k(o)}{LRD_k(x)}}{\left|N_k(x)\right|}
       \]</div>
 </li>
 </ol>
-<p>The LOF score is thus basically a ratio of local densities. This results
-in the nice property of LOF, that normal instances, which densities are
-as big as the densities of their neighbors, get a score of about 1.0.
-Anomalies, which have a low local density, will result in larger scores.
-At this point it is also clear why this algorithm is local: It only
-relies on its direct neighborhood and the score is a ratio mainly based
-on the k neighbors only. Of course, global anomalies can also be
-detected since they also have a low LRD when comparing with their
-neighbors. It is important to note that in anomaly detection tasks,
-where local anomalies are not of interest, this algorithm will generate
-a lot of false alarms.</p>
+<p>The LOF score is thus basically a ratio of local densities. This results in the nice property of LOF, that normal instances, which densities are as big as the densities of their neighbors, get a score of about 1.0. Anomalies, which have a low local density, will result in larger scores. At this point it is also clear why this algorithm is local: It only relies on its direct neighborhood and the score is a ratio mainly based on the k neighbors only. Of course, global anomalies can also be detected since they also have a low LRD when comparing with their neighbors. It is important to note that in anomaly detection tasks, where local anomalies are not of interest, this algorithm will generate a lot of false alarms.</p>
 <p>The reachability distance is defined as:</p>
 <div class="math notranslate nohighlight">
 \[
 d_k(x, o) = \max\left( k-distance(o), d(x,o)  \right)
 \]</div>
-<p>In words, the reachability distance of an object <span class="math notranslate nohighlight">\(x\)</span> from <span class="math notranslate nohighlight">\(o\)</span> is the
-true distance of the two objects, but at least the k-distance of <span class="math notranslate nohighlight">\(o\)</span>.
-Objects that belong to the k nearest neighbors of <span class="math notranslate nohighlight">\(o\)</span> (the “core” of
-<span class="math notranslate nohighlight">\(o\)</span>) are considered to be equally distant, i.e., equally reachable from
-<span class="math notranslate nohighlight">\(o\)</span>. The reason for this distance is to get more stable results. Note
-that this is not a distance in the mathematical definition, since it is
-not symmetric.</p>
+<p>In words, the reachability distance of an object <span class="math notranslate nohighlight">\(x\)</span> from <span class="math notranslate nohighlight">\(o\)</span> is the true distance of the two objects, but at least the k-distance of <span class="math notranslate nohighlight">\(o\)</span>. Objects that belong to the k nearest neighbors of <span class="math notranslate nohighlight">\(o\)</span> (the “core” of <span class="math notranslate nohighlight">\(o\)</span>) are considered to be equally distant, i.e., equally reachable from <span class="math notranslate nohighlight">\(o\)</span>. The reason for this distance is to get more stable results. Note that this is not a distance in the mathematical definition, since it is not symmetric.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lof</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
     <span class="c1"># Find the distance matrix</span>
     <span class="c1">### BEGIN SOLUTION</span>
@@ -871,47 +731,15 @@ not symmetric.</p>
 </div>
 <div class="section" id="angle-based-outlier-detection-abod">
 <h2>Angle based outlier detection (ABOD)<a class="headerlink" href="#angle-based-outlier-detection-abod" title="Permalink to this headline">¶</a></h2>
-<p>The main idea behind ABOD <span id="id4">[<a class="reference internal" href="#id21"><span>5</span></a>]</span> is that if <span class="math notranslate nohighlight">\(x\)</span> is an
-outlier, the variance of angles between pairs of the remaining objects
-becomes small:</p>
+<p>The main idea behind ABOD <span id="id5">[<a class="reference internal" href="#id22"><span>6</span></a>]</span> is that if <span class="math notranslate nohighlight">\(x\)</span> is an outlier, the variance of angles between pairs of the remaining objects becomes small:</p>
 <p><img alt="" src="_images/abod.png" /></p>
-<p>For a point within a cluster, the angles between difference vectors to
-pairs of other points differ widely. The variance of the angles will
-become smaller for points at the border of a cluster. However, even here
-the variance is still relatively high compared to the variance of angles
-for real outliers. Here, the angles to most pairs of points will be
-small since most points are clustered in some directions.</p>
-<p>As a result of these considerations, an angle-based outlier factor
-(ABOF) can describe the divergence in directions of objects relatively
-to one another. If the spectrum of observed angles for a point is broad,
-the point will be surrounded by other points in all possible directions
-meaning the point is positioned inside a cluster. If the spectrum of
-observed angles for a point is rather small, other points will be
-positioned only in certain directions. This means, the point is
-positioned outside of some sets of points that are grouped together.
-Thus, rather small angles for a point that are rather similar to one
-another imply that such point is an outlier.</p>
-<p>ABOD has been proposed as able to perform outlier detection more
-reliably in high dimensional data sets than distance based methods.</p>
-<p>A problem of the basic approach ABOD is obvious: since for each point
-all pairs of points must be considered, the time-complexity is in
-O(<span class="math notranslate nohighlight">\(n^3\)</span>), the original ABOD paper proposes two approximations to address
-this problem: FastABOD and LB-ABOD. These will not be discussed here.</p>
+<p>For a point within a cluster, the angles between difference vectors to pairs of other points differ widely. The variance of the angles will become smaller for points at the border of a cluster. However, even here the variance is still relatively high compared to the variance of angles for real outliers. Here, the angles to most pairs of points will be small since most points are clustered in some directions.</p>
+<p>As a result of these considerations, an angle-based outlier factor (ABOF) can describe the divergence in directions of objects relatively to one another. If the spectrum of observed angles for a point is broad, the point will be surrounded by other points in all possible directions meaning the point is positioned inside a cluster. If the spectrum of observed angles for a point is rather small, other points will be positioned only in certain directions. This means, the point is positioned outside of some sets of points that are grouped together. Thus, rather small angles for a point that are rather similar to one another imply that such point is an outlier.</p>
+<p>ABOD has been proposed as able to perform outlier detection more reliably in high dimensional data sets than distance based methods.</p>
+<p>A problem of the basic approach ABOD is obvious: since for each point all pairs of points must be considered, the time-complexity is in O(<span class="math notranslate nohighlight">\(n^3\)</span>), the original ABOD paper proposes two approximations to address this problem: FastABOD and LB-ABOD. These will not be discussed here.</p>
 <div class="section" id="the-angled-based-outlier-factor-abof">
 <h3>The Angled Based Outlier Factor (ABOF)<a class="headerlink" href="#the-angled-based-outlier-factor-abof" title="Permalink to this headline">¶</a></h3>
-<p>As an approach to assign the ABOF value to any object in the database
-<span class="math notranslate nohighlight">\(\mathcal{D}\)</span>, we compute the scalar product of the difference vectors
-of any triple of points (i.e. a query point <span class="math notranslate nohighlight">\(\vec{A} \in \mathcal{D}\)</span>
-and all pairs <span class="math notranslate nohighlight">\((\vec{B},\vec{C})\)</span> of all remaining points in
-<span class="math notranslate nohighlight">\(\mathcal{D} \backslash \{\vec{A}\})\)</span> normalized by the quadratic
-product of the length of the difference vectors, i.e. the angle is
-weighted less if the corresponding points are far from the query point.
-By this weighting factor, the distance influences the value after all,
-but only to a minor part. Nevertheless, this weighting of the variance
-is important since the angle to a pair of points varies naturally
-stronger for a bigger distance. The variance of this value over all
-pairs for the query point <span class="math notranslate nohighlight">\(\vec{A}\)</span> constitutes the angle-based outlier
-factor (ABOF) of <span class="math notranslate nohighlight">\(\vec{A}\)</span>.</p>
+<p>As an approach to assign the ABOF value to any object in the database <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>, we compute the scalar product of the difference vectors of any triple of points (i.e. a query point <span class="math notranslate nohighlight">\(\vec{A} \in \mathcal{D}\)</span> and all pairs <span class="math notranslate nohighlight">\((\vec{B},\vec{C})\)</span> of all remaining points in <span class="math notranslate nohighlight">\(\mathcal{D} \backslash \{\vec{A}\})\)</span> normalized by the quadratic product of the length of the difference vectors, i.e. the angle is weighted less if the corresponding points are far from the query point. By this weighting factor, the distance influences the value after all, but only to a minor part. Nevertheless, this weighting of the variance is important since the angle to a pair of points varies naturally stronger for a bigger distance. The variance of this value over all pairs for the query point <span class="math notranslate nohighlight">\(\vec{A}\)</span> constitutes the angle-based outlier factor (ABOF) of <span class="math notranslate nohighlight">\(\vec{A}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
 ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overline{AB}, \overline{AC}\right&gt;}
@@ -929,12 +757,7 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
 }
 {\sum_B\sum_C\frac{1}{\left\Vert \overline{AB}  \right\Vert \cdot \left\Vert \overline{AC}  \right\Vert}}\right)^2
 \end{split}\]</div>
-<p><strong>NOTE</strong>: This way of weighting the cosine similar is weird in my
-opinion. In fact, the pyod package implements ABOD without these
-weights. I’m not sure which way is the correct one, or even is one can
-say that either can be wrong, since the constructions of the algorithm
-is not based in any formalism. I have yet yo find a discussion about the
-issue.</p>
+<p><strong>NOTE</strong>: This way of weighting the cosine similar is weird in my opinion. In fact, the pyod package implements ABOD without these weights. I’m not sure which way is the correct one, or even is one can say that either can be wrong, since the constructions of the algorithm is not based in any formalism. I have yet yo find a discussion about the issue.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">abof</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns abof score for X[a] &quot;&quot;&quot;</span>
 
@@ -1012,74 +835,26 @@ issue.</p>
 </div>
 <div class="section" id="iforest">
 <h2>iForest<a class="headerlink" href="#iforest" title="Permalink to this headline">¶</a></h2>
-<p>One efficient way of performing outlier detection in high-dimensional
-datasets is to use random forests. The Isolation Forest algorithm
-<span id="id5">[<a class="reference internal" href="#id20"><span>6</span></a>,<a class="reference internal" href="#id22"><span>7</span></a>]</span> ‘isolates’ observations by
-randomly selecting a feature and then randomly selecting a split value
-between the maximum and minimum values of the selected feature.</p>
-<p>Since recursive partitioning can be represented by a tree structure, the
-number of splittings required to isolate a sample is equivalent to the
-path length from the root node to the terminating node.</p>
-<p>This path length, averaged over a forest of such random trees, is a
-measure of normality and our decision function.</p>
-<p>Random partitioning produces noticeably shorter paths for anomalies.
-Hence, when a forest of random trees collectively produce shorter path
-lengths for particular samples, they are highly likely to be anomalies.</p>
-<p>An example of random partitioning in a 2D dataset of normally
-distributed points is given below for a non-anomalous point:</p>
+<p>One efficient way of performing outlier detection in high-dimensional datasets is to use random forests. The Isolation Forest algorithm <span id="id6">[<a class="reference internal" href="#id21"><span>7</span></a>,<a class="reference internal" href="#id23"><span>8</span></a>]</span> ‘isolates’ observations by randomly selecting a feature and then randomly selecting a split value between the maximum and minimum values of the selected feature.</p>
+<p>Since recursive partitioning can be represented by a tree structure, the number of splittings required to isolate a sample is equivalent to the path length from the root node to the terminating node.</p>
+<p>This path length, averaged over a forest of such random trees, is a measure of normality and our decision function.</p>
+<p>Random partitioning produces noticeably shorter paths for anomalies. Hence, when a forest of random trees collectively produce shorter path lengths for particular samples, they are highly likely to be anomalies.</p>
+<p>An example of random partitioning in a 2D dataset of normally distributed points is given below for a non-anomalous point:</p>
 <p><img alt="" src="_images/Isolating_a_Non-Anomalous_Point.png" /></p>
-<p>Another example for a point that’s more likely to be an anomaly is now
-shown:</p>
+<p>Another example for a point that’s more likely to be an anomaly is now shown:</p>
 <p><img alt="" src="_images/Isolating_an_Anomalous_Point.png" /></p>
-<p>It is apparent from the pictures how anomalies require fewer random
-partitions to be isolated, compared to normal points.</p>
-<p>From a mathematical point of view, recursive partitioning can be
-represented by a tree structure named Isolation Tree, while the number
-of partitions required to isolate a point can be interpreted as the
-length of the path, within the tree, to reach a terminating node
-starting from the root.</p>
+<p>It is apparent from the pictures how anomalies require fewer random partitions to be isolated, compared to normal points.</p>
+<p>From a mathematical point of view, recursive partitioning can be represented by a tree structure named Isolation Tree, while the number of partitions required to isolate a point can be interpreted as the length of the path, within the tree, to reach a terminating node starting from the root.</p>
 <div class="section" id="the-itree">
 <h3>The iTree<a class="headerlink" href="#the-itree" title="Permalink to this headline">¶</a></h3>
-<p>More formally, let <span class="math notranslate nohighlight">\(X = \{ x_1, \ldots, x_n \}\)</span> be a set of
-d-dimensional points and <span class="math notranslate nohighlight">\(X' \subset X\)</span> a subset of <span class="math notranslate nohighlight">\(X\)</span>. An Isolation
-Tree (iTree) is defined as a data structure with the following
-properties:</p>
+<p>More formally, let <span class="math notranslate nohighlight">\(X = \{ x_1, \ldots, x_n \}\)</span> be a set of d-dimensional points and <span class="math notranslate nohighlight">\(X' \subset X\)</span> a subset of <span class="math notranslate nohighlight">\(X\)</span>. An Isolation Tree (iTree) is defined as a data structure with the following properties:</p>
 <ol class="simple">
-<li><p>for each node <span class="math notranslate nohighlight">\(T\)</span> in the Tree, <span class="math notranslate nohighlight">\(T\)</span> is either an external-node with
-no child, or an internal-node with one “test” and exactly two
-daughter nodes (<span class="math notranslate nohighlight">\(T_l\)</span>, <span class="math notranslate nohighlight">\(T_r\)</span>)</p></li>
-<li><p>a test at node <span class="math notranslate nohighlight">\(T\)</span> consists of an attribute <span class="math notranslate nohighlight">\(q\)</span> and a split value
-<span class="math notranslate nohighlight">\(p\)</span> such that the test <span class="math notranslate nohighlight">\(q &lt; p\)</span> determines the traversal of a data
-point to either <span class="math notranslate nohighlight">\(T_l\)</span> or <span class="math notranslate nohighlight">\(T_r\)</span>.</p></li>
+<li><p>for each node <span class="math notranslate nohighlight">\(T\)</span> in the Tree, <span class="math notranslate nohighlight">\(T\)</span> is either an external-node with no child, or an internal-node with one “test” and exactly two daughter nodes (<span class="math notranslate nohighlight">\(T_l\)</span>, <span class="math notranslate nohighlight">\(T_r\)</span>)</p></li>
+<li><p>a test at node <span class="math notranslate nohighlight">\(T\)</span> consists of an attribute <span class="math notranslate nohighlight">\(q\)</span> and a split value <span class="math notranslate nohighlight">\(p\)</span> such that the test <span class="math notranslate nohighlight">\(q &lt; p\)</span> determines the traversal of a data point to either <span class="math notranslate nohighlight">\(T_l\)</span> or <span class="math notranslate nohighlight">\(T_r\)</span>.</p></li>
 </ol>
-<p>In order to build an iTree, the algorithm recursively divides <span class="math notranslate nohighlight">\(X'\)</span> by
-randomly selecting an attribute <span class="math notranslate nohighlight">\(q\)</span> and a split value <span class="math notranslate nohighlight">\(p\)</span>, until either
-(i) the node has only one instance or (ii) all data at the node have the
-same values.</p>
-<p>When the iTree is fully grown, each point in <span class="math notranslate nohighlight">\(X\)</span> is isolated at one of
-the external nodes. Intuitively, the anomalous points are those (easier
-to isolate, hence) with the smaller path length in the tree, where the
-path length <span class="math notranslate nohighlight">\(h(x_i)\)</span> of point <span class="math notranslate nohighlight">\(x_{i}\in X\)</span> is defined as the number of
-edges <span class="math notranslate nohighlight">\(x_i\)</span> traverses from the root node to get to an external node.</p>
-<p>Since iForest does not need to isolate all of normal instances – the
-majority of the training sample, iForest is able to work well with a
-partial model without isolating all normal points and builds models
-using a small sample size. Swamping refers to wrongly identifying normal
-instances as anomalies. When normal instances are too close to
-anomalies, the number of partitions required to separate anomalies
-increases – which makes it harder to distinguish anomalies from normal
-in- stances. Masking is the existence of too many anomalies concealing
-their own presence. When an anomaly cluster is large and dense, it also
-increases the number of partitions to isolate each anomaly. Under these
-circumstances, evaluations using these trees have longer path lengths
-making anomalies more difficult to detect. Note that both swamping and
-masking are a result of too many data for the purpose of anomaly
-detection. The unique characteristic of isolation trees allows iForest
-to build a partial model by sub-sampling which incidentally alleviates
-the effects of swamping and masking. It is because: 1) sub-sampling con-
-trols data size, which helps iForest better isolate examples of
-anomalies and 2) each isolation tree can be specialised, as each
-sub-sample includes different set of anomalies or even no anomaly.</p>
+<p>In order to build an iTree, the algorithm recursively divides <span class="math notranslate nohighlight">\(X'\)</span> by randomly selecting an attribute <span class="math notranslate nohighlight">\(q\)</span> and a split value <span class="math notranslate nohighlight">\(p\)</span>, until either (i) the node has only one instance or (ii) all data at the node have the same values.</p>
+<p>When the iTree is fully grown, each point in <span class="math notranslate nohighlight">\(X\)</span> is isolated at one of the external nodes. Intuitively, the anomalous points are those (easier to isolate, hence) with the smaller path length in the tree, where the path length <span class="math notranslate nohighlight">\(h(x_i)\)</span> of point <span class="math notranslate nohighlight">\(x_{i}\in X\)</span> is defined as the number of edges <span class="math notranslate nohighlight">\(x_i\)</span> traverses from the root node to get to an external node.</p>
+<p>Since iForest does not need to isolate all of normal instances – the majority of the training sample, iForest is able to work well with a partial model without isolating all normal points and builds models using a small sample size. Swamping refers to wrongly identifying normal instances as anomalies. When normal instances are too close to anomalies, the number of partitions required to separate anomalies increases – which makes it harder to distinguish anomalies from normal in- stances. Masking is the existence of too many anomalies concealing their own presence. When an anomaly cluster is large and dense, it also increases the number of partitions to isolate each anomaly. Under these circumstances, evaluations using these trees have longer path lengths making anomalies more difficult to detect. Note that both swamping and masking are a result of too many data for the purpose of anomaly detection. The unique characteristic of isolation trees allows iForest to build a partial model by sub-sampling which incidentally alleviates the effects of swamping and masking. It is because: 1) sub-sampling con- trols data size, which helps iForest better isolate examples of anomalies and 2) each isolation tree can be specialised, as each sub-sample includes different set of anomalies or even no anomaly.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rn</span>
 
 <span class="k">class</span> <span class="nc">Node</span><span class="p">():</span>
@@ -1146,8 +921,7 @@ sub-sample includes different set of anomalies or even no anomaly.</p>
         <span class="k">return</span> <span class="n">node</span>
 </pre></div>
 </div>
-<p>Lets build a single iTree and visualize the partition obtained in our
-sample data set:</p>
+<p>Lets build a single iTree and visualize the partition obtained in our sample data set:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_tree</span> <span class="o">=</span> <span class="n">iTree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">get_splits</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
@@ -1198,25 +972,15 @@ sample data set:</p>
 </div>
 <div class="section" id="anomaly-score">
 <h3>Anomaly score<a class="headerlink" href="#anomaly-score" title="Permalink to this headline">¶</a></h3>
-<p>Since iTrees have an equivalent structure to Binary Search Tree or BST,
-the estimation of average <span class="math notranslate nohighlight">\(h(x)\)</span> for external node terminations is the
-same as the unsuccessful search in BST, this is: $<span class="math notranslate nohighlight">\(
+<p>Since iTrees have an equivalent structure to Binary Search Tree or BST, the estimation of average <span class="math notranslate nohighlight">\(h(x)\)</span> for external node terminations is the same as the unsuccessful search in BST, this is: $<span class="math notranslate nohighlight">\(
 c(n) = 2H(n-1)-2(n-1)/n,
-\)</span><span class="math notranslate nohighlight">\( where \)</span>H(i)<span class="math notranslate nohighlight">\( is the harmonic number and it can be estimated by
-\)</span>\ln(i) + 0.5772156649<span class="math notranslate nohighlight">\( . As \)</span>c(n)<span class="math notranslate nohighlight">\( is the average of \)</span>h(x)<span class="math notranslate nohighlight">\( given \)</span>n<span class="math notranslate nohighlight">\(,
-we use it to normalize \)</span>h(x)<span class="math notranslate nohighlight">\(. The anomaly score \)</span>s<span class="math notranslate nohighlight">\( of an instance \)</span>x<span class="math notranslate nohighlight">\(
-is defined as: \)</span><span class="math notranslate nohighlight">\(
+\)</span><span class="math notranslate nohighlight">\( where \)</span>H(i)<span class="math notranslate nohighlight">\( is the harmonic number and it can be estimated by \)</span>\ln(i) + 0.5772156649<span class="math notranslate nohighlight">\( . As \)</span>c(n)<span class="math notranslate nohighlight">\( is the average of \)</span>h(x)<span class="math notranslate nohighlight">\( given \)</span>n<span class="math notranslate nohighlight">\(, we use it to normalize \)</span>h(x)<span class="math notranslate nohighlight">\(. The anomaly score \)</span>s<span class="math notranslate nohighlight">\( of an instance \)</span>x<span class="math notranslate nohighlight">\( is defined as: \)</span><span class="math notranslate nohighlight">\(
 s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
-\)</span><span class="math notranslate nohighlight">\( where \)</span>E(h(x))<span class="math notranslate nohighlight">\( is the average of \)</span>h(x)$ from a collection of
-isolation trees. Using the anomaly score s, we are able to make the
-following assessment:</p>
+\)</span><span class="math notranslate nohighlight">\( where \)</span>E(h(x))<span class="math notranslate nohighlight">\( is the average of \)</span>h(x)$ from a collection of isolation trees. Using the anomaly score s, we are able to make the following assessment:</p>
 <ul class="simple">
-<li><p>(a) if instances return s very close to 1, then they are
-definitely anomalies,</p></li>
-<li><p>(b) if instances have s much smaller than 0.5, then they are quite
-safe to be regarded as normal instances, and</p></li>
-<li><p>(c) if all the instances return <span class="math notranslate nohighlight">\(s \approx 0.5\)</span>, then the entire
-sample does not really have any distinct anomaly.</p></li>
+<li><p>(a) if instances return s very close to 1, then they are definitely anomalies,</p></li>
+<li><p>(b) if instances have s much smaller than 0.5, then they are quite safe to be regarded as normal instances, and</p></li>
+<li><p>(c) if all the instances return <span class="math notranslate nohighlight">\(s \approx 0.5\)</span>, then the entire sample does not really have any distinct anomaly.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c_factor</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="k">return</span> <span class="mf">2.0</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5772156649</span><span class="p">)</span> <span class="o">-</span> <span class="mf">2.0</span><span class="o">*</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">n</span>
@@ -1225,15 +989,7 @@ sample does not really have any distinct anomaly.</p></li>
 </div>
 <div class="section" id="training-stage">
 <h3>Training stage<a class="headerlink" href="#training-stage" title="Permalink to this headline">¶</a></h3>
-<p>In the training stage, iTrees are constructed by recursively
-partitioning the given training set until instances are isolated or a
-specific tree height is reached of which results a partial model. Note
-that the tree height limit l is automatically set by the sub-sampling
-size <span class="math notranslate nohighlight">\(\psi\)</span>: <span class="math notranslate nohighlight">\(l = ceiling(\log_2 \psi)\)</span>, which is approximately the
-average tree height. The rationale of growing trees up to the average
-tree height is that we are only interested in data points that have
-shorter-than- average path lengths, as those points are more likely to
-be anomalies.</p>
+<p>In the training stage, iTrees are constructed by recursively partitioning the given training set until instances are isolated or a specific tree height is reached of which results a partial model. Note that the tree height limit l is automatically set by the sub-sampling size <span class="math notranslate nohighlight">\(\psi\)</span>: <span class="math notranslate nohighlight">\(l = ceiling(\log_2 \psi)\)</span>, which is approximately the average tree height. The rationale of growing trees up to the average tree height is that we are only interested in data points that have shorter-than- average path lengths, as those points are more likely to be anomalies.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">iForest</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_trees</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">sample_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Trains an iForest as an ensemble of iTrees.</span>
 <span class="sd">    Inputs:</span>
@@ -1267,16 +1023,7 @@ be anomalies.</p>
 </div>
 <div class="section" id="evaluation-stage">
 <h3>Evaluation stage<a class="headerlink" href="#evaluation-stage" title="Permalink to this headline">¶</a></h3>
-<p>In the evaluating stage, an anomaly score <span class="math notranslate nohighlight">\(s\)</span> is derived from the
-expected path length <span class="math notranslate nohighlight">\(E(h(x))\)</span> for each test instance. <span class="math notranslate nohighlight">\(E(h(x))\)</span> are
-derived by passing instances through each iTree in an iForest. Using
-<code class="docutils literal notranslate"><span class="pre">PathLength</span></code> function, a single path length <span class="math notranslate nohighlight">\(h(x)\)</span> is derived by
-counting the number of edges e from the root node to a terminating node
-as instance <span class="math notranslate nohighlight">\(x\)</span> traverses through an iTree. When <span class="math notranslate nohighlight">\(x\)</span> is terminated at an
-external node, where <span class="math notranslate nohighlight">\(Size &gt; 1\)</span>, the return value is <span class="math notranslate nohighlight">\(e\)</span> plus an
-adjustment <span class="math notranslate nohighlight">\(c(Size)\)</span>. The adjustment accounts for an unbuilt subtree
-beyond the tree height limit. When <span class="math notranslate nohighlight">\(h(x)\)</span> is obtained for each tree of
-the ensemble, an anomaly score is produced by computing <span class="math notranslate nohighlight">\(s(x, \psi)\)</span>.</p>
+<p>In the evaluating stage, an anomaly score <span class="math notranslate nohighlight">\(s\)</span> is derived from the expected path length <span class="math notranslate nohighlight">\(E(h(x))\)</span> for each test instance. <span class="math notranslate nohighlight">\(E(h(x))\)</span> are derived by passing instances through each iTree in an iForest. Using <code class="docutils literal notranslate"><span class="pre">PathLength</span></code> function, a single path length <span class="math notranslate nohighlight">\(h(x)\)</span> is derived by counting the number of edges e from the root node to a terminating node as instance <span class="math notranslate nohighlight">\(x\)</span> traverses through an iTree. When <span class="math notranslate nohighlight">\(x\)</span> is terminated at an external node, where <span class="math notranslate nohighlight">\(Size &gt; 1\)</span>, the return value is <span class="math notranslate nohighlight">\(e\)</span> plus an adjustment <span class="math notranslate nohighlight">\(c(Size)\)</span>. The adjustment accounts for an unbuilt subtree beyond the tree height limit. When <span class="math notranslate nohighlight">\(h(x)\)</span> is obtained for each tree of the ensemble, an anomaly score is produced by computing <span class="math notranslate nohighlight">\(s(x, \psi)\)</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">path_length</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">ntype</span> <span class="o">==</span> <span class="s1">&#39;exNode&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
@@ -1317,26 +1064,29 @@ the ensemble, an anomaly score is produced by computing <span class="math notran
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id6"><dl class="citation">
-<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id7"><dl class="citation">
+<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Markus Goldstein and Seiichi Uchida. A comparative evaluation of unsupervised anomaly detection algorithms for multivariate data. <em>PloS one</em>, 11(4):e0152173, 2016.</p>
 </dd>
-<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
 <dd><p>Mia Hubert, Michiel Debruyne, and Peter J Rousseeuw. Minimum covariance determinant and extensions. <em>Wiley Interdisciplinary Reviews: Computational Statistics</em>, 10(3):e1421, 2018.</p>
 </dd>
-<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>Edwin M Knorr and Raymond T Ng. Algorithms for mining distance-based outliers in large datasets. In <em>VLDB</em>, volume 98, 392–403. Citeseer, 1998.</p>
+</dd>
+<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
 <dd><p>Markus M Breunig, Hans-Peter Kriegel, Raymond T Ng, and Jörg Sander. Lof: identifying density-based local outliers. In <em>Proceedings of the 2000 ACM SIGMOD international conference on Management of data</em>, 93–104. 2000.</p>
 </dd>
-<dt class="label" id="id23"><span class="brackets"><a class="fn-backref" href="#id3">4</a></span></dt>
+<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id4">5</a></span></dt>
 <dd><p>Wikipedia contributors. Local outlier factor — Wikipedia, the free encyclopedia. 2020. [Online; accessed 24-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Local_outlier_factor&amp;oldid=992466888">https://en.wikipedia.org/w/index.php?title=Local_outlier_factor&amp;oldid=992466888</a>.</p>
 </dd>
-<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id4">5</a></span></dt>
+<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id5">6</a></span></dt>
 <dd><p>Hans-Peter Kriegel, Matthias Schubert, and Arthur Zimek. Angle-based outlier detection in high-dimensional data. In <em>Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining</em>, 444–452. 2008.</p>
 </dd>
-<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id5">6</a></span></dt>
+<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id6">7</a></span></dt>
 <dd><p>Fei Tony Liu, Kai Ming Ting, and Zhi-Hua Zhou. Isolation forest. In <em>2008 eighth ieee international conference on data mining</em>, 413–422. IEEE, 2008.</p>
 </dd>
-<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id5">7</a></span></dt>
+<dt class="label" id="id23"><span class="brackets"><a class="fn-backref" href="#id6">8</a></span></dt>
 <dd><p>Wikipedia contributors. Isolation forest — Wikipedia, the free encyclopedia. 2021. [Online; accessed 24-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Isolation_forest&amp;oldid=1005785930">https://en.wikipedia.org/w/index.php?title=Isolation_forest&amp;oldid=1005785930</a>.</p>
 </dd>
 </dl>
