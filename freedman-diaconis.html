@@ -230,40 +230,25 @@
                 
   <div class="section" id="freedman-diaconis-rule">
 <h1>Freedman-Diaconis Rule<a class="headerlink" href="#freedman-diaconis-rule" title="Permalink to this headline">¶</a></h1>
-<p>There is a rule of thumb for determining the optimal number of bins in a
-histogram. The Freedman-Diaconis rule states that the optimal bin width
-can be estimated as</p>
+<p>There is a rule of thumb for determining the optimal number of bins in a histogram. The Freedman-Diaconis rule states that the optimal bin width can be estimated as</p>
 <div class="math notranslate nohighlight">
 \[
 h = \frac{2\ IQR}{n^{1/3}}
 \]</div>
-<p>The asymptotic (large <span class="math notranslate nohighlight">\(n\)</span>) optimal bin width was derived by Scott
-<span id="id1">[<a class="reference internal" href="#id10"><span>1</span></a>]</span>, yet, its value depends on the derivative of the
-theoretical distribution, often not known. Freedman and Diaconis claimed
-<span id="id2">[<a class="reference internal" href="#id11"><span>2</span></a>]</span> the bin width can be robustly estimated by the
-formula above, which works well most of the time, under the requirements
-that the true distribution has squared integrable and continuous first
-and second derivatives.</p>
-<p>It is worth it to provide a rough derivation of the FD rule, as it is an
-nice exercise in the art of approximation.</p>
-<p>To find the optimal bin width, we minimize the Mean Integrated Squared
-Error (MISE),</p>
+<p>The asymptotic (large <span class="math notranslate nohighlight">\(n\)</span>) optimal bin width was derived by Scott <span id="id1">[<a class="reference internal" href="#id9"><span>1</span></a>,<span></span>]</span> yet, its value depends on the derivative of the theoretical distribution, often not known. Freedman and Diaconis claimed &#64;freedman1981histogram the bin width can be robustly estimated by the formula above, which works well most of the time, under the requirements that the true distribution has squared integrable and continuous first and second derivatives.</p>
+<p>It is worth it to provide a rough derivation of the FD rule, as it is an nice exercise in the art of approximation.</p>
+<p>To find the optimal bin width, we minimize the Mean Integrated Squared Error (MISE),</p>
 <div class="math notranslate nohighlight">
 \[
 MISE = E\left[ \int \left\{ H(x) - f(x)  \right\}^{2}\right],
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(f(x)\)</span> is the underlying probability density function and <span class="math notranslate nohighlight">\(H(x)\)</span>
-is the histogram function, which gives the height bin <span class="math notranslate nohighlight">\(j\)</span> containing
-<span class="math notranslate nohighlight">\(x\)</span>,</p>
+<p>where <span class="math notranslate nohighlight">\(f(x)\)</span> is the underlying probability density function and <span class="math notranslate nohighlight">\(H(x)\)</span> is the histogram function, which gives the height bin <span class="math notranslate nohighlight">\(j\)</span> containing <span class="math notranslate nohighlight">\(x\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[
 H(x) = \frac{N_{j}(x)}{N h}
 \]</div>
-<p>The MISE gives the expected area between the estimated density
-(histogram) and the true density (<span class="math notranslate nohighlight">\(f(x)\)</span>).</p>
-<p>Within each bin, the count number <span class="math notranslate nohighlight">\(N_j\)</span> is a binomial random variable
-with parameters <span class="math notranslate nohighlight">\(p=hf_j\)</span> and <span class="math notranslate nohighlight">\(n=N\)</span> (# of trials), where <span class="math notranslate nohighlight">\(p\)</span> is the
-probability of an observation lying in bin <span class="math notranslate nohighlight">\(j\)</span> and</p>
+<p>The MISE gives the expected area between the estimated density (histogram) and the true density (<span class="math notranslate nohighlight">\(f(x)\)</span>).</p>
+<p>Within each bin, the count number <span class="math notranslate nohighlight">\(N_j\)</span> is a binomial random variable with parameters <span class="math notranslate nohighlight">\(p=hf_j\)</span> and <span class="math notranslate nohighlight">\(n=N\)</span> (# of trials), where <span class="math notranslate nohighlight">\(p\)</span> is the probability of an observation lying in bin <span class="math notranslate nohighlight">\(j\)</span> and</p>
 <div class="math notranslate nohighlight">
 \[
 f_j = \frac{1}{h}\int_{\text{bin }j}f(u) du.
@@ -294,16 +279,8 @@ h = h\int f_j \rightarrow \int f_j = 1\)</span></p>
 \[
 MISE = \frac{1}{Nh} - \frac{1}{N}\int f_j^2(x)dx + \int (f_j(x) - f(x))^2 dx.
 \]</div>
-<p>The first term above refers to the sampling error made, and grows as
-<span class="math notranslate nohighlight">\(h\rightarrow 0\)</span> since bin counts stop reflecting the true density, some
-even being left empty. The last term refers to the bias from
-discretization, and goes to zero with <span class="math notranslate nohighlight">\(h\)</span>, as we show below. The mid
-term is proportional to <span class="math notranslate nohighlight">\(\sim \frac{1}{N}\)</span>, and vanishes in the
-asymptotic limit <span class="math notranslate nohighlight">\(N\rightarrow \infty\)</span>, which is the limit that
-interests us.</p>
-<p>To deal with third term in the MISE, we expand <span class="math notranslate nohighlight">\(f(u)\)</span> around <span class="math notranslate nohighlight">\(x\)</span>,
-keeping the linear terms, which amounts to discarding contributions of
-order at most <span class="math notranslate nohighlight">\(O(h^{2})\)</span></p>
+<p>The first term above refers to the sampling error made, and grows as <span class="math notranslate nohighlight">\(h\rightarrow 0\)</span> since bin counts stop reflecting the true density, some even being left empty. The last term refers to the bias from discretization, and goes to zero with <span class="math notranslate nohighlight">\(h\)</span>, as we show below. The mid term is proportional to <span class="math notranslate nohighlight">\(\sim \frac{1}{N}\)</span>, and vanishes in the asymptotic limit <span class="math notranslate nohighlight">\(N\rightarrow \infty\)</span>, which is the limit that interests us.</p>
+<p>To deal with third term in the MISE, we expand <span class="math notranslate nohighlight">\(f(u)\)</span> around <span class="math notranslate nohighlight">\(x\)</span>, keeping the linear terms, which amounts to discarding contributions of order at most <span class="math notranslate nohighlight">\(O(h^{2})\)</span></p>
 <div class="math notranslate nohighlight">
 \[
 f(u) \approx f(x) + f'(x)(u-x)
@@ -319,18 +296,14 @@ f_j \approx&amp; \frac{1}{h}\int_{\text{bin }j}\left( f(x) + f'(x)(u-x)  \right)
 =&amp; f(x) + \frac{f'(x)}{2h}\left[ h^2 - 2h(x-x_j) \right]\\
 =&amp; f(x) + \frac{hf'(x)}{2} - (x-x_j)f'(x),
 \end{align}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(x_{j}\)</span> is the lower limit of bin <span class="math notranslate nohighlight">\(j\)</span>. We can identify the bias of
-<span class="math notranslate nohighlight">\(E[H(x)]\)</span> as <span class="math notranslate nohighlight">\(\frac{hf'(x)}{2} - (x-x_j)f'(x)\)</span>.</p>
-<p>Plugging this expansion into the MISE, remebering the second term
-vanishes,</p>
+<p>where <span class="math notranslate nohighlight">\(x_{j}\)</span> is the lower limit of bin <span class="math notranslate nohighlight">\(j\)</span>. We can identify the bias of <span class="math notranslate nohighlight">\(E[H(x)]\)</span> as <span class="math notranslate nohighlight">\(\frac{hf'(x)}{2} - (x-x_j)f'(x)\)</span>.</p>
+<p>Plugging this expansion into the MISE, remebering the second term vanishes,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
 MISE \approx&amp; \frac{1}{Nh} + \int \left(\frac{hf'(x)}{2} - (x-x_j)f'(x)\right)^2 dx\\
 =&amp; \frac{1}{Nh} + \frac{h^2}{4}\int f'^2(x)dx + \int (x-x_j)^2f'^2(x) dx - h\int (x-x_j)f'^2(x) dx
 \end{align}\end{split}\]</div>
-<p>We can split the second a third integrals into the sum of integrals for
-each bin <span class="math notranslate nohighlight">\(j\)</span>, for which <span class="math notranslate nohighlight">\(x_j\)</span> are constants. With a change of variable,
-<span class="math notranslate nohighlight">\(y=x-x_j\)</span>, we have</p>
+<p>We can split the second a third integrals into the sum of integrals for each bin <span class="math notranslate nohighlight">\(j\)</span>, for which <span class="math notranslate nohighlight">\(x_j\)</span> are constants. With a change of variable, <span class="math notranslate nohighlight">\(y=x-x_j\)</span>, we have</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
 \int (x-x_j)^2f'^2(x) dx = \sum_j \int_0^h  y^2f'^2(y + x_j) dy\\
@@ -342,8 +315,7 @@ each bin <span class="math notranslate nohighlight">\(j\)</span>, for which <spa
 \sum_j \int_0^h  y^2(f'^2(x_j) +  O(h))dy = \sum_j \frac{h^{3}}{3} f'^2(x_j) + O(h^4) \\
 \sum_j \int_0^h y (f'^2(x_j) +  O(h))dy = \sum_j \frac{h^{2}}{2} f'^2(x_j) +  O(h^{3}).
 \end{align}\end{split}\]</div>
-<p>Dropping the higher order terms, we can approximate the sums by
-integrals, by identifying <span class="math notranslate nohighlight">\(h = \Delta x\)</span>,</p>
+<p>Dropping the higher order terms, we can approximate the sums by integrals, by identifying <span class="math notranslate nohighlight">\(h = \Delta x\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
 \sum_j \frac{h^{3}}{3} f'^2(x_j) \approx \frac{h^{2}}{3} \int  f'^2(x)dx  \\
@@ -355,8 +327,7 @@ integrals, by identifying <span class="math notranslate nohighlight">\(h = \Delt
 MISE \approx&amp; \frac{1}{Nh} + \left(\frac{h^2}{4} + \frac{h^2}{3} - \frac{h^2}{2}\right)\int f'^2(x)dx
 = \frac{1}{Nh} + \frac{h^2}{12}\int f'^2(x)dx.
 \end{align}\]</div>
-<p>And optmizing with respect to <span class="math notranslate nohighlight">\(h\)</span>, one obtains the optimal bin width
-<span class="math notranslate nohighlight">\(h^{*}\)</span></p>
+<p>And optmizing with respect to <span class="math notranslate nohighlight">\(h\)</span>, one obtains the optimal bin width <span class="math notranslate nohighlight">\(h^{*}\)</span></p>
 <div class="math notranslate nohighlight">
 \[
 -\frac{1}{N (h^{*})^{2}} + \frac{h^{*}}{6} \int f'^2(x)dx = 0.
@@ -366,22 +337,17 @@ MISE \approx&amp; \frac{1}{Nh} + \left(\frac{h^2}{4} + \frac{h^2}{3} - \frac{h^2
 \[
 h^* = \left(\frac{6}{N \int f'^2(x)dx}\right)^\frac{1}{3}
 \]</div>
-<p>This optimal bin width depends on the density <span class="math notranslate nohighlight">\(f(x)\)</span>. Assuming a normal
-distribution gives</p>
+<p>This optimal bin width depends on the density <span class="math notranslate nohighlight">\(f(x)\)</span>. Assuming a normal distribution gives</p>
 <div class="math notranslate nohighlight">
 \[
 h^* = \left(\frac{24\sqrt{\pi}}{N}\right)^{\frac{1}{3}}s
 \]</div>
-<p>Another choice is to approximate the integral more robustly using the
-IQR, leading to the FD rule.</p>
+<p>Another choice is to approximate the integral more robustly using the IQR, leading to the FD rule.</p>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id3"><dl class="citation">
-<dt class="label" id="id10"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id2"><dl class="citation">
+<dt class="label" id="id9"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>David W Scott. On optimal and data-based histograms. <em>Biometrika</em>, 66(3):605–610, 1979.</p>
-</dd>
-<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
-<dd><p>David Freedman and Persi Diaconis. On the histogram as a density estimator: l 2 theory. <em>Zeitschrift für Wahrscheinlichkeitstheorie und verwandte Gebiete</em>, 57(4):453–476, 1981.</p>
 </dd>
 </dl>
 </p>

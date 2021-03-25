@@ -280,24 +280,9 @@
 <h1>Discretization<a class="headerlink" href="#discretization" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>In statistics and machine learning, discretization refers to the process
-of converting or partitioning continuous attributes, features or
-variables to discretized or nominal
-attributes/features/variables/intervals. Whenever continuous data is
-discretized, there is always some amount of discretization error. The
-goal is to reduce the amount to a level considered negligible for the
-modeling purposes at hand. Many machine learning algorithms are known to
-produce better models by discretizing continuous attributes.
-<span id="id1">[<a class="reference internal" href="#id16"><span>1</span></a>]</span></p>
-<p>In a supervised context, the performance of a particular discretization
-can be evaluated using class information. Many algorithms use this
-information to find the minimum number of partitions relative to some
-metric, such as mutual information. Among these methods we find Fayyad &amp;
-Irani’s MDL method, CAIM, CACC, and Ameva.</p>
-<p>When class information is not available, it becomes difficult to
-evaluate the partition. Typically data is discretized into partitions of
-K equal lengths/width (equal intervals) or K% of the total data (equal
-frequencies).</p>
+<p>In statistics and machine learning, discretization refers to the process of converting or partitioning continuous attributes, features or variables to discretized or nominal attributes/features/variables/intervals. Whenever continuous data is discretized, there is always some amount of discretization error. The goal is to reduce the amount to a level considered negligible for the modeling purposes at hand. Many machine learning algorithms are known to produce better models by discretizing continuous attributes. <span id="id1">[<a class="reference internal" href="#id14"><span>1</span></a>]</span></p>
+<p>In a supervised context, the performance of a particular discretization can be evaluated using class information. Many algorithms use this information to find the minimum number of partitions relative to some metric, such as mutual information. Among these methods we find Fayyad &amp; Irani’s MDL method, CAIM, CACC, and Ameva.</p>
+<p>When class information is not available, it becomes difficult to evaluate the partition. Typically data is discretized into partitions of K equal lengths/width (equal intervals) or K% of the total data (equal frequencies).</p>
 </div>
 <div class="section" id="test-data">
 <h2>Test data<a class="headerlink" href="#test-data" title="Permalink to this headline">¶</a></h2>
@@ -308,9 +293,7 @@ frequencies).</p>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
 </pre></div>
 </div>
-<p>We will create some synthetic data do test different discretization
-schemes, 3 data sets with different characteristics, an homogeneous data
-set, one with 2 blobs and a last one with 3 blobs.</p>
+<p>We will create some synthetic data do test different discretization schemes, 3 data sets with different characteristics, an homogeneous data set, one with 2 blobs and a last one with 3 blobs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># taken from sklearn docs: https://scikit-learn.org/stable/auto_examples/preprocessing/plot_discretization_strategies.html#sphx-glr-auto-examples-preprocessing-plot-discretization-strategies-py</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_blobs</span>
@@ -346,22 +329,9 @@ set, one with 2 blobs and a last one with 3 blobs.</p>
 </div>
 <div class="section" id="equal-width">
 <h2>Equal width<a class="headerlink" href="#equal-width" title="Permalink to this headline">¶</a></h2>
-<p>In both methods, arity <span class="math notranslate nohighlight">\(k\)</span> is used to determine the number of bins. Each
-bin is associated with a distinct discrete value. In equal-width, the
-continuous range of a feature is evenly divided into intervals that have
-an equal-width and each interval represents a bin. In equal-frequency,
-an equal number of continuous values are placed in each bin.</p>
-<p>The two methods are very simple but are sensitive for a given k (number
-of bins). For equal-frequency, for instance, many occurrences of a
-continuous value could cause the occurrences to be assigned into
-different bins. One improvement can be that, after continuous values are
-assigned into bins, boundaries of every pair of neighboring bins are
-adjusted so that duplicate values should belong to one bin only. Another
-problem is outliers that take extreme values. One solution can be to
-remove the outliers using a threshold.</p>
-<p>Here we implement equal with discretization. The function
-<code class="docutils literal notranslate"><span class="pre">disc_eq_width(X,</span> <span class="pre">k)</span></code> takes a data matrix and the number of bins as
-paramenters. Each feature is discretized individually.</p>
+<p>In both methods, arity <span class="math notranslate nohighlight">\(k\)</span> is used to determine the number of bins. Each bin is associated with a distinct discrete value. In equal-width, the continuous range of a feature is evenly divided into intervals that have an equal-width and each interval represents a bin. In equal-frequency, an equal number of continuous values are placed in each bin.</p>
+<p>The two methods are very simple but are sensitive for a given k (number of bins). For equal-frequency, for instance, many occurrences of a continuous value could cause the occurrences to be assigned into different bins. One improvement can be that, after continuous values are assigned into bins, boundaries of every pair of neighboring bins are adjusted so that duplicate values should belong to one bin only. Another problem is outliers that take extreme values. One solution can be to remove the outliers using a threshold.</p>
+<p>Here we implement equal with discretization. The function <code class="docutils literal notranslate"><span class="pre">disc_eq_width(X,</span> <span class="pre">k)</span></code> takes a data matrix and the number of bins as paramenters. Each feature is discretized individually.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">disc_eq_width</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
     <span class="c1"># Implement equal width discretization with k bins.</span>
     <span class="c1"># Each feature is discretized individually (univariate discretization).</span>
@@ -537,119 +507,49 @@ Feature 1
 (     1.9,     inf) |        6
 </pre></div>
 </div>
-<p>There is a rule of thumb for determining the optimal number of bins in a
-histogram. The Freedman-Diaconis rule states that the optimal bin width
-can be estimated as</p>
+<p>There is a rule of thumb for determining the optimal number of bins in a histogram. The Freedman-Diaconis rule states that the optimal bin width can be estimated as</p>
 <div class="math notranslate nohighlight">
 \[
 h = \frac{2\ IQR}{n^{1/3}}
 \]</div>
-<p>The asymptotic (large <span class="math notranslate nohighlight">\(n\)</span>) optimal bin width was derived by Scott
-<span id="id2">[<a class="reference internal" href="freedman-diaconis.html#id10"><span>1</span></a>]</span>, yet, its value depends on the derivative of the
-theoretical distribution, often not known. Freedman and Diaconis claimed
-<span id="id3">[<a class="reference internal" href="freedman-diaconis.html#id11"><span>2</span></a>]</span> the bin width can be robustly estimated by the
-formula above, which works well most of the time, under the requirements
-that the true distribution has squared integrable and continuous first
-and second derivatives.</p>
-<p>It is worth it to provide a rough derivation of the FD rule, as it is an
-nice exercise in the art of approximation. You can find such derivation
-in the <a class="reference internal" href="freedman-diaconis.html"><span class="doc std std-doc">Appendix</span></a>.</p>
+<p>The asymptotic (large <span class="math notranslate nohighlight">\(n\)</span>) optimal bin width was derived by Scott <span id="id2">[<a class="reference internal" href="freedman-diaconis.html#id9"><span>1</span></a>,<span></span>]</span> yet, its value depends on the derivative of the theoretical distribution, often not known. Freedman and Diaconis claimed &#64;freedman1981histogram the bin width can be robustly estimated by the formula above, which works well most of the time, under the requirements that the true distribution has squared integrable and continuous first and second derivatives.</p>
+<p>It is worth it to provide a rough derivation of the FD rule, as it is an nice exercise in the art of approximation. You can find such derivation in the <a class="reference internal" href="freedman-diaconis.html"><span class="doc std std-doc">Appendix</span></a>.</p>
 </div>
 <div class="section" id="equal-frequency">
 <h2>Equal frequency<a class="headerlink" href="#equal-frequency" title="Permalink to this headline">¶</a></h2>
-<p>We now deal with equal frequency binning. To find the bin limits we can
-use the percentiles of each feature, as to partition with equal number
-of elements in each interval.</p>
+<p>We now deal with equal frequency binning. To find the bin limits we can use the percentiles of each feature, as to partition with equal number of elements in each interval.</p>
 <p>Again, with 4 bins (K=4), but using equal frequency:</p>
 <p><img alt="" src="_images/8728237344f6f9856fadeb4255eaf0452c8cc48d.png" /></p>
 <p>You’ll implement this method in the assignment.</p>
-<p>Equal-width and equal-frequency are simple and easy to implement. This
-does not come without a price. First, arity k has to be specified
-beforehand. Because we usually do not know what a proper value k is, we
-need to resort to trial-and-error or specify a value randomly.</p>
-<p>Both this methods are implemented in the sklearn preprocessing module,
-in the KBinsDiscretizer method. KBinsDiscretizer performs extra safety
-checks, so should be preferred in production. Refer to:
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html">https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html</a></p>
+<p>Equal-width and equal-frequency are simple and easy to implement. This does not come without a price. First, arity k has to be specified beforehand. Because we usually do not know what a proper value k is, we need to resort to trial-and-error or specify a value randomly.</p>
+<p>Both this methods are implemented in the sklearn preprocessing module, in the KBinsDiscretizer method. KBinsDiscretizer performs extra safety checks, so should be preferred in production. Refer to: <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html">https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html</a></p>
 </div>
 <div class="section" id="discretization-by-clustering">
 <h2>Discretization by clustering<a class="headerlink" href="#discretization-by-clustering" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="d-k-means">
 <h3>1D K-means<a class="headerlink" href="#d-k-means" title="Permalink to this headline">¶</a></h3>
-<p>Discretizing a data set is similar to the clustering problem in the
-sense that we are looking for partitions with large within-class
-similarity and small intra-class similarity.</p>
-<p>One way to discretize a feature matrix is to apply a clustering
-algorithm to each individual feature. In the following we will implement
-discretization via the K-Means clustering algorithm. Since we have not
-yet implemented our own version of K-means (wait until unit 3), we’ll
-follow a method proposed by Daniela Joita in <span id="id4">[<a class="reference internal" href="#id14"><span>4</span></a>]</span> to
-cluster one dimensional features. This particular algorithm has a long
-history within quantitative geography, where it was first developed by
-Jenks and Caspall <span id="id5">[<a class="reference internal" href="#id19"><span>5</span></a>]</span>, and understandably known as the
-Jenks-Caspall algorithm, or <a class="reference external" href="https://en.wikipedia.org/wiki/Jenks_natural_breaks_optimization#cite_note-6">Jenks natural breaks
-algorithm</a>.</p>
-<p>The idea of the algorithm is to chose initial centers such that they are
-in increasing order. In this way, the recomputed centers are also in
-increasing order and therefore to determine the closest cluster for each
-value of the attribute A, the algorithm does less comparisons than in
-the general case. The closest cluster either remains the one in which
-the value belongs to or it is one of the two neighbouring clusters. In
-this way the number of comparisons done for reallocation of cluster is
-no longer k (one for each centroid) but 3. Also there is no need to
-order all the values in dom(A) like in the case of equal- frequency
-interval discretization.</p>
-<p>The cut points are defined as the minimum and maximum of the active
-domain of the attribute and the midpoints between the centers of the
-clusters.</p>
-<p>In the assignment, you will implement this algorithm starting with a 1D
-version of K-means, which is applied independently to each feature.</p>
+<p>Discretizing a data set is similar to the clustering problem in the sense that we are looking for partitions with large within-class similarity and small intra-class similarity.</p>
+<p>One way to discretize a feature matrix is to apply a clustering algorithm to each individual feature. In the following we will implement discretization via the K-Means clustering algorithm. Since we have not yet implemented our own version of K-means (wait until unit 3), we’ll follow a method proposed by Daniela Joita in <span id="id3">[<a class="reference internal" href="#id12"><span>3</span></a>]</span> to cluster one dimensional features. This particular algorithm has a long history within quantitative geography, where it was first developed by Jenks and Caspall &#64;jenks1971error, and understandably known as the Jenks-Caspall algorithm, or <a class="reference external" href="https://en.wikipedia.org/wiki/Jenks_natural_breaks_optimization#cite_note-6">Jenks natural breaks algorithm</a>.</p>
+<p>The idea of the algorithm is to chose initial centers such that they are in increasing order. In this way, the recomputed centers are also in increasing order and therefore to determine the closest cluster for each value of the attribute A, the algorithm does less comparisons than in the general case. The closest cluster either remains the one in which the value belongs to or it is one of the two neighbouring clusters. In this way the number of comparisons done for reallocation of cluster is no longer k (one for each centroid) but 3. Also there is no need to order all the values in dom(A) like in the case of equal- frequency interval discretization.</p>
+<p>The cut points are defined as the minimum and maximum of the active domain of the attribute and the midpoints between the centers of the clusters.</p>
+<p>In the assignment, you will implement this algorithm starting with a 1D version of K-means, which is applied independently to each feature.</p>
 <p>To test the function employ the following test matrix:</p>
-<p>The following plots show the results of applying 1D K-means to each
-feature of the test data, with K=4.</p>
+<p>The following plots show the results of applying 1D K-means to each feature of the test data, with K=4.</p>
 <p><img alt="" src="_images/5e170d37fc5a17d35051231a91e368495a683385.png" /></p>
 </div>
 <div class="section" id="fisher-jenks">
 <h3>Fisher-Jenks<a class="headerlink" href="#fisher-jenks" title="Permalink to this headline">¶</a></h3>
-<p>Another modified version of the algorithm that uses dynamic programming
-to find the optimal partition is the Fisher-Jenks algorithm
-<span id="id6">[<a class="reference internal" href="#id20"><span>6</span></a>]</span>, for which we are missing an implementation. The FJ
-algorithm tests all possible <strong>continuous</strong> partitions (reducing the
-search space) and selects the one that minimizes the clusters variance.
-Extra point awarded for whom can provide a working well documented
-implementation (possible project).</p>
-<p>While in general there exist <span class="math notranslate nohighlight">\({N \choose K}\)</span> ways of partition N points
-into K groups, when restricting to ordered continuous partitions the
-total number of possible partitions is <span class="math notranslate nohighlight">\({N-1 \choose
-K-1}\)</span>. This is easily understood by considering the problem as choosing
-where to place the braking points in an ordered list. But, even with
-this reduction the number of possible partition is still impractical for
-moderate N and K.</p>
-<p>To address this, we can formulate the problem in terms of smaller
-sub-problems, involving finding partitions in subsets of the original
-data. Then reusing this work by aggregating sub-solutions into the
-optimal solution. This is possible, since the following lemma holds
-<span id="id7">[<span>fisher1958grouping:</span>]</span></p>
-<p><em>Suboptimization Lemma</em>: If <span class="math notranslate nohighlight">\(A_1:A_2\)</span> denotes a partition of a set <span class="math notranslate nohighlight">\(A\)</span>
-into two disjoint subsets <span class="math notranslate nohighlight">\(A_1\)</span> and <span class="math notranslate nohighlight">\(A_2\)</span>, if <span class="math notranslate nohighlight">\(P_1^{*}\)</span> denotes a least
-squares partition of <span class="math notranslate nohighlight">\(A_1\)</span> into two <span class="math notranslate nohighlight">\(G_1\)</span> subsets and <span class="math notranslate nohighlight">\(P_2^{*}\)</span> denotes
-a least squares partition of <span class="math notranslate nohighlight">\(A_2\)</span> into <span class="math notranslate nohighlight">\(G_2\)</span> subsets; then, of the
-class of subpartitions of <span class="math notranslate nohighlight">\(A_1:A_2\)</span> employing <span class="math notranslate nohighlight">\(G_1\)</span> subsets over <span class="math notranslate nohighlight">\(A_1\)</span>
-and <span class="math notranslate nohighlight">\(G_2\)</span> subsets over <span class="math notranslate nohighlight">\(A_2\)</span> a least squares subpartition is
-<span class="math notranslate nohighlight">\(P_1^{*}:P_2^{*}\)</span>.</p>
+<p>Another modified version of the algorithm that uses dynamic programming to find the optimal partition is the Fisher-Jenks algorithm <span id="id4">[<a class="reference internal" href="#id18"><span>4</span></a>,<span></span>]</span> for which we are missing an implementation. The FJ algorithm tests all possible <strong>continuous</strong> partitions (reducing the search space) and selects the one that minimizes the clusters variance. Extra point awarded for whom can provide a working well documented implementation (possible project).</p>
+<p>While in general there exist <span class="math notranslate nohighlight">\({N \choose K}\)</span> ways of partition N points into K groups, when restricting to ordered continuous partitions the total number of possible partitions is <span class="math notranslate nohighlight">\({N-1 \choose
+K-1}\)</span>. This is easily understood by considering the problem as choosing where to place the braking points in an ordered list. But, even with this reduction the number of possible partition is still impractical for moderate N and K.</p>
+<p>To address this, we can formulate the problem in terms of smaller sub-problems, involving finding partitions in subsets of the original data. Then reusing this work by aggregating sub-solutions into the optimal solution. This is possible, since the following lemma holds <span id="id5">[<span>fisher1958grouping:</span>]</span></p>
+<p><em>Suboptimization Lemma</em>: If <span class="math notranslate nohighlight">\(A_1:A_2\)</span> denotes a partition of a set <span class="math notranslate nohighlight">\(A\)</span> into two disjoint subsets <span class="math notranslate nohighlight">\(A_1\)</span> and <span class="math notranslate nohighlight">\(A_2\)</span>, if <span class="math notranslate nohighlight">\(P_1^{*}\)</span> denotes a least squares partition of <span class="math notranslate nohighlight">\(A_1\)</span> into two <span class="math notranslate nohighlight">\(G_1\)</span> subsets and <span class="math notranslate nohighlight">\(P_2^{*}\)</span> denotes a least squares partition of <span class="math notranslate nohighlight">\(A_2\)</span> into <span class="math notranslate nohighlight">\(G_2\)</span> subsets; then, of the class of subpartitions of <span class="math notranslate nohighlight">\(A_1:A_2\)</span> employing <span class="math notranslate nohighlight">\(G_1\)</span> subsets over <span class="math notranslate nohighlight">\(A_1\)</span> and <span class="math notranslate nohighlight">\(G_2\)</span> subsets over <span class="math notranslate nohighlight">\(A_2\)</span> a least squares subpartition is <span class="math notranslate nohighlight">\(P_1^{*}:P_2^{*}\)</span>.</p>
 <p>From the lemma follows the recursive relationship</p>
 <div class="math notranslate nohighlight">
 \[
 P^{*}(k, U) = \min_L P^{*}(k-1, L-1) + D(L, U),\quad L=k-1 ,\ldots, U
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(P^{*}(k,U)\)</span> is the optimal partition of subset <span class="math notranslate nohighlight">\(x_1,\ldots,x_U\)</span>
-into <span class="math notranslate nohighlight">\(k\)</span> groups, and <span class="math notranslate nohighlight">\(D(a,b)\)</span> is the diameter of the cluster comprised
-of points <span class="math notranslate nohighlight">\(x_a,\ldots,x_b\)</span>. Using this recursion relation, build optimal
-partitions for <span class="math notranslate nohighlight">\(k\)</span> from previous calculated partitions for <span class="math notranslate nohighlight">\(k-1\)</span>,
-starting with <span class="math notranslate nohighlight">\(k=2\)</span>. An implementation can be found in
-<span id="id8">[<a class="reference internal" href="#id21"><span>7</span></a>]</span>. I have implemented the algorithm below, in such
-a ways that wastes a lot of memory, but is easier to understand. Try to
-optimize it as an exercise.</p>
+<p>where <span class="math notranslate nohighlight">\(P^{*}(k,U)\)</span> is the optimal partition of subset <span class="math notranslate nohighlight">\(x_1,\ldots,x_U\)</span> into <span class="math notranslate nohighlight">\(k\)</span> groups, and <span class="math notranslate nohighlight">\(D(a,b)\)</span> is the diameter of the cluster comprised of points <span class="math notranslate nohighlight">\(x_a,\ldots,x_b\)</span>. Using this recursion relation, build optimal partitions for <span class="math notranslate nohighlight">\(k\)</span> from previous calculated partitions for <span class="math notranslate nohighlight">\(k-1\)</span>, starting with <span class="math notranslate nohighlight">\(k=2\)</span>. An implementation can be found in <span id="id6">[<a class="reference internal" href="#id19"><span>5</span></a>]</span>. I have implemented the algorithm below, in such a ways that wastes a lot of memory, but is easier to understand. Try to optimize it as an exercise.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test data</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">120</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">106</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span>
               <span class="mi">103</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
@@ -735,28 +635,13 @@ optimize it as an exercise.</p>
 </div>
 <div class="section" id="kernel-density-estimation">
 <h2>Kernel density estimation<a class="headerlink" href="#kernel-density-estimation" title="Permalink to this headline">¶</a></h2>
-<p>Kernel density estimation <span id="id9">[<a class="reference internal" href="#id15"><span>8</span></a>]</span> is a univariate
-non-parametric probability density estimation method. It estimates the
-probability density at point <span class="math notranslate nohighlight">\(x\)</span> through the kernel density function:</p>
+<p>Kernel density estimation <span id="id7">[<a class="reference internal" href="#id13"><span>6</span></a>]</span> is a univariate non-parametric probability density estimation method. It estimates the probability density at point <span class="math notranslate nohighlight">\(x\)</span> through the kernel density function:</p>
 <div class="math notranslate nohighlight">
 \[
 p(x) = \frac{1}{nh}\sum_{i=1}^n K\left( \frac{x- X_i}{h}  \right)
 \]</div>
-<p>where the kernel K is a weighting function, the <span class="math notranslate nohighlight">\(X_i\)</span> are the <span class="math notranslate nohighlight">\(n\)</span>
-available data points, and <span class="math notranslate nohighlight">\(h\)</span> is the kernel bandwidth, a
-hyper-parameter. It is essentially a weighted average, where the weights
-are given by the kernel function. Each point contributes to the density
-depending on its distance from <span class="math notranslate nohighlight">\(x\)</span>. The kernel must be a positive
-function that integrates to 1. The choice of the bandwidth is crucial
-and heavily influences the results. Intuitively one wants to choose <span class="math notranslate nohighlight">\(h\)</span>
-as small as the data will allow; however, there is always a trade-off
-between the bias of the estimator and its variance. While methods have
-been proposed for bandwidth selection, a simple yet good performing one
-is k-fold cross-validation.</p>
-<p>Here we will employ KDE as a non-parametric unsupervised discretizing
-method. First, we find the best kernel density estimate for each row of
-the data using CV. Then, we select the cut-points at the local minima of
-the KDE. You will implement this in the assignment.</p>
+<p>where the kernel K is a weighting function, the <span class="math notranslate nohighlight">\(X_i\)</span> are the <span class="math notranslate nohighlight">\(n\)</span> available data points, and <span class="math notranslate nohighlight">\(h\)</span> is the kernel bandwidth, a hyper-parameter. It is essentially a weighted average, where the weights are given by the kernel function. Each point contributes to the density depending on its distance from <span class="math notranslate nohighlight">\(x\)</span>. The kernel must be a positive function that integrates to 1. The choice of the bandwidth is crucial and heavily influences the results. Intuitively one wants to choose <span class="math notranslate nohighlight">\(h\)</span> as small as the data will allow; however, there is always a trade-off between the bias of the estimator and its variance. While methods have been proposed for bandwidth selection, a simple yet good performing one is k-fold cross-validation.</p>
+<p>Here we will employ KDE as a non-parametric unsupervised discretizing method. First, we find the best kernel density estimate for each row of the data using CV. Then, we select the cut-points at the local minima of the KDE. You will implement this in the assignment.</p>
 <p>The following code plots the sample data sets with the found partitions:</p>
 </div>
 <div class="section" id="references">
@@ -764,29 +649,23 @@ the KDE. You will implement this in the assignment.</p>
 <ul class="simple">
 <li><p>Discretization: An Enabling Technique, Liu et. al.</p></li>
 </ul>
-<p id="id10"><dl class="citation">
-<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id8"><dl class="citation">
+<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Wikipedia contributors. Discretization of continuous features — Wikipedia, the free encyclopedia. 2019. [Online; accessed 11-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Discretization_of_continuous_features&amp;oldid=898762851">https://en.wikipedia.org/w/index.php?title=Discretization_of_continuous_features&amp;oldid=898762851</a>.</p>
 </dd>
-<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
 <dd><p>David W Scott. On optimal and data-based histograms. <em>Biometrika</em>, 66(3):605–610, 1979.</p>
 </dd>
-<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
-<dd><p>David Freedman and Persi Diaconis. On the histogram as a density estimator: l 2 theory. <em>Zeitschrift für Wahrscheinlichkeitstheorie und verwandte Gebiete</em>, 57(4):453–476, 1981.</p>
-</dd>
-<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
 <dd><p>Daniela Joiţa. Unsupervised static discretization methods in data mining. <em>Titu Maiorescu University, Bucharest, Romania</em>, 2010.</p>
 </dd>
-<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
-<dd><p>George F Jenks and Fred C Caspall. Error on choroplethic maps: definition, measurement, reduction. <em>Annals of the Association of American Geographers</em>, 61(2):217–244, 1971.</p>
-</dd>
-<dt class="label" id="id20"><span class="brackets"><a class="fn-backref" href="#id6">6</a></span></dt>
+<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
 <dd><p>Walter D Fisher. On grouping for maximum homogeneity. <em>Journal of the American statistical Association</em>, 53(284):789–798, 1958.</p>
 </dd>
-<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
+<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
 <dd><p>John A Hartigan. <em>Clustering algorithms</em>. John Wiley &amp; Sons, Inc., 1975.</p>
 </dd>
-<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
+<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id7">6</a></span></dt>
 <dd><p>Wikipedia contributors. Kernel density estimation — Wikipedia, the free encyclopedia. 2021. [Online; accessed 11-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Kernel_density_estimation&amp;oldid=1010981873">https://en.wikipedia.org/w/index.php?title=Kernel_density_estimation&amp;oldid=1010981873</a>.</p>
 </dd>
 </dl>
@@ -795,8 +674,7 @@ the KDE. You will implement this in the assignment.</p>
 <div class="section" id="to-do">
 <h2>TO-DO<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>[ ] Discuss several recent unsupervised methods in the literature
-(papers available on bibliography folder).</p></li>
+<li><p>[ ] Discuss several recent unsupervised methods in the literature (papers available on bibliography folder).</p></li>
 </ul>
 </div>
 </div>

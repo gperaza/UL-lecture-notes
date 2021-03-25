@@ -318,7 +318,13 @@ The main drawbacks of the $DB(\alpha, \delta)$ methods are that choosing the rig
 
 ### KNN
 
-First, for every record in the dataset, the k-nearest-neighbors have to be found. Then, an anomaly score is computed using these neighbors, whereas two possibilities have been proposed: Either the distance to the kth-nearest-neighbor is used (a single one) or the average distance to all of the k-nearest-neighbors is computed. In the following, we refer to the first method as kth-NN and the latter as k-NN. In practical applications, the k-NN method is often preferred. However, the absolute value of the score depends very much on the dataset itself, the number of dimensions, and on normalization. As a result, it is in practice not easy to select an appropriate threshold, if required.
+We will consider two different nearest neighbor based algorithms, depending on whether the the distance to the kth-nearest-neighbor is used (a single one) or the average distance to all of the k-nearest-neighbors is computed. In the following, we refer to the first method as kth-NN {cite}`ramaswamy2000efficient` and the latter as k-NN. Both algorithms assign a score to each observation based on the distance to its neighbors (the kth distance or the average).
+
+In practical applications, the k-NN method is often preferred. However, the absolute value of the score depends very much on the dataset itself, the number of dimensions, and on normalization. As a result, it is not easy to select an appropriate threshold.
+
+```{figure} Figures/od-2.png
+kthNN scores based on the distance to the second neighbor. Note that if the first neighbor were to be used, observations 10 and 11 would rank much lower, thus failed to be identified as outliers. Source: Mahito Sugiyama course on Data Mining (<https://mahito.nii.ac.jp/lecture>)
+```
 
 Our KNN algorithm will use a brute force approach to calculate the nearest neighbors. This implies the calculation of $N^2$ pairwise distances among all observations (rows) of the data matrix. More efficient approaches for large datasets employ KDTrees or BallTrees (see, for example, <https://scikit-learn.org/stable/modules/neighbors.html>). Euclidian distance is often used, but other metrics can be employed as well. The distance matrix is an $N\times N$ matrix defined as:
 
@@ -333,7 +339,7 @@ $$
 
 You will implement the distance matrix calculation in the assignment. There exists an efficient way to calculate this matrix using Numpy broadcasting. To do this, we need to transform our original data matrix $X$ into new 3D arrays that repeat X along a given dimension. The purpose is to obtain 3D array with all elements of the form $x_{ik} - x_{jk}$ indexed as $ijk$. If you are unfamiliar with broadcasting operations, you may wish to implement this as a nested for loop, at the cost of being slower.
 
-There are two variants of this algorithm, the K\$^th^\$NN and the KNN algorithm. The K\$^th^\$NN algorithm finds the distance to the kth neighbor, while the KNN algorithm uses the average distance from the first k neighbors. This distances are called scores. For both algorithm we need to find the scores, then sort according to those scores. The larger the score, the more likely a point is to be an outlier. You\'ll be ask to implement this functionality in the `scores_kthnn` and `scores_knn` functions in the assignment.
+There are two variants of this algorithm, the kth-NN and the KNN algorithm. The kth-NN algorithm finds the distance to the kth neighbor, while the KNN algorithm uses the average distance from the first k neighbors. This distances are called scores. For both algorithm we need to find the scores, then sort according to those scores. The larger the score, the more likely a point is to be an outlier. You\'ll be ask to implement this functionality in the `scores_kthnn` and `scores_knn` functions in the assignment.
 
 The choice of the parameter $k$ is of course important for the results. If it is chosen too low, the density estimation for the records might be not reliable. On the other hand, if it is too large, density estimation may be too coarse. As a rule of thumb, k should be in the range 10 \< k \< 50.
 
@@ -364,6 +370,16 @@ legend.legendHandles[1]._sizes = [20]
 
 plt.xlabel('Malic acid')
 plt.ylabel('Proline');
+```
+
+![](./.ob-jupyter/1278176ddcc7749d28954a68705a9a9a33c7c7ae.png)
+
+For large date sets, naive KNN algorithms become inefficient, as they scale as $O(n^2)$. Two modifications have been proposed to deal with scalability issues, mainly by avoiding unnecessary distance computations. One modification, ORCA {cite}`bay2003mining,` uses an Approximate Nearest Neighbor Search, which terminates as soon as the current score becomes smaller than the t-th largest score so far, as then x can never become an outlier. The second one, iORCA @bhaduri2011algorithms, further improves on ORCA by indexing observations using the distance from a reference point.
+
+Other drawback is that distance based algorithms cannot cope with in-homogeneously spaced data, i.e, data where density varies greatly, or with clusters of different local densities. In this cases, density based or angle based algorithms perform better.
+
+```{figure} Figures/od-3.png
+Two clusters of different density for which KNN based methods perform poorly. Source: Mahito Sugiyama course on Data Mining (<https://mahito.nii.ac.jp/lecture>)
 ```
 
 ## LOF
