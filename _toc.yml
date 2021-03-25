@@ -1,0 +1,16 @@
+# Table of content
+# Learn more at https://jupyterbook.org/customize/toc.html
+#
+- file: intro
+- part: "Unit 1 - Unsupervised Preprocessing"
+  sections:
+    - file: U1-M1-L1-prep-normalization
+    - file: U1-M1-L2-prep-discretization
+    - file: U1-M1-L3-unsup-outlier-detection
+- part: "Appendix"
+  sections:
+    - file: freedman-diaconis
+# - part: "Unit 2 - Feature Selection and Extraction"
+# - part: "Unit 3 - Clustering"
+# - part: "Unit 4 - Probabilistic Unsupervised Algorithms"
+# - part: "Unit 5 - Introduction to Reinforcement Learning"
