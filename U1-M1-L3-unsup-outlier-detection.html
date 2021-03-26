@@ -780,7 +780,8 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
 </ol>
 <p>In order to build an iTree, the algorithm recursively divides <span class="math notranslate nohighlight">\(X'\)</span> by randomly selecting an attribute <span class="math notranslate nohighlight">\(q\)</span> and a split value <span class="math notranslate nohighlight">\(p\)</span>, until either (i) the node has only one instance or (ii) all data at the node have the same values.</p>
 <p>When the iTree is fully grown, each point in <span class="math notranslate nohighlight">\(X\)</span> is isolated at one of the external nodes. Intuitively, the anomalous points are those (easier to isolate, hence) with the smaller path length in the tree, where the path length <span class="math notranslate nohighlight">\(h(x_i)\)</span> of point <span class="math notranslate nohighlight">\(x_{i}\in X\)</span> is defined as the number of edges <span class="math notranslate nohighlight">\(x_i\)</span> traverses from the root node to get to an external node.</p>
-<p>Since iForest does not need to isolate all of normal instances – the majority of the training sample, iForest is able to work well with a partial model without isolating all normal points and builds models using a small sample size. Swamping refers to wrongly identifying normal instances as anomalies. When normal instances are too close to anomalies, the number of partitions required to separate anomalies increases – which makes it harder to distinguish anomalies from normal in- stances. Masking is the existence of too many anomalies concealing their own presence. When an anomaly cluster is large and dense, it also increases the number of partitions to isolate each anomaly. Under these circumstances, evaluations using these trees have longer path lengths making anomalies more difficult to detect. Note that both swamping and masking are a result of too many data for the purpose of anomaly detection. The unique characteristic of isolation trees allows iForest to build a partial model by sub-sampling which incidentally alleviates the effects of swamping and masking. It is because: 1) sub-sampling con- trols data size, which helps iForest better isolate examples of anomalies and 2) each isolation tree can be specialised, as each sub-sample includes different set of anomalies or even no anomaly.</p>
+<p>Since iForest does not need to isolate all of normal instances – the majority of the training sample, iForest is able to work well with a partial model without isolating all normal points and builds models using a small sample size. Swamping refers to wrongly identifying normal instances as anomalies. When normal instances are too close to anomalies, the number of partitions required to separate anomalies increases – which makes it harder to distinguish anomalies from normal instances. Masking is the existence of too many anomalies concealing their own presence. When an anomaly cluster is large and dense, it also increases the number of partitions to isolate each anomaly. Under these circumstances, evaluations using these trees have longer path lengths making anomalies more difficult to detect. Note that both swamping and masking are a result of too many data for the purpose of anomaly detection. The unique characteristic of isolation trees allows iForest to build a partial model by sub-sampling which incidentally alleviates the effects of swamping and masking. It is because: 1) sub-sampling con- trols data size, which helps iForest better isolate examples of anomalies and 2) each isolation tree can be specialised, as each sub-sample includes different set of anomalies or even no anomaly.</p>
+<p>/Note: I vaguely remember the code here is based on someone else’s code, but I don’t seem to locate the source. It has been refactored, but I am unsure at what extent. So I cannot confidently claim it as original./</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span> <span class="k">as</span> <span class="nn">rn</span>
 
 <span class="k">class</span> <span class="nc">Node</span><span class="p">():</span>
@@ -868,7 +869,7 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
     <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><img alt="" src="b30ea676ea73ff6f2c4c6706b24e23a38decb513.png" /></p>
+<p><img alt="" src="_images/88f62b0ddaa2eab078102f13a835b0bb956c610b.png" /></p>
 <p>Now let’s try to isolate a single observation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">test_tree</span> <span class="o">=</span> <span class="n">iTree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
 
@@ -894,7 +895,7 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p><img alt="" src="e3fde9aa6945cc28ec1c18d2ca2be80c2d259fb7.png" /></p>
+<p><img alt="" src="_images/4fa3f6a39204a3398d0019fd659620f6cc599419.png" /></p>
 </div>
 <div class="section" id="anomaly-score">
 <h3>Anomaly score<a class="headerlink" href="#anomaly-score" title="Permalink to this headline">¶</a></h3>
@@ -926,7 +927,7 @@ s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
     <span class="sd">&quot;&quot;&quot; Trains an iForest as an ensemble of iTrees.</span>
 <span class="sd">    Inputs:</span>
 <span class="sd">        X: input data</span>
-<span class="sd">        n_trees: Ensemble size, number of iTrees to build. Default of 100 taken from original paper.</span>
+<span class="sd">         n_trees: Ensemble size, number of iTrees to build. Default of 100 taken from original paper.</span>
 <span class="sd">        sampling_size: Size of the random samples taken from X. Dafault of 256 taken from original paper.</span>
 <span class="sd">    Output: a list of iTrees.&quot;&quot;&quot;</span>
 
@@ -991,7 +992,7 @@ s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p><img alt="" src="c0acc826896afb90566192a04a088ad949a753fc.png" /></p>
+<p><img alt="" src="_images/1c0026fe78df8a090b3247709d891cb3d432fbbb.png" /></p>
 </div>
 </div>
 <div class="section" id="references">

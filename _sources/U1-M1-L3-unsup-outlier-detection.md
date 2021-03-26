@@ -551,7 +551,9 @@ In order to build an iTree, the algorithm recursively divides $X'$ by randomly s
 
 When the iTree is fully grown, each point in $X$ is isolated at one of the external nodes. Intuitively, the anomalous points are those (easier to isolate, hence) with the smaller path length in the tree, where the path length $h(x_i)$ of point $x_{i}\in X$ is defined as the number of edges $x_i$ traverses from the root node to get to an external node.
 
-Since iForest does not need to isolate all of normal instances -- the majority of the training sample, iForest is able to work well with a partial model without isolating all normal points and builds models using a small sample size. Swamping refers to wrongly identifying normal instances as anomalies. When normal instances are too close to anomalies, the number of partitions required to separate anomalies increases -- which makes it harder to distinguish anomalies from normal in- stances. Masking is the existence of too many anomalies concealing their own presence. When an anomaly cluster is large and dense, it also increases the number of partitions to isolate each anomaly. Under these circumstances, evaluations using these trees have longer path lengths making anomalies more difficult to detect. Note that both swamping and masking are a result of too many data for the purpose of anomaly detection. The unique characteristic of isolation trees allows iForest to build a partial model by sub-sampling which incidentally alleviates the effects of swamping and masking. It is because: 1) sub-sampling con- trols data size, which helps iForest better isolate examples of anomalies and 2) each isolation tree can be specialised, as each sub-sample includes different set of anomalies or even no anomaly.
+Since iForest does not need to isolate all of normal instances -- the majority of the training sample, iForest is able to work well with a partial model without isolating all normal points and builds models using a small sample size. Swamping refers to wrongly identifying normal instances as anomalies. When normal instances are too close to anomalies, the number of partitions required to separate anomalies increases -- which makes it harder to distinguish anomalies from normal instances. Masking is the existence of too many anomalies concealing their own presence. When an anomaly cluster is large and dense, it also increases the number of partitions to isolate each anomaly. Under these circumstances, evaluations using these trees have longer path lengths making anomalies more difficult to detect. Note that both swamping and masking are a result of too many data for the purpose of anomaly detection. The unique characteristic of isolation trees allows iForest to build a partial model by sub-sampling which incidentally alleviates the effects of swamping and masking. It is because: 1) sub-sampling con- trols data size, which helps iForest better isolate examples of anomalies and 2) each isolation tree can be specialised, as each sub-sample includes different set of anomalies or even no anomaly.
+
+/Note: I vaguely remember the code here is based on someone else\'s code, but I don\'t seem to locate the source. It has been refactored, but I am unsure at what extent. So I cannot confidently claim it as original./
 
 ``` python
 import random as rn
@@ -643,7 +645,7 @@ for y in [y for (y, m) in splits if m==1]:
     plt.axhline(y)
 ```
 
-![](b30ea676ea73ff6f2c4c6706b24e23a38decb513.png)
+![](./.ob-jupyter/88f62b0ddaa2eab078102f13a835b0bb956c610b.png)
 
 Now let\'s try to isolate a single observation:
 
@@ -672,7 +674,7 @@ for l in [y for (y, m) in splits if m==1]:
 plt.plot(x[0], x[1], 'ro');
 ```
 
-![](e3fde9aa6945cc28ec1c18d2ca2be80c2d259fb7.png)
+![](./.ob-jupyter/4fa3f6a39204a3398d0019fd659620f6cc599419.png)
 
 ### Anomaly score
 
@@ -708,7 +710,7 @@ def iForest(X, n_trees=100, sample_size=256, max_depth=None):
     """ Trains an iForest as an ensemble of iTrees.
     Inputs:
         X: input data
-        n_trees: Ensemble size, number of iTrees to build. Default of 100 taken from original paper.
+         n_trees: Ensemble size, number of iTrees to build. Default of 100 taken from original paper.
         sampling_size: Size of the random samples taken from X. Dafault of 256 taken from original paper.
     Output: a list of iTrees."""
 
@@ -777,7 +779,7 @@ plt.xlabel('Malic acid')
 plt.ylabel('Proline');
 ```
 
-![](c0acc826896afb90566192a04a088ad949a753fc.png)
+![](./.ob-jupyter/1c0026fe78df8a090b3247709d891cb3d432fbbb.png)
 
 ## References
 
