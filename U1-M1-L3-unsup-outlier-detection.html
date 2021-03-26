@@ -788,7 +788,6 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">s_value</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">node_type</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>      <span class="c1"># The path depth of the node in the tree.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>      <span class="c1"># Initial number of observations in the node</span>
-        <span class="c1">#self.X = X              # Initial split of the observations in this node</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feature</span> <span class="o">=</span> <span class="n">feature</span>  <span class="c1"># Feature along which to split the observations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">s_value</span> <span class="o">=</span> <span class="n">s_value</span>  <span class="c1"># Value the separates the split</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>        <span class="c1"># Left node</span>
@@ -799,14 +798,9 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
 <span class="k">class</span> <span class="nc">iTree</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">max_height</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Initializes the root node and parameters. &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">max_h</span> <span class="o">=</span> <span class="n">max_height</span>      <span class="c1"># Max depth of the tree</span>
-        <span class="c1">#self.curr_h = 0              # Current depth of the iTree</span>
-        <span class="c1">#self.X = X                   # Data to split along the tree</span>
-        <span class="c1">#self.size = len(X)           # Number of observations in the tree</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nFeatures</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Number of features in the data matrix</span>
-        <span class="c1">#self.feature = None          # Current feature being used to split</span>
-        <span class="c1">#self.s_value = None          # Current split value</span>
-        <span class="c1">#self.exnodes = 0             # Number of external nodes in the tree</span>
 
         <span class="c1"># Initialize the tree with the root</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_tree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -814,25 +808,25 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
 
     <span class="k">def</span> <span class="nf">make_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">current_height</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Recursivele builds the iTree. &quot;&quot;&quot;</span>
-        <span class="c1">#self.curr_h = current_height</span>
+
         <span class="k">if</span> <span class="n">current_height</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_h</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="c1"># Return an external node</span>
-            <span class="c1">#self.exnodes += 1</span>
             <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">current_height</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;exNode&#39;</span><span class="p">)</span>
+
         <span class="c1"># Choose a random feature</span>
-        <span class="c1">#self.feature = rn.randint(0, self.nFeatures - 1)</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="n">rn</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nFeatures</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">fmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">feature</span><span class="p">])</span>
         <span class="n">fmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">feature</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">fmin</span> <span class="o">==</span> <span class="n">fmax</span><span class="p">:</span>
             <span class="c1"># Many instances of the same value, return exNode</span>
-            <span class="c1">#self.exnodes += 1</span>
             <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">current_height</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;exNode&#39;</span><span class="p">)</span>
+
         <span class="c1"># Choose a random split value</span>
-        <span class="c1">#self.s_value = rn.uniform(fmin, fmax)</span>
         <span class="n">s_value</span> <span class="o">=</span> <span class="n">rn</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="p">)</span>
+
         <span class="c1"># Find mask for X</span>
         <span class="n">s_mask</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">feature</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">s_value</span>
+
         <span class="c1"># Return node only after recursively calculating its children</span>
         <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">s_value</span><span class="p">,</span> <span class="n">current_height</span><span class="p">,</span>
                    <span class="bp">self</span><span class="o">.</span><span class="n">make_tree</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">s_mask</span><span class="p">],</span> <span class="n">current_height</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>

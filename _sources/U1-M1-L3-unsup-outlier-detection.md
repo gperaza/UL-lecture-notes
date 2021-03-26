@@ -562,7 +562,6 @@ class Node():
     def __init__(self, X, feature, s_value, depth, left, right, node_type=' '):
         self.depth = depth      # The path depth of the node in the tree.
         self.size = len(X)      # Initial number of observations in the node
-        #self.X = X              # Initial split of the observations in this node
         self.feature = feature  # Feature along which to split the observations
         self.s_value = s_value  # Value the separates the split
         self.left = left        # Left node
@@ -573,14 +572,9 @@ class Node():
 class iTree():
     def __init__(self, X, max_height):
         """ Initializes the root node and parameters. """
+
         self.max_h = max_height      # Max depth of the tree
-        #self.curr_h = 0              # Current depth of the iTree
-        #self.X = X                   # Data to split along the tree
-        #self.size = len(X)           # Number of observations in the tree
         self.nFeatures = X.shape[1]  # Number of features in the data matrix
-        #self.feature = None          # Current feature being used to split
-        #self.s_value = None          # Current split value
-        #self.exnodes = 0             # Number of external nodes in the tree
 
         # Initialize the tree with the root
         self.root = self.make_tree(X, 0)
@@ -588,25 +582,25 @@ class iTree():
 
     def make_tree(self, X, current_height):
         """ Recursivele builds the iTree. """
-        #self.curr_h = current_height
+
         if current_height >= self.max_h or len(X) <= 1:
             # Return an external node
-            #self.exnodes += 1
             return Node(X, None, None, current_height, None, None, 'exNode')
+
         # Choose a random feature
-        #self.feature = rn.randint(0, self.nFeatures - 1)
         feature = rn.randint(0, self.nFeatures - 1)
         fmin = np.min(X[:, feature])
         fmax = np.max(X[:, feature])
         if fmin == fmax:
             # Many instances of the same value, return exNode
-            #self.exnodes += 1
             return Node(X, None, None, current_height, None, None, 'exNode')
+
         # Choose a random split value
-        #self.s_value = rn.uniform(fmin, fmax)
         s_value = rn.uniform(fmin, fmax)
+
         # Find mask for X
         s_mask = X[:, feature] < s_value
+
         # Return node only after recursively calculating its children
         return Node(X, feature, s_value, current_height,
                    self.make_tree(X[s_mask], current_height + 1),
