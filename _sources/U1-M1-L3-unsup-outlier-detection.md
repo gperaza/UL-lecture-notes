@@ -676,11 +676,19 @@ plt.plot(x[0], x[1], 'ro');
 
 ### Anomaly score
 
-Since iTrees have an equivalent structure to Binary Search Tree or BST, the estimation of average $h(x)$ for external node terminations is the same as the unsuccessful search in BST, this is: $$
+Since iTrees have an equivalent structure to Binary Search Tree or BST, the estimation of average $h(x)$ for external node terminations is the same as the unsuccessful search in BST, this is:
+
+$$
 c(n) = 2H(n-1)-2(n-1)/n,
-$$ where $H(i)$ is the harmonic number and it can be estimated by $\ln(i) + 0.5772156649$ . As $c(n)$ is the average of $h(x)$ given $n$, we use it to normalize $h(x)$. The anomaly score $s$ of an instance $x$ is defined as: $$
+$$
+
+where $H(i)$ is the harmonic number and it can be estimated by $\ln(i) + 0.5772156649$ . As $c(n)$ is the average of $h(x)$ given $n$, we use it to normalize $h(x)$. The anomaly score $s$ of an instance $x$ is defined as:
+
+$$
 s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
-$$ where $E(h(x))$ is the average of $h(x)$ from a collection of isolation trees. Using the anomaly score s, we are able to make the following assessment:
+$$
+
+where $E(h(x))$ is the average of $h(x)$ from a collection of isolation trees. Using the anomaly score s, we are able to make the following assessment:
 
 -   \(a\) if instances return s very close to 1, then they are definitely anomalies,
 -   \(b\) if instances have s much smaller than 0.5, then they are quite safe to be regarded as normal instances, and

@@ -898,11 +898,17 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
 </div>
 <div class="section" id="anomaly-score">
 <h3>Anomaly score<a class="headerlink" href="#anomaly-score" title="Permalink to this headline">¶</a></h3>
-<p>Since iTrees have an equivalent structure to Binary Search Tree or BST, the estimation of average <span class="math notranslate nohighlight">\(h(x)\)</span> for external node terminations is the same as the unsuccessful search in BST, this is: $<span class="math notranslate nohighlight">\(
+<p>Since iTrees have an equivalent structure to Binary Search Tree or BST, the estimation of average <span class="math notranslate nohighlight">\(h(x)\)</span> for external node terminations is the same as the unsuccessful search in BST, this is:</p>
+<div class="math notranslate nohighlight">
+\[
 c(n) = 2H(n-1)-2(n-1)/n,
-\)</span><span class="math notranslate nohighlight">\( where \)</span>H(i)<span class="math notranslate nohighlight">\( is the harmonic number and it can be estimated by \)</span>\ln(i) + 0.5772156649<span class="math notranslate nohighlight">\( . As \)</span>c(n)<span class="math notranslate nohighlight">\( is the average of \)</span>h(x)<span class="math notranslate nohighlight">\( given \)</span>n<span class="math notranslate nohighlight">\(, we use it to normalize \)</span>h(x)<span class="math notranslate nohighlight">\(. The anomaly score \)</span>s<span class="math notranslate nohighlight">\( of an instance \)</span>x<span class="math notranslate nohighlight">\( is defined as: \)</span><span class="math notranslate nohighlight">\(
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(H(i)\)</span> is the harmonic number and it can be estimated by <span class="math notranslate nohighlight">\(\ln(i) + 0.5772156649\)</span> . As <span class="math notranslate nohighlight">\(c(n)\)</span> is the average of <span class="math notranslate nohighlight">\(h(x)\)</span> given <span class="math notranslate nohighlight">\(n\)</span>, we use it to normalize <span class="math notranslate nohighlight">\(h(x)\)</span>. The anomaly score <span class="math notranslate nohighlight">\(s\)</span> of an instance <span class="math notranslate nohighlight">\(x\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
 s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
-\)</span><span class="math notranslate nohighlight">\( where \)</span>E(h(x))<span class="math notranslate nohighlight">\( is the average of \)</span>h(x)$ from a collection of isolation trees. Using the anomaly score s, we are able to make the following assessment:</p>
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(E(h(x))\)</span> is the average of <span class="math notranslate nohighlight">\(h(x)\)</span> from a collection of isolation trees. Using the anomaly score s, we are able to make the following assessment:</p>
 <ul class="simple">
 <li><p>(a) if instances return s very close to 1, then they are definitely anomalies,</p></li>
 <li><p>(b) if instances have s much smaller than 0.5, then they are quite safe to be regarded as normal instances, and</p></li>
