@@ -253,7 +253,7 @@ plt.ylabel('Proline');
 plt.tight_layout();
 ```
 
-![](./.ob-jupyter/6eb740f5f689c2dfa6d29cd97e5f1adeb43e1f07.png)
+![](./.ob-jupyter/9d1afc5bee7d5a3d1df998f9a3dc066721fe161c.png)
 
 ### Choosing the threshold
 
@@ -291,10 +291,10 @@ print('Top outliers: ', top_outliers)
 
 
 ``` example
-Top outliers:  [45 39 43 41 21 46 19  4]
+Top outliers:  [43 39 45 21 41 46 19  4]
 ```
 
-![](./.ob-jupyter/2cc8f2832388230de8856da27ff848207e841e2f.png)
+![](./.ob-jupyter/e8e85da959456524efd80c2f73fd698c71035b23.png)
 
 
 ## Distance based OD
@@ -382,19 +382,19 @@ Other drawback is that distance based algorithms cannot cope with in-homogeneous
 Two clusters of different density for which KNN based methods perform poorly. Source: Mahito Sugiyama course on Data Mining (<https://mahito.nii.ac.jp/lecture>)
 ```
 
-## LOF
+## Density based OD: Local Outlier Factor (LOF)
 
 The local outlier factor {cite}`breunig2000lof,enwiki:992466888` is the most well-known local anomaly detection algorithm and also introduced the idea of local anomalies first. To calculate the LOF score, three steps have to be computed:
 
-1.  The k-nearest-neighbors have to be found for each record x. In case of distance tie of the kth neighbor, more than k neighbors are used.
+1.  The k-nearest-neighbors have to be found for each record $x$. In case of distance tie of the kth neighbor, more than $k$ neighbors are used.
 
-2.  Using these k-nearest-neighbors $N_k$, the local density for a record is estimated by computing the local reachability density (LRD):
+2.  Using these k-nearest-neighbors $N_k(x)$ (the set of neighbors), the local density for a record is estimated by computing the local reachability density (LRD):
 
     $$
       LRD_k(x) = 1/\left(  \frac{\sum\limits_{o\in N_k(x)} d_k(x,o)}{\left|N_k(x)\right|} \right)
       $$
 
-    whereas dk(·) is the reachability distance. Except for some very rare situations in highly dense clusters, this is the Euclidean distance.
+    whereas $d_k(x,o)$ is the reachability distance. Except for some very rare situations in highly dense clusters, this is the Euclidean distance.
 
 3.  Finally, the LOF score is computed by comparing the LRD of a record with the LRDs of its k neighbors:
 
@@ -407,56 +407,12 @@ The LOF score is thus basically a ratio of local densities. This results in the 
 The reachability distance is defined as:
 
 $$
-d_k(x, o) = \max\left( k-distance(o), d(x,o)  \right)
+d_k(x, o) = \max\left( k\text{-distance}(o), d(x,o)  \right)
 $$
 
 In words, the reachability distance of an object $x$ from $o$ is the true distance of the two objects, but at least the k-distance of $o$. Objects that belong to the k nearest neighbors of $o$ (the \"core\" of $o$) are considered to be equally distant, i.e., equally reachable from $o$. The reason for this distance is to get more stable results. Note that this is not a distance in the mathematical definition, since it is not symmetric.
 
-``` python
-def lof(X, k):
-    # Find the distance matrix
-    ### BEGIN SOLUTION
-    D = distance_matrix(X)
-    ### END SOLUTION
-
-    # Sort the distance matrix row by row to obtain the k neighborhood of each row.
-    ### BEGIN SOLUTION
-    Nk_distances = np.sort(D)[:,1:k+1]
-    ### END SOLUTION
-
-    # Store the k-distance of each observation
-    ### BEGIN SOLUTION
-    k_dist = Nk_distances[:,-1]
-    ### END SOLUTION
-
-    # Also store the indices of the neighbors to find the k-distance of each point o.
-    ### BEGIN SOLUTION
-    Nk_idx = np.argsort(D)[:,1:k+1]
-    ### END SOLUTION
-
-    # Find the reachability distances of each neighborhood
-    # Note: Numpy fancy indexing is your friend
-    r_dist = np.zeros((len(X), k))
-    for i, x in enumerate(X):
-        for j, o in enumerate(Nk_idx[i]):
-            r_dist[i,j] = max(D[i,o], k_dist[o])
-
-    ### BEGIN SOLUTION
-    r_dist = np.maximum(Nk_distances, k_dist[Nk_idx])
-    ### END SOLUTION
-
-    # Find LDR for each observation
-    ### BEGIN SOLUTION
-    ldr = k/r_dist.sum(axis=1)
-    ### END SOLUTION
-
-    #Find LOF scores
-    ### BEGIN SOLUTION
-    scores = ldr[Nk_idx].sum(axis=1)/ldr/k
-    ### END SOLUTION
-
-    return scores
-```
+You\'ll be asked to implement the LOF algorithm in the assignment. The function `lof(X, k)` takes the data matrix and $k$, the number of neighbors, as inputs; and outputs the scores for each observation.
 
 ``` python
 # Normalize the data matrix, this step is important
@@ -476,13 +432,27 @@ plt.xlabel('Malic acid')
 plt.ylabel('Proline');
 ```
 
-![](60b94d56a822659bca1591ccce1bb1a9fb52206b.png)
+![](./.ob-jupyter/b38371285e1e90d6d33074bf978328ccaed6879f.png)
+
+Larger scores are associated with possible outliers. Use the above image to check your work. The main drawback of LOF is it scales as $O(n^2)$. Another one is that the resulting values are quotient-values and hard to interpret (text from {cite}`enwiki:992466888`). A value of 1 or even less indicates a clear inlier, but there is no clear rule for when a point is an outlier. In one data set, a value of 1.1 may already be an outlier, in another dataset and parameterization (with strong local fluctuations) a value of 2 could still be an inlier. These differences can also occur within a dataset due to the locality of the method. There exist extensions of LOF that try to improve over LOF in these aspects:
+
+-   Feature Bagging for Outlier Detection {cite}`lazarevic2005feature` runs LOF on multiple projections and combines the results for improved detection qualities in high dimensions. This is the first ensemble learning approach to outlier detection, for other variants see @zimek2014ensembles.
+
+-   Local Outlier Probability (LoOP) {cite}`kriegel2009loop` is a method derived from LOF but using inexpensive local statistics to become less sensitive to the choice of the parameter k. In addition, the resulting values are scaled to a value range of \[0:1\].
+
+-   Interpreting and Unifying Outlier Scores {cite}`kriegel2011interpreting` proposes a normalization of the LOF outlier scores to the interval \[0:1\] using statistical scaling to increase usability and can be seen an improved version of the LoOP ideas.
+
+-   On Evaluation of Outlier Rankings and Outlier Scores {cite}`schubert2012evaluation` proposes methods for measuring similarity and diversity of methods for building advanced outlier detection ensembles using LOF variants and other algorithms and improving on the Feature Bagging approach discussed above.
+
+-   Local outlier detection reconsidered: a generalized view on locality with applications to spatial, video, and network outlier detection {cite}`schubert2014local` discusses the general pattern in various local outlier detection methods (including, e.g., LOF, a simplified version of LOF and LoOP) and abstracts from this into a general framework. This framework is then applied, e.g., to detecting outliers in geographic data, video streams and authorship networks.
 
 ## Angle based outlier detection (ABOD)
 
 The main idea behind ABOD {cite}`kriegel2008angle` is that if $x$ is an outlier, the variance of angles between pairs of the remaining objects becomes small:
 
-![](Figures/abod.png)
+```{figure} Figures/abod.png
+Left: Range of angle values for an inlier (blue) and an outlier (red). Right: Angle values for all pairs of data points for the same observations. Notice the inlier\'s (blue) large variation. Source: <https://doi.org/10.1371/journal.pone.0152173.g001>
+```
 
 For a point within a cluster, the angles between difference vectors to pairs of other points differ widely. The variance of the angles will become smaller for points at the border of a cluster. However, even here the variance is still relatively high compared to the variance of angles for real outliers. Here, the angles to most pairs of points will be small since most points are clustered in some directions.
 
@@ -490,9 +460,7 @@ As a result of these considerations, an angle-based outlier factor (ABOF) can de
 
 ABOD has been proposed as able to perform outlier detection more reliably in high dimensional data sets than distance based methods.
 
-A problem of the basic approach ABOD is obvious: since for each point all pairs of points must be considered, the time-complexity is in O($n^3$), the original ABOD paper proposes two approximations to address this problem: FastABOD and LB-ABOD. These will not be discussed here.
-
-### The Angled Based Outlier Factor (ABOF)
+A problem of the basic approach ABOD is obvious: since for each point all pairs of points must be considered, the time-complexity is in O($n^3$), the original ABOD paper proposes two approximations to address this problem: FastABOD and LB-ABOD. These will not be discussed here. Another fast approximation, FastVOA {cite}`pham2012near,` estimates the first and the second moment of the variance independently using random projections and AMS sketches, at the expense of introducing many parameters.
 
 As an approach to assign the ABOF value to any object in the database $\mathcal{D}$, we compute the scalar product of the difference vectors of any triple of points (i.e. a query point $\vec{A} \in \mathcal{D}$ and all pairs $(\vec{B},\vec{C})$ of all remaining points in $\mathcal{D} \backslash \{\vec{A}\})$ normalized by the quadratic product of the length of the difference vectors, i.e. the angle is weighted less if the corresponding points are far from the query point. By this weighting factor, the distance influences the value after all, but only to a minor part. Nevertheless, this weighting of the variance is important since the angle to a pair of points varies naturally stronger for a bigger distance. The variance of this value over all pairs for the query point $\vec{A}$ constitutes the angle-based outlier factor (ABOF) of $\vec{A}$.
 
@@ -515,51 +483,7 @@ $$
 
 **NOTE**: This way of weighting the cosine similar is weird in my opinion. In fact, the pyod package implements ABOD without these weights. I\'m not sure which way is the correct one, or even is one can say that either can be wrong, since the constructions of the algorithm is not based in any formalism. I have yet yo find a discussion about the issue.
 
-``` python
-def abof(a, X):
-    """ Returns abof score for X[a] """
-
-    m = len(X)
-    # Variablea to store the first and second terms of the varince
-    var1 = 0
-    var2 = 0
-    # variable to store the normalization constant (sum of weights)
-    norm_c = 0
-
-    # Loop over all pairs of points
-    for b in range(m):
-        if a == b:
-            continue
-        for c in range(b+1, m):
-            if a == c:
-                continue
-            ### BEGIN SOLUTION
-            vec_ab = X[b] - X[a]
-            vec_ac = X[c] - X[a]
-            d_ab = np.linalg.norm(vec_ab)
-            d_ac = np.linalg.norm(vec_ac)
-            scalar_prod = np.dot(vec_ab, vec_ac)
-
-            d_product = d_ab*d_ac
-            # If duplicates are present, some of these might be zero
-            # In such case, omit. Not sure this is the correct behaviour.
-            if d_product == 0:
-                continue
-            var_temp = scalar_prod/(d_product**3)
-            # Note: pyod implements this as var_temp = scalar_prod/(d_product**2)
-            # The original paper wighting scheme seems weird to me, pyod implementation seems more natural.
-            # but i haven't found any discussion about it.
-            var1 += var_temp**2
-            var2 += var_temp
-            norm_c += 1/d_product
-            # Note: pyod implements this as norm_c += 1
-
-            ### END SOLUTION
-
-    var = var1/norm_c - (var2/norm_c)**2
-
-    return var
-```
+You\'ll be asked to implement the scoring function `abof(a, X)` in the assignment. The inputs are the index $a$ of an observation and the data matrix $X$. The output is the score for observation $x_a$.
 
 ``` python
 def abod(X):
@@ -590,7 +514,9 @@ plt.xlabel('Malic acid')
 plt.ylabel('Proline');
 ```
 
-![](c05df94848e0f252a72b26bbbf6b9890099625ad.png)
+![](./.ob-jupyter/fea0cf1afea61057fe606bd3dbdb66ac0a748e98.png)
+
+In this case, lower scores are associated with outliers. Use the image above to check your implementation.
 
 ## iForest
 

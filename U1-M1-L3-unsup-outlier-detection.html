@@ -253,21 +253,14 @@
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#lof">
-   LOF
+  <a class="reference internal nav-link" href="#density-based-od-local-outlier-factor-lof">
+   Density based OD: Local Outlier Factor (LOF)
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#angle-based-outlier-detection-abod">
    Angle based outlier detection (ABOD)
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#the-angled-based-outlier-factor-abof">
-     The Angled Based Outlier Factor (ABOF)
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#iforest">
@@ -316,7 +309,7 @@
 <h1>Anomaly and Outlier Detection<a class="headerlink" href="#anomaly-and-outlier-detection" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>Section from <span id="id1">[<a class="reference internal" href="#id21"><span>1</span></a>]</span>.</p>
+<p>Section from <span id="id1">[<a class="reference internal" href="#id28"><span>1</span></a>]</span>.</p>
 <p>Anomaly detection is the process of identifying unexpected items or events in datasets, which differ from the norm. In contrast to standard classification tasks, anomaly detection is often applied on unlabeled data, taking only the internal structure of the dataset into account. Anomalies are often associated with particular interesting events or suspicious data records. Anomalies are known to have two important characteristics:</p>
 <ol class="simple">
 <li><p>Anomalies are different from the norm with respect to their features and</p></li>
@@ -329,23 +322,23 @@
 <li><p>Data Leakage Prevention</p></li>
 </ul>
 <p>We can distinguish between three main types of anomaly detection: Supervised Anomaly Detection, Semi-supervised Anomaly Detection, and Unsupervised Anomaly Detection. Unsupervised Anomaly Detection is the most flexible setup which does not require any labels. Furthermore, there is also no distinction between a training and a test dataset. The idea is that an unsupervised anomaly detection algorithm scores the data solely based on intrinsic properties of the dataset. Typically, distances or densities are used to give an estimation what is normal and what is an outlier.</p>
-<div class="figure align-default" id="id32">
+<div class="figure align-default" id="id46">
 <img alt="_images/journal.pone.0152173.g001.PNG" src="_images/journal.pone.0152173.g001.PNG" />
-<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Different anomaly detection modes depending on the availability of labels in the dataset. (a) Supervised anomaly detection uses a fully labeled dataset for training. (b) Semi-supervised anomaly detection uses an anomaly-free training dataset. Afterwards, deviations in the test data from that normal model are used to detect anomalies. (c) Unsupervised anomaly detection algorithms use only intrinsic information of the data in order to detect instances deviating from the majority of the data. Source: <a class="reference external" href="https://doi.org/10.1371/journal.pone.0152173.g001">https://doi.org/10.1371/journal.pone.0152173.g001</a></span><a class="headerlink" href="#id32" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Different anomaly detection modes depending on the availability of labels in the dataset. (a) Supervised anomaly detection uses a fully labeled dataset for training. (b) Semi-supervised anomaly detection uses an anomaly-free training dataset. Afterwards, deviations in the test data from that normal model are used to detect anomalies. (c) Unsupervised anomaly detection algorithms use only intrinsic information of the data in order to detect instances deviating from the majority of the data. Source: <a class="reference external" href="https://doi.org/10.1371/journal.pone.0152173.g001">https://doi.org/10.1371/journal.pone.0152173.g001</a></span><a class="headerlink" href="#id46" title="Permalink to this image">¶</a></p>
 </div>
 <p>The output of an unsupervised anomaly detection algorithm is often a score. Here, we also use scores and rank the results such that the ranking can be used for performance evaluation. Of course, a ranking can be converted into a label using an appropriate threshold.</p>
 </div>
 <div class="section" id="types-of-anomalies">
 <h2>Types of anomalies<a class="headerlink" href="#types-of-anomalies" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-default" id="id33">
+<div class="figure align-default" id="id47">
 <img alt="_images/journal.pone.0152173.g002.PNG" src="_images/journal.pone.0152173.g002.PNG" />
-<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">A simple two-dimensional example. It illustrates global anomalies (x1, x2), a local anomaly x3 and a micro-cluster c3. Source: <a class="reference external" href="https://doi.org/10.1371/journal.pone.0152173.g002">https://doi.org/10.1371/journal.pone.0152173.g002</a></span><a class="headerlink" href="#id33" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">A simple two-dimensional example. It illustrates global anomalies (x1, x2), a local anomaly x3 and a micro-cluster c3. Source: <a class="reference external" href="https://doi.org/10.1371/journal.pone.0152173.g002">https://doi.org/10.1371/journal.pone.0152173.g002</a></span><a class="headerlink" href="#id47" title="Permalink to this image">¶</a></p>
 </div>
 <p>In Fig 2 two anomalies can be easily identified by eye: x1 and x2 are very different from the dense areas with respect to their attributes and are therefore called global anomalies. When looking at the dataset globally, x3 can be seen as a normal record since it is not too far away from the cluster c2. However, when we focus only on the cluster c2 and compare it with x3 while neglecting all the other instances, it can be seen as an anomaly. Therefore, x3 is called a local anomaly, since it is only anomalous when compared with its close-by neighborhood. It depends on the application, whether local anomalies are of interest or not. Another interesting question is whether the instances of the cluster c3 should be seen as three anomalies or as a (small) regular cluster. These phenomena is called micro cluster and anomaly detection algorithms should assign scores to its members larger than the normal instances, but smaller values than the obvious anomalies. This simple example already illustrates that anomalies are not always obvious and a score is much more useful than a binary label assignment.</p>
 <p>To this end, an anomaly is always referred to a single instance in a dataset only occurring rarely. In reality, this is often not true. For example, in intrusion detection, anomalies are often referred to many (suspicious) access patterns, which may be observed at a larger amount as the normal accesses. In this case, an unsupervised anomaly detection algorithm directly applied on the raw data will fail. The task of detecting single anomalous instances in a larger dataset (as introduced so far) is called point anomaly detection. Nearly all available unsupervised anomaly detection algorithms today are from this type. If an anomalous situation is represented as a set of many instances, this is called a collective anomaly. Each of these instances is not necessarily a point anomaly, but only a specific combination thereof defines the anomaly. The previous given example of occurring multiple specific access patterns in intrusion detection is such a collective anomaly. A third kind are contextual anomalies, which describe the effect that a point can be seen as normal, but when a given context is taken into account, the point turns out to be an anomaly. The most commonly occurring context is time. As an example, suppose we measure temperature in a range of 0°to 35°C during the year. Thus, a temperature of 26°C seems pretty normal, but when we take the context time into account (e.g. the month), such a high temperature of 26°C during winter would definitively be considered as an anomaly.</p>
-<div class="figure align-default" id="id34">
+<div class="figure align-default" id="id48">
 <img alt="_images/journal.pone.0152173.g003.PNG" src="_images/journal.pone.0152173.g003.PNG" />
-<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">A taxonomy of unsupervised anomaly detection algorithms comprising of four main groups. Note that CMGOS can be categorized in two groups: It is a clustering-based algorithm as well as estimating a subspace of each cluster.</span><a class="headerlink" href="#id34" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">A taxonomy of unsupervised anomaly detection algorithms comprising of four main groups. Note that CMGOS can be categorized in two groups: It is a clustering-based algorithm as well as estimating a subspace of each cluster.</span><a class="headerlink" href="#id48" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="statistical-method-gaussian-model-mahalanobis-distance">
@@ -507,7 +500,7 @@ p\left( x; \mu, \Sigma \right)  = \frac{1}{  \sqrt{  \left( 2\pi\right)^k  \left
 </div>
 <p><img alt="" src="_images/45328740638fa58fabeab0a1676e2dc54b2a45e6.png" /></p>
 <p>There is a problem with the previous estimation of our normal distribution. By inspecting the plot, it is clear that if outliers where removed the shape of the distribution should be an ellipse almost aligned with the y-axis. The problem is that the estimation of the covariance matrix is heavily influenced by the outliers. In principle, we would like to estimate the covariance using only the clean subset of the data.</p>
-<p>One way to solve this problems is to use a robust estimator for the covariance matrix called the Minimum Covariance Determinant <span id="id2">[<a class="reference internal" href="#id22"><span>2</span></a>]</span>. The Minimum Covariance Determinant estimator is a robust, high-breakdown point (i.e. it can be used to estimate the covariance matrix of highly contaminated datasets, up to <span class="math notranslate nohighlight">\(\frac{n_\text{samples} - n_\text{features} - 1}{2}\)</span> outliers) estimator of covariance. The idea is to find <span class="math notranslate nohighlight">\(\frac{n_\text{samples}+n_\text{features}+1}{2}\)</span> observations whose empirical covariance has the smallest determinant, yielding a “pure” subset of observations from which to compute standards estimates of location and covariance.</p>
+<p>One way to solve this problems is to use a robust estimator for the covariance matrix called the Minimum Covariance Determinant <span id="id2">[<a class="reference internal" href="#id29"><span>2</span></a>]</span>. The Minimum Covariance Determinant estimator is a robust, high-breakdown point (i.e. it can be used to estimate the covariance matrix of highly contaminated datasets, up to <span class="math notranslate nohighlight">\(\frac{n_\text{samples} - n_\text{features} - 1}{2}\)</span> outliers) estimator of covariance. The idea is to find <span class="math notranslate nohighlight">\(\frac{n_\text{samples}+n_\text{features}+1}{2}\)</span> observations whose empirical covariance has the smallest determinant, yielding a “pure” subset of observations from which to compute standards estimates of location and covariance.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.covariance</span> <span class="kn">import</span> <span class="n">MinCovDet</span>
 
 <span class="k">def</span> <span class="nf">estimateGaussianRobust</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
@@ -540,7 +533,7 @@ p\left( x; \mu, \Sigma \right)  = \frac{1}{  \sqrt{  \left( 2\pi\right)^k  \left
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
 </pre></div>
 </div>
-<p><img alt="" src="_images/6eb740f5f689c2dfa6d29cd97e5f1adeb43e1f07.png" /></p>
+<p><img alt="" src="_images/9d1afc5bee7d5a3d1df998f9a3dc066721fe161c.png" /></p>
 </div>
 <div class="section" id="choosing-the-threshold">
 <h3>Choosing the threshold<a class="headerlink" href="#choosing-the-threshold" title="Permalink to this headline">¶</a></h3>
@@ -573,34 +566,34 @@ MD(x) = \sqrt{\left(x - \mu \right)^T\Sigma^{-1}\left(x - \mu\right)}
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Top outliers: &#39;</span><span class="p">,</span> <span class="n">top_outliers</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Top outliers:  [45 39 43 41 21 46 19  4]
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Top outliers:  [43 39 45 21 41 46 19  4]
 </pre></div>
 </div>
-<p><img alt="" src="_images/2cc8f2832388230de8856da27ff848207e841e2f.png" /></p>
+<p><img alt="" src="_images/e8e85da959456524efd80c2f73fd698c71035b23.png" /></p>
 </div>
 </div>
 <div class="section" id="distance-based-od">
 <h2>Distance based OD<a class="headerlink" href="#distance-based-od" title="Permalink to this headline">¶</a></h2>
 <p>In a modern distance based approach, an outlier is an observation far away from its neighbors. A distance based methods do not assume any distribution (non-parametric), but employ the whole set of observations.</p>
-<p>The approach was first formalized by Knorr and Ng <span id="id3">[<a class="reference internal" href="#id28"><span>3</span></a>]</span>. The distance based (DB) method labels an observation <span class="math notranslate nohighlight">\(x\)</span> as an outlier if the fraction of points farther than a distance <span class="math notranslate nohighlight">\(\delta\)</span> from <span class="math notranslate nohighlight">\(x\)</span> exceeds a specified threshold <span class="math notranslate nohighlight">\(\alpha\)</span>, i.e, if the following condition is satisfied</p>
+<p>The approach was first formalized by Knorr and Ng <span id="id3">[<a class="reference internal" href="#id35"><span>3</span></a>]</span>. The distance based (DB) method labels an observation <span class="math notranslate nohighlight">\(x\)</span> as an outlier if the fraction of points farther than a distance <span class="math notranslate nohighlight">\(\delta\)</span> from <span class="math notranslate nohighlight">\(x\)</span> exceeds a specified threshold <span class="math notranslate nohighlight">\(\alpha\)</span>, i.e, if the following condition is satisfied</p>
 <div class="math notranslate nohighlight">
 \[
 \left|\left\{ x' \in X \mid d(x,x') &gt; \delta \right\}\right| \geq \alpha,
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(n\)</span> is the number of observations, and <span class="math notranslate nohighlight">\(\alpha,\delta \in
 \mathbb{R}(0 \leq \alpha \leq1)\)</span> are parameters.</p>
-<div class="figure align-default" id="id35">
+<div class="figure align-default" id="id49">
 <img alt="_images/od-1.png" src="_images/od-1.png" />
-<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">A DB outlier (left) and a regular observation (right). Source: Mahito Sugiyama course on Data Mining (<a class="reference external" href="https://mahito.nii.ac.jp/lecture">https://mahito.nii.ac.jp/lecture</a>)</span><a class="headerlink" href="#id35" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">A DB outlier (left) and a regular observation (right). Source: Mahito Sugiyama course on Data Mining (<a class="reference external" href="https://mahito.nii.ac.jp/lecture">https://mahito.nii.ac.jp/lecture</a>)</span><a class="headerlink" href="#id49" title="Permalink to this image">¶</a></p>
 </div>
 <p>The main drawbacks of the <span class="math notranslate nohighlight">\(DB(\alpha, \delta)\)</span> methods are that choosing the right value for <span class="math notranslate nohighlight">\(\delta\)</span> is hard and that it outputs a binary classification of observations. A point is either an outlier or it is not. It would be nice to have a measure of the <em>degree</em> of <em>outlierness</em> of a point. The follwing algorithms based on the distance to the k-nearest neighbors offer just that.</p>
 <div class="section" id="knn">
 <h3>KNN<a class="headerlink" href="#knn" title="Permalink to this headline">¶</a></h3>
-<p>We will consider two different nearest neighbor based algorithms, depending on whether the the distance to the kth-nearest-neighbor is used (a single one) or the average distance to all of the k-nearest-neighbors is computed. In the following, we refer to the first method as kth-NN <span id="id4">[<a class="reference internal" href="#id29"><span>4</span></a>]</span> and the latter as k-NN. Both algorithms assign a score to each observation based on the distance to its neighbors (the kth distance or the average).</p>
+<p>We will consider two different nearest neighbor based algorithms, depending on whether the the distance to the kth-nearest-neighbor is used (a single one) or the average distance to all of the k-nearest-neighbors is computed. In the following, we refer to the first method as kth-NN <span id="id4">[<a class="reference internal" href="#id36"><span>4</span></a>]</span> and the latter as k-NN. Both algorithms assign a score to each observation based on the distance to its neighbors (the kth distance or the average).</p>
 <p>In practical applications, the k-NN method is often preferred. However, the absolute value of the score depends very much on the dataset itself, the number of dimensions, and on normalization. As a result, it is not easy to select an appropriate threshold.</p>
-<div class="figure align-default" id="id36">
+<div class="figure align-default" id="id50">
 <img alt="_images/od-2.png" src="_images/od-2.png" />
-<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">kthNN scores based on the distance to the second neighbor. Note that if the first neighbor were to be used, observations 10 and 11 would rank much lower, thus failed to be identified as outliers. Source: Mahito Sugiyama course on Data Mining (<a class="reference external" href="https://mahito.nii.ac.jp/lecture">https://mahito.nii.ac.jp/lecture</a>)</span><a class="headerlink" href="#id36" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">kthNN scores based on the distance to the second neighbor. Note that if the first neighbor were to be used, observations 10 and 11 would rank much lower, thus failed to be identified as outliers. Source: Mahito Sugiyama course on Data Mining (<a class="reference external" href="https://mahito.nii.ac.jp/lecture">https://mahito.nii.ac.jp/lecture</a>)</span><a class="headerlink" href="#id50" title="Permalink to this image">¶</a></p>
 </div>
 <p>Our KNN algorithm will use a brute force approach to calculate the nearest neighbors. This implies the calculation of <span class="math notranslate nohighlight">\(N^2\)</span> pairwise distances among all observations (rows) of the data matrix. More efficient approaches for large datasets employ KDTrees or BallTrees (see, for example, <a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a>). Euclidian distance is often used, but other metrics can be employed as well. The distance matrix is an <span class="math notranslate nohighlight">\(N\times N\)</span> matrix defined as:</p>
 <div class="math notranslate nohighlight">
@@ -643,25 +636,25 @@ d(x_n,x_1) &amp; d(x_n,x_2) &amp; \dots &amp; d(x_n,x_n)
 </pre></div>
 </div>
 <p><img alt="" src="_images/1278176ddcc7749d28954a68705a9a9a33c7c7ae.png" /></p>
-<p>For large date sets, naive KNN algorithms become inefficient, as they scale as <span class="math notranslate nohighlight">\(O(n^2)\)</span>. Two modifications have been proposed to deal with scalability issues, mainly by avoiding unnecessary distance computations. One modification, ORCA <span id="id5">[<a class="reference internal" href="#id30"><span>5</span></a>,<span></span>]</span> uses an Approximate Nearest Neighbor Search, which terminates as soon as the current score becomes smaller than the t-th largest score so far, as then x can never become an outlier. The second one, iORCA &#64;bhaduri2011algorithms, further improves on ORCA by indexing observations using the distance from a reference point.</p>
+<p>For large date sets, naive KNN algorithms become inefficient, as they scale as <span class="math notranslate nohighlight">\(O(n^2)\)</span>. Two modifications have been proposed to deal with scalability issues, mainly by avoiding unnecessary distance computations. One modification, ORCA <span id="id5">[<a class="reference internal" href="#id37"><span>5</span></a>,<span></span>]</span> uses an Approximate Nearest Neighbor Search, which terminates as soon as the current score becomes smaller than the t-th largest score so far, as then x can never become an outlier. The second one, iORCA &#64;bhaduri2011algorithms, further improves on ORCA by indexing observations using the distance from a reference point.</p>
 <p>Other drawback is that distance based algorithms cannot cope with in-homogeneously spaced data, i.e, data where density varies greatly, or with clusters of different local densities. In this cases, density based or angle based algorithms perform better.</p>
-<div class="figure align-default" id="id37">
+<div class="figure align-default" id="id51">
 <img alt="_images/od-3.png" src="_images/od-3.png" />
-<p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">Two clusters of different density for which KNN based methods perform poorly. Source: Mahito Sugiyama course on Data Mining (<a class="reference external" href="https://mahito.nii.ac.jp/lecture">https://mahito.nii.ac.jp/lecture</a>)</span><a class="headerlink" href="#id37" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">Two clusters of different density for which KNN based methods perform poorly. Source: Mahito Sugiyama course on Data Mining (<a class="reference external" href="https://mahito.nii.ac.jp/lecture">https://mahito.nii.ac.jp/lecture</a>)</span><a class="headerlink" href="#id51" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 </div>
-<div class="section" id="lof">
-<h2>LOF<a class="headerlink" href="#lof" title="Permalink to this headline">¶</a></h2>
-<p>The local outlier factor <span id="id6">[<a class="reference internal" href="#id27"><span>6</span></a>,<a class="reference internal" href="#id26"><span>7</span></a>]</span> is the most well-known local anomaly detection algorithm and also introduced the idea of local anomalies first. To calculate the LOF score, three steps have to be computed:</p>
+<div class="section" id="density-based-od-local-outlier-factor-lof">
+<h2>Density based OD: Local Outlier Factor (LOF)<a class="headerlink" href="#density-based-od-local-outlier-factor-lof" title="Permalink to this headline">¶</a></h2>
+<p>The local outlier factor <span id="id6">[<a class="reference internal" href="#id34"><span>6</span></a>,<a class="reference internal" href="#id33"><span>7</span></a>]</span> is the most well-known local anomaly detection algorithm and also introduced the idea of local anomalies first. To calculate the LOF score, three steps have to be computed:</p>
 <ol>
-<li><p>The k-nearest-neighbors have to be found for each record x. In case of distance tie of the kth neighbor, more than k neighbors are used.</p></li>
-<li><p>Using these k-nearest-neighbors <span class="math notranslate nohighlight">\(N_k\)</span>, the local density for a record is estimated by computing the local reachability density (LRD):</p>
+<li><p>The k-nearest-neighbors have to be found for each record <span class="math notranslate nohighlight">\(x\)</span>. In case of distance tie of the kth neighbor, more than <span class="math notranslate nohighlight">\(k\)</span> neighbors are used.</p></li>
+<li><p>Using these k-nearest-neighbors <span class="math notranslate nohighlight">\(N_k(x)\)</span> (the set of neighbors), the local density for a record is estimated by computing the local reachability density (LRD):</p>
 <div class="math notranslate nohighlight">
 \[
       LRD_k(x) = 1/\left(  \frac{\sum\limits_{o\in N_k(x)} d_k(x,o)}{\left|N_k(x)\right|} \right)
       \]</div>
-<p>whereas dk(·) is the reachability distance. Except for some very rare situations in highly dense clusters, this is the Euclidean distance.</p>
+<p>whereas <span class="math notranslate nohighlight">\(d_k(x,o)\)</span> is the reachability distance. Except for some very rare situations in highly dense clusters, this is the Euclidean distance.</p>
 </li>
 <li><p>Finally, the LOF score is computed by comparing the LRD of a record with the LRDs of its k neighbors:</p>
 <div class="math notranslate nohighlight">
@@ -674,54 +667,10 @@ d(x_n,x_1) &amp; d(x_n,x_2) &amp; \dots &amp; d(x_n,x_n)
 <p>The reachability distance is defined as:</p>
 <div class="math notranslate nohighlight">
 \[
-d_k(x, o) = \max\left( k-distance(o), d(x,o)  \right)
+d_k(x, o) = \max\left( k\text{-distance}(o), d(x,o)  \right)
 \]</div>
 <p>In words, the reachability distance of an object <span class="math notranslate nohighlight">\(x\)</span> from <span class="math notranslate nohighlight">\(o\)</span> is the true distance of the two objects, but at least the k-distance of <span class="math notranslate nohighlight">\(o\)</span>. Objects that belong to the k nearest neighbors of <span class="math notranslate nohighlight">\(o\)</span> (the “core” of <span class="math notranslate nohighlight">\(o\)</span>) are considered to be equally distant, i.e., equally reachable from <span class="math notranslate nohighlight">\(o\)</span>. The reason for this distance is to get more stable results. Note that this is not a distance in the mathematical definition, since it is not symmetric.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lof</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
-    <span class="c1"># Find the distance matrix</span>
-    <span class="c1">### BEGIN SOLUTION</span>
-    <span class="n">D</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="c1">### END SOLUTION</span>
-
-    <span class="c1"># Sort the distance matrix row by row to obtain the k neighborhood of each row.</span>
-    <span class="c1">### BEGIN SOLUTION</span>
-    <span class="n">Nk_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">D</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c1">### END SOLUTION</span>
-
-    <span class="c1"># Store the k-distance of each observation</span>
-    <span class="c1">### BEGIN SOLUTION</span>
-    <span class="n">k_dist</span> <span class="o">=</span> <span class="n">Nk_distances</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c1">### END SOLUTION</span>
-
-    <span class="c1"># Also store the indices of the neighbors to find the k-distance of each point o.</span>
-    <span class="c1">### BEGIN SOLUTION</span>
-    <span class="n">Nk_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">D</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c1">### END SOLUTION</span>
-
-    <span class="c1"># Find the reachability distances of each neighborhood</span>
-    <span class="c1"># Note: Numpy fancy indexing is your friend</span>
-    <span class="n">r_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">k</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Nk_idx</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
-            <span class="n">r_dist</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">o</span><span class="p">],</span> <span class="n">k_dist</span><span class="p">[</span><span class="n">o</span><span class="p">])</span>
-
-    <span class="c1">### BEGIN SOLUTION</span>
-    <span class="n">r_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">Nk_distances</span><span class="p">,</span> <span class="n">k_dist</span><span class="p">[</span><span class="n">Nk_idx</span><span class="p">])</span>
-    <span class="c1">### END SOLUTION</span>
-
-    <span class="c1"># Find LDR for each observation</span>
-    <span class="c1">### BEGIN SOLUTION</span>
-    <span class="n">ldr</span> <span class="o">=</span> <span class="n">k</span><span class="o">/</span><span class="n">r_dist</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1">### END SOLUTION</span>
-
-    <span class="c1">#Find LOF scores</span>
-    <span class="c1">### BEGIN SOLUTION</span>
-    <span class="n">scores</span> <span class="o">=</span> <span class="n">ldr</span><span class="p">[</span><span class="n">Nk_idx</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">ldr</span><span class="o">/</span><span class="n">k</span>
-    <span class="c1">### END SOLUTION</span>
-
-    <span class="k">return</span> <span class="n">scores</span>
-</pre></div>
-</div>
+<p>You’ll be asked to implement the LOF algorithm in the assignment. The function <code class="docutils literal notranslate"><span class="pre">lof(X,</span> <span class="pre">k)</span></code> takes the data matrix and <span class="math notranslate nohighlight">\(k\)</span>, the number of neighbors, as inputs; and outputs the scores for each observation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize the data matrix, this step is important</span>
 <span class="c1"># since the scale of the two columns differs significantly</span>
 <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
@@ -739,18 +688,27 @@ d_k(x, o) = \max\left( k-distance(o), d(x,o)  \right)
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p><img alt="" src="60b94d56a822659bca1591ccce1bb1a9fb52206b.png" /></p>
+<p><img alt="" src="_images/b38371285e1e90d6d33074bf978328ccaed6879f.png" /></p>
+<p>Larger scores are associated with possible outliers. Use the above image to check your work. The main drawback of LOF is it scales as <span class="math notranslate nohighlight">\(O(n^2)\)</span>. Another one is that the resulting values are quotient-values and hard to interpret (text from <span id="id7">[<a class="reference internal" href="#id33"><span>7</span></a>]</span>). A value of 1 or even less indicates a clear inlier, but there is no clear rule for when a point is an outlier. In one data set, a value of 1.1 may already be an outlier, in another dataset and parameterization (with strong local fluctuations) a value of 2 could still be an inlier. These differences can also occur within a dataset due to the locality of the method. There exist extensions of LOF that try to improve over LOF in these aspects:</p>
+<ul class="simple">
+<li><p>Feature Bagging for Outlier Detection <span id="id8">[<a class="reference internal" href="#id39"><span>8</span></a>]</span> runs LOF on multiple projections and combines the results for improved detection qualities in high dimensions. This is the first ensemble learning approach to outlier detection, for other variants see &#64;zimek2014ensembles.</p></li>
+<li><p>Local Outlier Probability (LoOP) <span id="id9">[<a class="reference internal" href="#id41"><span>9</span></a>]</span> is a method derived from LOF but using inexpensive local statistics to become less sensitive to the choice of the parameter k. In addition, the resulting values are scaled to a value range of [0:1].</p></li>
+<li><p>Interpreting and Unifying Outlier Scores <span id="id10">[<a class="reference internal" href="#id42"><span>10</span></a>]</span> proposes a normalization of the LOF outlier scores to the interval [0:1] using statistical scaling to increase usability and can be seen an improved version of the LoOP ideas.</p></li>
+<li><p>On Evaluation of Outlier Rankings and Outlier Scores <span id="id11">[<a class="reference internal" href="#id43"><span>11</span></a>]</span> proposes methods for measuring similarity and diversity of methods for building advanced outlier detection ensembles using LOF variants and other algorithms and improving on the Feature Bagging approach discussed above.</p></li>
+<li><p>Local outlier detection reconsidered: a generalized view on locality with applications to spatial, video, and network outlier detection <span id="id12">[<a class="reference internal" href="#id44"><span>12</span></a>]</span> discusses the general pattern in various local outlier detection methods (including, e.g., LOF, a simplified version of LOF and LoOP) and abstracts from this into a general framework. This framework is then applied, e.g., to detecting outliers in geographic data, video streams and authorship networks.</p></li>
+</ul>
 </div>
 <div class="section" id="angle-based-outlier-detection-abod">
 <h2>Angle based outlier detection (ABOD)<a class="headerlink" href="#angle-based-outlier-detection-abod" title="Permalink to this headline">¶</a></h2>
-<p>The main idea behind ABOD <span id="id7">[<a class="reference internal" href="#id24"><span>8</span></a>]</span> is that if <span class="math notranslate nohighlight">\(x\)</span> is an outlier, the variance of angles between pairs of the remaining objects becomes small:</p>
-<p><img alt="" src="_images/abod.png" /></p>
+<p>The main idea behind ABOD <span id="id13">[<a class="reference internal" href="#id31"><span>13</span></a>]</span> is that if <span class="math notranslate nohighlight">\(x\)</span> is an outlier, the variance of angles between pairs of the remaining objects becomes small:</p>
+<div class="figure align-default" id="id52">
+<img alt="_images/abod.png" src="_images/abod.png" />
+<p class="caption"><span class="caption-number">Fig. 7 </span><span class="caption-text">Left: Range of angle values for an inlier (blue) and an outlier (red). Right: Angle values for all pairs of data points for the same observations. Notice the inlier’s (blue) large variation. Source: <a class="reference external" href="https://doi.org/10.1371/journal.pone.0152173.g001">https://doi.org/10.1371/journal.pone.0152173.g001</a></span><a class="headerlink" href="#id52" title="Permalink to this image">¶</a></p>
+</div>
 <p>For a point within a cluster, the angles between difference vectors to pairs of other points differ widely. The variance of the angles will become smaller for points at the border of a cluster. However, even here the variance is still relatively high compared to the variance of angles for real outliers. Here, the angles to most pairs of points will be small since most points are clustered in some directions.</p>
 <p>As a result of these considerations, an angle-based outlier factor (ABOF) can describe the divergence in directions of objects relatively to one another. If the spectrum of observed angles for a point is broad, the point will be surrounded by other points in all possible directions meaning the point is positioned inside a cluster. If the spectrum of observed angles for a point is rather small, other points will be positioned only in certain directions. This means, the point is positioned outside of some sets of points that are grouped together. Thus, rather small angles for a point that are rather similar to one another imply that such point is an outlier.</p>
 <p>ABOD has been proposed as able to perform outlier detection more reliably in high dimensional data sets than distance based methods.</p>
-<p>A problem of the basic approach ABOD is obvious: since for each point all pairs of points must be considered, the time-complexity is in O(<span class="math notranslate nohighlight">\(n^3\)</span>), the original ABOD paper proposes two approximations to address this problem: FastABOD and LB-ABOD. These will not be discussed here.</p>
-<div class="section" id="the-angled-based-outlier-factor-abof">
-<h3>The Angled Based Outlier Factor (ABOF)<a class="headerlink" href="#the-angled-based-outlier-factor-abof" title="Permalink to this headline">¶</a></h3>
+<p>A problem of the basic approach ABOD is obvious: since for each point all pairs of points must be considered, the time-complexity is in O(<span class="math notranslate nohighlight">\(n^3\)</span>), the original ABOD paper proposes two approximations to address this problem: FastABOD and LB-ABOD. These will not be discussed here. Another fast approximation, FastVOA <span id="id14">[<a class="reference internal" href="#id45"><span>14</span></a>,<span></span>]</span> estimates the first and the second moment of the variance independently using random projections and AMS sketches, at the expense of introducing many parameters.</p>
 <p>As an approach to assign the ABOF value to any object in the database <span class="math notranslate nohighlight">\(\mathcal{D}\)</span>, we compute the scalar product of the difference vectors of any triple of points (i.e. a query point <span class="math notranslate nohighlight">\(\vec{A} \in \mathcal{D}\)</span> and all pairs <span class="math notranslate nohighlight">\((\vec{B},\vec{C})\)</span> of all remaining points in <span class="math notranslate nohighlight">\(\mathcal{D} \backslash \{\vec{A}\})\)</span> normalized by the quadratic product of the length of the difference vectors, i.e. the angle is weighted less if the corresponding points are far from the query point. By this weighting factor, the distance influences the value after all, but only to a minor part. Nevertheless, this weighting of the variance is important since the angle to a pair of points varies naturally stronger for a bigger distance. The variance of this value over all pairs for the query point <span class="math notranslate nohighlight">\(\vec{A}\)</span> constitutes the angle-based outlier factor (ABOF) of <span class="math notranslate nohighlight">\(\vec{A}\)</span>.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -770,51 +728,7 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
 {\sum_B\sum_C\frac{1}{\left\Vert \overline{AB}  \right\Vert \cdot \left\Vert \overline{AC}  \right\Vert}}\right)^2
 \end{split}\]</div>
 <p><strong>NOTE</strong>: This way of weighting the cosine similar is weird in my opinion. In fact, the pyod package implements ABOD without these weights. I’m not sure which way is the correct one, or even is one can say that either can be wrong, since the constructions of the algorithm is not based in any formalism. I have yet yo find a discussion about the issue.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">abof</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Returns abof score for X[a] &quot;&quot;&quot;</span>
-
-    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-    <span class="c1"># Variablea to store the first and second terms of the varince</span>
-    <span class="n">var1</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">var2</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="c1"># variable to store the normalization constant (sum of weights)</span>
-    <span class="n">norm_c</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="c1"># Loop over all pairs of points</span>
-    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="c1">### BEGIN SOLUTION</span>
-            <span class="n">vec_ab</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
-            <span class="n">vec_ac</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
-            <span class="n">d_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec_ab</span><span class="p">)</span>
-            <span class="n">d_ac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">vec_ac</span><span class="p">)</span>
-            <span class="n">scalar_prod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">vec_ab</span><span class="p">,</span> <span class="n">vec_ac</span><span class="p">)</span>
-
-            <span class="n">d_product</span> <span class="o">=</span> <span class="n">d_ab</span><span class="o">*</span><span class="n">d_ac</span>
-            <span class="c1"># If duplicates are present, some of these might be zero</span>
-            <span class="c1"># In such case, omit. Not sure this is the correct behaviour.</span>
-            <span class="k">if</span> <span class="n">d_product</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">var_temp</span> <span class="o">=</span> <span class="n">scalar_prod</span><span class="o">/</span><span class="p">(</span><span class="n">d_product</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
-            <span class="c1"># Note: pyod implements this as var_temp = scalar_prod/(d_product**2)</span>
-            <span class="c1"># The original paper wighting scheme seems weird to me, pyod implementation seems more natural.</span>
-            <span class="c1"># but i haven&#39;t found any discussion about it.</span>
-            <span class="n">var1</span> <span class="o">+=</span> <span class="n">var_temp</span><span class="o">**</span><span class="mi">2</span>
-            <span class="n">var2</span> <span class="o">+=</span> <span class="n">var_temp</span>
-            <span class="n">norm_c</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">/</span><span class="n">d_product</span>
-            <span class="c1"># Note: pyod implements this as norm_c += 1</span>
-
-            <span class="c1">### END SOLUTION</span>
-
-    <span class="n">var</span> <span class="o">=</span> <span class="n">var1</span><span class="o">/</span><span class="n">norm_c</span> <span class="o">-</span> <span class="p">(</span><span class="n">var2</span><span class="o">/</span><span class="n">norm_c</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
-
-    <span class="k">return</span> <span class="n">var</span>
-</pre></div>
-</div>
+<p>You’ll be asked to implement the scoring function <code class="docutils literal notranslate"><span class="pre">abof(a,</span> <span class="pre">X)</span></code> in the assignment. The inputs are the index <span class="math notranslate nohighlight">\(a\)</span> of an observation and the data matrix <span class="math notranslate nohighlight">\(X\)</span>. The output is the score for observation <span class="math notranslate nohighlight">\(x_a\)</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">abod</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Retrun abof scores for X &quot;&quot;&quot;</span>
 
@@ -842,12 +756,12 @@ ABOF(\vec{A}) = VAR_{\vec{B},\vec{C}\in\mathcal{D}} \left( \frac{\left&lt;\overl
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Proline&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p><img alt="" src="c05df94848e0f252a72b26bbbf6b9890099625ad.png" /></p>
-</div>
+<p><img alt="" src="_images/fea0cf1afea61057fe606bd3dbdb66ac0a748e98.png" /></p>
+<p>In this case, lower scores are associated with outliers. Use the image above to check your implementation.</p>
 </div>
 <div class="section" id="iforest">
 <h2>iForest<a class="headerlink" href="#iforest" title="Permalink to this headline">¶</a></h2>
-<p>One efficient way of performing outlier detection in high-dimensional datasets is to use random forests. The Isolation Forest algorithm <span id="id8">[<a class="reference internal" href="#id23"><span>9</span></a>,<a class="reference internal" href="#id25"><span>10</span></a>]</span> ‘isolates’ observations by randomly selecting a feature and then randomly selecting a split value between the maximum and minimum values of the selected feature.</p>
+<p>One efficient way of performing outlier detection in high-dimensional datasets is to use random forests. The Isolation Forest algorithm <span id="id15">[<a class="reference internal" href="#id30"><span>15</span></a>,<a class="reference internal" href="#id32"><span>16</span></a>]</span> ‘isolates’ observations by randomly selecting a feature and then randomly selecting a split value between the maximum and minimum values of the selected feature.</p>
 <p>Since recursive partitioning can be represented by a tree structure, the number of splittings required to isolate a sample is equivalent to the path length from the root node to the terminating node.</p>
 <p>This path length, averaged over a forest of such random trees, is a measure of normality and our decision function.</p>
 <p>Random partitioning produces noticeably shorter paths for anomalies. Hence, when a forest of random trees collectively produce shorter path lengths for particular samples, they are highly likely to be anomalies.</p>
@@ -1076,35 +990,53 @@ s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id9"><dl class="citation">
-<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id16"><dl class="citation">
+<dt class="label" id="id28"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Markus Goldstein and Seiichi Uchida. A comparative evaluation of unsupervised anomaly detection algorithms for multivariate data. <em>PloS one</em>, 11(4):e0152173, 2016.</p>
 </dd>
-<dt class="label" id="id22"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id29"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
 <dd><p>Mia Hubert, Michiel Debruyne, and Peter J Rousseeuw. Minimum covariance determinant and extensions. <em>Wiley Interdisciplinary Reviews: Computational Statistics</em>, 10(3):e1421, 2018.</p>
 </dd>
-<dt class="label" id="id28"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
 <dd><p>Edwin M Knorr and Raymond T Ng. Algorithms for mining distance-based outliers in large datasets. In <em>VLDB</em>, volume 98, 392–403. Citeseer, 1998.</p>
 </dd>
-<dt class="label" id="id29"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dt class="label" id="id36"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
 <dd><p>Sridhar Ramaswamy, Rajeev Rastogi, and Kyuseok Shim. Efficient algorithms for mining outliers from large data sets. In <em>Proceedings of the 2000 ACM SIGMOD international conference on Management of data</em>, 427–438. 2000.</p>
 </dd>
-<dt class="label" id="id30"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
+<dt class="label" id="id37"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
 <dd><p>Stephen D Bay and Mark Schwabacher. Mining distance-based outliers in near linear time with randomization and a simple pruning rule. In <em>Proceedings of the ninth ACM SIGKDD international conference on Knowledge discovery and data mining</em>, 29–38. 2003.</p>
 </dd>
-<dt class="label" id="id27"><span class="brackets"><a class="fn-backref" href="#id6">6</a></span></dt>
+<dt class="label" id="id34"><span class="brackets"><a class="fn-backref" href="#id6">6</a></span></dt>
 <dd><p>Markus M Breunig, Hans-Peter Kriegel, Raymond T Ng, and Jörg Sander. Lof: identifying density-based local outliers. In <em>Proceedings of the 2000 ACM SIGMOD international conference on Management of data</em>, 93–104. 2000.</p>
 </dd>
-<dt class="label" id="id26"><span class="brackets"><a class="fn-backref" href="#id6">7</a></span></dt>
+<dt class="label" id="id33"><span class="brackets">7</span><span class="fn-backref">(<a href="#id6">1</a>,<a href="#id7">2</a>)</span></dt>
 <dd><p>Wikipedia contributors. Local outlier factor — Wikipedia, the free encyclopedia. 2020. [Online; accessed 24-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Local_outlier_factor&amp;oldid=992466888">https://en.wikipedia.org/w/index.php?title=Local_outlier_factor&amp;oldid=992466888</a>.</p>
 </dd>
-<dt class="label" id="id24"><span class="brackets"><a class="fn-backref" href="#id7">8</a></span></dt>
+<dt class="label" id="id39"><span class="brackets"><a class="fn-backref" href="#id8">8</a></span></dt>
+<dd><p>Aleksandar Lazarevic and Vipin Kumar. Feature bagging for outlier detection. In <em>Proceedings of the eleventh ACM SIGKDD international conference on Knowledge discovery in data mining</em>, 157–166. 2005.</p>
+</dd>
+<dt class="label" id="id41"><span class="brackets"><a class="fn-backref" href="#id9">9</a></span></dt>
+<dd><p>Hans-Peter Kriegel, Peer Kröger, Erich Schubert, and Arthur Zimek. Loop: local outlier probabilities. In <em>Proceedings of the 18th ACM conference on Information and knowledge management</em>, 1649–1652. 2009.</p>
+</dd>
+<dt class="label" id="id42"><span class="brackets"><a class="fn-backref" href="#id10">10</a></span></dt>
+<dd><p>Hans-Peter Kriegel, Peer Kroger, Erich Schubert, and Arthur Zimek. Interpreting and unifying outlier scores. In <em>Proceedings of the 2011 SIAM International Conference on Data Mining</em>, 13–24. SIAM, 2011.</p>
+</dd>
+<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id11">11</a></span></dt>
+<dd><p>Erich Schubert, Remigius Wojdanowski, Arthur Zimek, and Hans-Peter Kriegel. On evaluation of outlier rankings and outlier scores. In <em>Proceedings of the 2012 SIAM International Conference on Data Mining</em>, 1047–1058. SIAM, 2012.</p>
+</dd>
+<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id12">12</a></span></dt>
+<dd><p>Erich Schubert, Arthur Zimek, and Hans-Peter Kriegel. Local outlier detection reconsidered: a generalized view on locality with applications to spatial, video, and network outlier detection. <em>Data mining and knowledge discovery</em>, 28(1):190–237, 2014.</p>
+</dd>
+<dt class="label" id="id31"><span class="brackets"><a class="fn-backref" href="#id13">13</a></span></dt>
 <dd><p>Hans-Peter Kriegel, Matthias Schubert, and Arthur Zimek. Angle-based outlier detection in high-dimensional data. In <em>Proceedings of the 14th ACM SIGKDD international conference on Knowledge discovery and data mining</em>, 444–452. 2008.</p>
 </dd>
-<dt class="label" id="id23"><span class="brackets"><a class="fn-backref" href="#id8">9</a></span></dt>
+<dt class="label" id="id45"><span class="brackets"><a class="fn-backref" href="#id14">14</a></span></dt>
+<dd><p>Ninh Pham and Rasmus Pagh. A near-linear time approximation algorithm for angle-based outlier detection in high-dimensional data. In <em>Proceedings of the 18th ACM SIGKDD international conference on Knowledge discovery and data mining</em>, 877–885. 2012.</p>
+</dd>
+<dt class="label" id="id30"><span class="brackets"><a class="fn-backref" href="#id15">15</a></span></dt>
 <dd><p>Fei Tony Liu, Kai Ming Ting, and Zhi-Hua Zhou. Isolation forest. In <em>2008 eighth ieee international conference on data mining</em>, 413–422. IEEE, 2008.</p>
 </dd>
-<dt class="label" id="id25"><span class="brackets"><a class="fn-backref" href="#id8">10</a></span></dt>
+<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id15">16</a></span></dt>
 <dd><p>Wikipedia contributors. Isolation forest — Wikipedia, the free encyclopedia. 2021. [Online; accessed 24-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Isolation_forest&amp;oldid=1005785930">https://en.wikipedia.org/w/index.php?title=Isolation_forest&amp;oldid=1005785930</a>.</p>
 </dd>
 </dl>
