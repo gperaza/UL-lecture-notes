@@ -781,6 +781,9 @@ plt.ylabel('Proline');
 Further reading:
 
 -   <https://github.com/yzhao062/anomaly-detection-resources>
+-   One-class SVM trains on normal already seen data, and classifies new data as outliers/inliers. Schölkopf, B. et al., "Estimating the support of a high-dimensional distribution", Neural computation (2001)
+-   Sampling methods employ a small sample of points to calculate distances from other points. The idea is that small samples contain mainly inliers. Sugiyama, M., Borgwardt, K.M., "Rapid Distance-Based Outlier Detection via Sampling", NIPS 2013
+-   Ensemble methods are recently emerging. Aggarwal, C.C., Outlier Ensembles: An Introduction, Springer (2017)
 
 Python modules for outlier detection:
 
