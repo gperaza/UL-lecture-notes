@@ -681,7 +681,7 @@ $$
 where $H(i)$ is the harmonic number and it can be estimated by $\ln(i) + 0.5772156649$ . As $c(n)$ is the average of $h(x)$ given $n$, we use it to normalize $h(x)$. The anomaly score $s$ of an instance $x$ is defined as:
 
 $$
-s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
+s(x,n) = 2^{\frac{-E(h(x))}{c(n)}},
 $$
 
 where $E(h(x))$ is the average of $h(x)$ from a collection of isolation trees. Using the anomaly score s, we are able to make the following assessment:

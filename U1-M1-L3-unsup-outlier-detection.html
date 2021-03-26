@@ -901,7 +901,7 @@ c(n) = 2H(n-1)-2(n-1)/n,
 <p>where <span class="math notranslate nohighlight">\(H(i)\)</span> is the harmonic number and it can be estimated by <span class="math notranslate nohighlight">\(\ln(i) + 0.5772156649\)</span> . As <span class="math notranslate nohighlight">\(c(n)\)</span> is the average of <span class="math notranslate nohighlight">\(h(x)\)</span> given <span class="math notranslate nohighlight">\(n\)</span>, we use it to normalize <span class="math notranslate nohighlight">\(h(x)\)</span>. The anomaly score <span class="math notranslate nohighlight">\(s\)</span> of an instance <span class="math notranslate nohighlight">\(x\)</span> is defined as:</p>
 <div class="math notranslate nohighlight">
 \[
-s(x,n) = 2^{\frac{E(h(x))}{c(n)}},
+s(x,n) = 2^{\frac{-E(h(x))}{c(n)}},
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(E(h(x))\)</span> is the average of <span class="math notranslate nohighlight">\(h(x)\)</span> from a collection of isolation trees. Using the anomaly score s, we are able to make the following assessment:</p>
 <ul class="simple">
