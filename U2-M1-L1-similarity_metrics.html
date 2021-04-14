@@ -862,28 +862,892 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <span class="n">mushrooms</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  class   cap-shape   cap-surface   cap-color   bruises   odor   gill-attachment   gill-spacing   gill-size   gill-color   stalk-shape   stalk-root   stalk-surface-above-ring   stalk-surface-below-ring   stalk-color-above-ring   stalk-color-below-ring   veil-type   veil-color   ring-number   ring-type   spore-print-color   population   habitat
-</pre></div>
-</div>
-<hr class="docutils" />
-<p>0   p       x           s             n           t         p      f                 c              n           k            e             e            s                          s                          w                        w                        p           w            o             p           k                   s            u
-1   e       x           s             y           t         a      f                 c              b           k            e             c            s                          s                          w                        w                        p           w            o             p           n                   n            g
-2   e       b           s             w           t         l      f                 c              b           n            e             c            s                          s                          w                        w                        p           w            o             p           n                   n            m
-3   p       x           y             w           t         p      f                 c              n           n            e             e            s                          s                          w                        w                        p           w            o             p           k                   s            u
-4   e       x           s             g           f         n      f                 w              b           k            t             e            s                          s                          w                        w                        p           w            o             e           n                   a            g</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>class</p></th>
+<th class="head"><p>cap-shape</p></th>
+<th class="head"><p>cap-surface</p></th>
+<th class="head"><p>cap-color</p></th>
+<th class="head"><p>bruises</p></th>
+<th class="head"><p>odor</p></th>
+<th class="head"><p>gill-attachment</p></th>
+<th class="head"><p>gill-spacing</p></th>
+<th class="head"><p>gill-size</p></th>
+<th class="head"><p>gill-color</p></th>
+<th class="head"><p>stalk-shape</p></th>
+<th class="head"><p>stalk-root</p></th>
+<th class="head"><p>stalk-surface-above-ring</p></th>
+<th class="head"><p>stalk-surface-below-ring</p></th>
+<th class="head"><p>stalk-color-above-ring</p></th>
+<th class="head"><p>stalk-color-below-ring</p></th>
+<th class="head"><p>veil-type</p></th>
+<th class="head"><p>veil-color</p></th>
+<th class="head"><p>ring-number</p></th>
+<th class="head"><p>ring-type</p></th>
+<th class="head"><p>spore-print-color</p></th>
+<th class="head"><p>population</p></th>
+<th class="head"><p>habitat</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>p</p></td>
+<td><p>x</p></td>
+<td><p>s</p></td>
+<td><p>n</p></td>
+<td><p>t</p></td>
+<td><p>p</p></td>
+<td><p>f</p></td>
+<td><p>c</p></td>
+<td><p>n</p></td>
+<td><p>k</p></td>
+<td><p>e</p></td>
+<td><p>e</p></td>
+<td><p>s</p></td>
+<td><p>s</p></td>
+<td><p>w</p></td>
+<td><p>w</p></td>
+<td><p>p</p></td>
+<td><p>w</p></td>
+<td><p>o</p></td>
+<td><p>p</p></td>
+<td><p>k</p></td>
+<td><p>s</p></td>
+<td><p>u</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>e</p></td>
+<td><p>x</p></td>
+<td><p>s</p></td>
+<td><p>y</p></td>
+<td><p>t</p></td>
+<td><p>a</p></td>
+<td><p>f</p></td>
+<td><p>c</p></td>
+<td><p>b</p></td>
+<td><p>k</p></td>
+<td><p>e</p></td>
+<td><p>c</p></td>
+<td><p>s</p></td>
+<td><p>s</p></td>
+<td><p>w</p></td>
+<td><p>w</p></td>
+<td><p>p</p></td>
+<td><p>w</p></td>
+<td><p>o</p></td>
+<td><p>p</p></td>
+<td><p>n</p></td>
+<td><p>n</p></td>
+<td><p>g</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>e</p></td>
+<td><p>b</p></td>
+<td><p>s</p></td>
+<td><p>w</p></td>
+<td><p>t</p></td>
+<td><p>l</p></td>
+<td><p>f</p></td>
+<td><p>c</p></td>
+<td><p>b</p></td>
+<td><p>n</p></td>
+<td><p>e</p></td>
+<td><p>c</p></td>
+<td><p>s</p></td>
+<td><p>s</p></td>
+<td><p>w</p></td>
+<td><p>w</p></td>
+<td><p>p</p></td>
+<td><p>w</p></td>
+<td><p>o</p></td>
+<td><p>p</p></td>
+<td><p>n</p></td>
+<td><p>n</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>p</p></td>
+<td><p>x</p></td>
+<td><p>y</p></td>
+<td><p>w</p></td>
+<td><p>t</p></td>
+<td><p>p</p></td>
+<td><p>f</p></td>
+<td><p>c</p></td>
+<td><p>n</p></td>
+<td><p>n</p></td>
+<td><p>e</p></td>
+<td><p>e</p></td>
+<td><p>s</p></td>
+<td><p>s</p></td>
+<td><p>w</p></td>
+<td><p>w</p></td>
+<td><p>p</p></td>
+<td><p>w</p></td>
+<td><p>o</p></td>
+<td><p>p</p></td>
+<td><p>k</p></td>
+<td><p>s</p></td>
+<td><p>u</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>e</p></td>
+<td><p>x</p></td>
+<td><p>s</p></td>
+<td><p>g</p></td>
+<td><p>f</p></td>
+<td><p>n</p></td>
+<td><p>f</p></td>
+<td><p>w</p></td>
+<td><p>b</p></td>
+<td><p>k</p></td>
+<td><p>t</p></td>
+<td><p>e</p></td>
+<td><p>s</p></td>
+<td><p>s</p></td>
+<td><p>w</p></td>
+<td><p>w</p></td>
+<td><p>p</p></td>
+<td><p>w</p></td>
+<td><p>o</p></td>
+<td><p>e</p></td>
+<td><p>n</p></td>
+<td><p>a</p></td>
+<td><p>g</p></td>
+</tr>
+</tbody>
+</table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mushrooms</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">mushrooms</span><span class="p">)</span>
 <span class="n">mushrooms</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  class~e~   class~p~   cap-shape~b~   cap-shape~c~   cap-shape~f~   cap-shape~k~   cap-shape~s~   cap-shape~x~   cap-surface~f~   cap-surface~g~   cap-surface~s~   cap-surface~y~   cap-color~b~   cap-color~c~   cap-color~e~   cap-color~g~   cap-color~n~   cap-color~p~   cap-color~r~   cap-color~u~   cap-color~w~   cap-color~y~   bruises~f~   bruises~t~   odor~a~   odor~c~   odor~f~   odor~l~   odor~m~   odor~n~   odor~p~   odor~s~   odor~y~   gill-attachment~a~   gill-attachment~f~   gill-spacing~c~   gill-spacing~w~   gill-size~b~   gill-size~n~   gill-color~b~   gill-color~e~   gill-color~g~   gill-color~h~   gill-color~k~   gill-color~n~   gill-color~o~   gill-color~p~   gill-color~r~   gill-color~u~   gill-color~w~   gill-color~y~   stalk-shape~e~   stalk-shape~t~   stalk-root~b~   stalk-root~c~   stalk-root~e~   stalk-root~r~   stalk-surface-above-ring~f~   stalk-surface-above-ring~k~   stalk-surface-above-ring~s~   stalk-surface-above-ring~y~   stalk-surface-below-ring~f~   stalk-surface-below-ring~k~   stalk-surface-below-ring~s~   stalk-surface-below-ring~y~   stalk-color-above-ring~b~   stalk-color-above-ring~c~   stalk-color-above-ring~e~   stalk-color-above-ring~g~   stalk-color-above-ring~n~   stalk-color-above-ring~o~   stalk-color-above-ring~p~   stalk-color-above-ring~w~   stalk-color-above-ring~y~   stalk-color-below-ring~b~   stalk-color-below-ring~c~   stalk-color-below-ring~e~   stalk-color-below-ring~g~   stalk-color-below-ring~n~   stalk-color-below-ring~o~   stalk-color-below-ring~p~   stalk-color-below-ring~w~   stalk-color-below-ring~y~   veil-type~p~   veil-color~n~   veil-color~o~   veil-color~w~   veil-color~y~   ring-number~n~   ring-number~o~   ring-number~t~   ring-type~e~   ring-type~f~   ring-type~l~   ring-type~n~   ring-type~p~   spore-print-color~b~   spore-print-color~h~   spore-print-color~k~   spore-print-color~n~   spore-print-color~o~   spore-print-color~r~   spore-print-color~u~   spore-print-color~w~   spore-print-color~y~   population~a~   population~c~   population~n~   population~s~   population~v~   population~y~   habitat~d~   habitat~g~   habitat~l~   habitat~m~   habitat~p~   habitat~u~   habitat~w~
-</pre></div>
-</div>
-<hr class="docutils" />
-<p>0   0          1          0              0              0              0              0              1              0                0                1                0                0              0              0              0              1              0              0              0              0              0              0            1            0         0         0         0         0         0         1         0         0         0                    1                    1                 0                 0              1              0               0               0               0               1               0               0               0               0               0               0               0               1                0                0               0               1               0               0                             0                             1                             0                             0                             0                             1                             0                             0                           0                           0                           0                           0                           0                           0                           1                           0                           0                           0                           0                           0                           0                           0                           0                           1                           0                           1              0               0               1               0               0                1                0                0              0              0              0              1              0                      0                      1                      0                      0                      0                      0                      0                      0                      0               0               0               1               0               0               0            0            0            0            0            1            0
-1   1          0          0              0              0              0              0              1              0                0                1                0                0              0              0              0              0              0              0              0              0              1              0            1            1         0         0         0         0         0         0         0         0         0                    1                    1                 0                 1              0              0               0               0               0               1               0               0               0               0               0               0               0               1                0                0               1               0               0               0                             0                             1                             0                             0                             0                             1                             0                             0                           0                           0                           0                           0                           0                           0                           1                           0                           0                           0                           0                           0                           0                           0                           0                           1                           0                           1              0               0               1               0               0                1                0                0              0              0              0              1              0                      0                      0                      1                      0                      0                      0                      0                      0                      0               0               1               0               0               0               0            1            0            0            0            0            0
-2   1          0          1              0              0              0              0              0              0                0                1                0                0              0              0              0              0              0              0              0              1              0              0            1            0         0         0         1         0         0         0         0         0         0                    1                    1                 0                 1              0              0               0               0               0               0               1               0               0               0               0               0               0               1                0                0               1               0               0               0                             0                             1                             0                             0                             0                             1                             0                             0                           0                           0                           0                           0                           0                           0                           1                           0                           0                           0                           0                           0                           0                           0                           0                           1                           0                           1              0               0               1               0               0                1                0                0              0              0              0              1              0                      0                      0                      1                      0                      0                      0                      0                      0                      0               0               1               0               0               0               0            0            0            1            0            0            0
-3   0          1          0              0              0              0              0              1              0                0                0                1                0              0              0              0              0              0              0              0              1              0              0            1            0         0         0         0         0         0         1         0         0         0                    1                    1                 0                 0              1              0               0               0               0               0               1               0               0               0               0               0               0               1                0                0               0               1               0               0                             0                             1                             0                             0                             0                             1                             0                             0                           0                           0                           0                           0                           0                           0                           1                           0                           0                           0                           0                           0                           0                           0                           0                           1                           0                           1              0               0               1               0               0                1                0                0              0              0              0              1              0                      0                      1                      0                      0                      0                      0                      0                      0                      0               0               0               1               0               0               0            0            0            0            0            1            0
-4   1          0          0              0              0              0              0              1              0                0                1                0                0              0              0              1              0              0              0              0              0              0              1            0            0         0         0         0         0         1         0         0         0         0                    1                    0                 1                 1              0              0               0               0               0               1               0               0               0               0               0               0               0               0                1                0               0               1               0               0                             0                             1                             0                             0                             0                             1                             0                             0                           0                           0                           0                           0                           0                           0                           1                           0                           0                           0                           0                           0                           0                           0                           0                           1                           0                           1              0               0               1               0               0                1                0                1              0              0              0              0              0                      0                      0                      1                      0                      0                      0                      0                      0                      1               0               0               0               0               0               0            1            0            0            0            0            0</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>class~e~</p></th>
+<th class="head"><p>class~p~</p></th>
+<th class="head"><p>cap-shape~b~</p></th>
+<th class="head"><p>cap-shape~c~</p></th>
+<th class="head"><p>cap-shape~f~</p></th>
+<th class="head"><p>cap-shape~k~</p></th>
+<th class="head"><p>cap-shape~s~</p></th>
+<th class="head"><p>cap-shape~x~</p></th>
+<th class="head"><p>cap-surface~f~</p></th>
+<th class="head"><p>cap-surface~g~</p></th>
+<th class="head"><p>cap-surface~s~</p></th>
+<th class="head"><p>cap-surface~y~</p></th>
+<th class="head"><p>cap-color~b~</p></th>
+<th class="head"><p>cap-color~c~</p></th>
+<th class="head"><p>cap-color~e~</p></th>
+<th class="head"><p>cap-color~g~</p></th>
+<th class="head"><p>cap-color~n~</p></th>
+<th class="head"><p>cap-color~p~</p></th>
+<th class="head"><p>cap-color~r~</p></th>
+<th class="head"><p>cap-color~u~</p></th>
+<th class="head"><p>cap-color~w~</p></th>
+<th class="head"><p>cap-color~y~</p></th>
+<th class="head"><p>bruises~f~</p></th>
+<th class="head"><p>bruises~t~</p></th>
+<th class="head"><p>odor~a~</p></th>
+<th class="head"><p>odor~c~</p></th>
+<th class="head"><p>odor~f~</p></th>
+<th class="head"><p>odor~l~</p></th>
+<th class="head"><p>odor~m~</p></th>
+<th class="head"><p>odor~n~</p></th>
+<th class="head"><p>odor~p~</p></th>
+<th class="head"><p>odor~s~</p></th>
+<th class="head"><p>odor~y~</p></th>
+<th class="head"><p>gill-attachment~a~</p></th>
+<th class="head"><p>gill-attachment~f~</p></th>
+<th class="head"><p>gill-spacing~c~</p></th>
+<th class="head"><p>gill-spacing~w~</p></th>
+<th class="head"><p>gill-size~b~</p></th>
+<th class="head"><p>gill-size~n~</p></th>
+<th class="head"><p>gill-color~b~</p></th>
+<th class="head"><p>gill-color~e~</p></th>
+<th class="head"><p>gill-color~g~</p></th>
+<th class="head"><p>gill-color~h~</p></th>
+<th class="head"><p>gill-color~k~</p></th>
+<th class="head"><p>gill-color~n~</p></th>
+<th class="head"><p>gill-color~o~</p></th>
+<th class="head"><p>gill-color~p~</p></th>
+<th class="head"><p>gill-color~r~</p></th>
+<th class="head"><p>gill-color~u~</p></th>
+<th class="head"><p>gill-color~w~</p></th>
+<th class="head"><p>gill-color~y~</p></th>
+<th class="head"><p>stalk-shape~e~</p></th>
+<th class="head"><p>stalk-shape~t~</p></th>
+<th class="head"><p>stalk-root~b~</p></th>
+<th class="head"><p>stalk-root~c~</p></th>
+<th class="head"><p>stalk-root~e~</p></th>
+<th class="head"><p>stalk-root~r~</p></th>
+<th class="head"><p>stalk-surface-above-ring~f~</p></th>
+<th class="head"><p>stalk-surface-above-ring~k~</p></th>
+<th class="head"><p>stalk-surface-above-ring~s~</p></th>
+<th class="head"><p>stalk-surface-above-ring~y~</p></th>
+<th class="head"><p>stalk-surface-below-ring~f~</p></th>
+<th class="head"><p>stalk-surface-below-ring~k~</p></th>
+<th class="head"><p>stalk-surface-below-ring~s~</p></th>
+<th class="head"><p>stalk-surface-below-ring~y~</p></th>
+<th class="head"><p>stalk-color-above-ring~b~</p></th>
+<th class="head"><p>stalk-color-above-ring~c~</p></th>
+<th class="head"><p>stalk-color-above-ring~e~</p></th>
+<th class="head"><p>stalk-color-above-ring~g~</p></th>
+<th class="head"><p>stalk-color-above-ring~n~</p></th>
+<th class="head"><p>stalk-color-above-ring~o~</p></th>
+<th class="head"><p>stalk-color-above-ring~p~</p></th>
+<th class="head"><p>stalk-color-above-ring~w~</p></th>
+<th class="head"><p>stalk-color-above-ring~y~</p></th>
+<th class="head"><p>stalk-color-below-ring~b~</p></th>
+<th class="head"><p>stalk-color-below-ring~c~</p></th>
+<th class="head"><p>stalk-color-below-ring~e~</p></th>
+<th class="head"><p>stalk-color-below-ring~g~</p></th>
+<th class="head"><p>stalk-color-below-ring~n~</p></th>
+<th class="head"><p>stalk-color-below-ring~o~</p></th>
+<th class="head"><p>stalk-color-below-ring~p~</p></th>
+<th class="head"><p>stalk-color-below-ring~w~</p></th>
+<th class="head"><p>stalk-color-below-ring~y~</p></th>
+<th class="head"><p>veil-type~p~</p></th>
+<th class="head"><p>veil-color~n~</p></th>
+<th class="head"><p>veil-color~o~</p></th>
+<th class="head"><p>veil-color~w~</p></th>
+<th class="head"><p>veil-color~y~</p></th>
+<th class="head"><p>ring-number~n~</p></th>
+<th class="head"><p>ring-number~o~</p></th>
+<th class="head"><p>ring-number~t~</p></th>
+<th class="head"><p>ring-type~e~</p></th>
+<th class="head"><p>ring-type~f~</p></th>
+<th class="head"><p>ring-type~l~</p></th>
+<th class="head"><p>ring-type~n~</p></th>
+<th class="head"><p>ring-type~p~</p></th>
+<th class="head"><p>spore-print-color~b~</p></th>
+<th class="head"><p>spore-print-color~h~</p></th>
+<th class="head"><p>spore-print-color~k~</p></th>
+<th class="head"><p>spore-print-color~n~</p></th>
+<th class="head"><p>spore-print-color~o~</p></th>
+<th class="head"><p>spore-print-color~r~</p></th>
+<th class="head"><p>spore-print-color~u~</p></th>
+<th class="head"><p>spore-print-color~w~</p></th>
+<th class="head"><p>spore-print-color~y~</p></th>
+<th class="head"><p>population~a~</p></th>
+<th class="head"><p>population~c~</p></th>
+<th class="head"><p>population~n~</p></th>
+<th class="head"><p>population~s~</p></th>
+<th class="head"><p>population~v~</p></th>
+<th class="head"><p>population~y~</p></th>
+<th class="head"><p>habitat~d~</p></th>
+<th class="head"><p>habitat~g~</p></th>
+<th class="head"><p>habitat~l~</p></th>
+<th class="head"><p>habitat~m~</p></th>
+<th class="head"><p>habitat~p~</p></th>
+<th class="head"><p>habitat~u~</p></th>
+<th class="head"><p>habitat~w~</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
 <p>We now have 118 binary features.</p>
 </div>
 <div class="section" id="similarity-measures-for-categorical-data">
