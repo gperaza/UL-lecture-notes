@@ -422,3 +422,5 @@ The following code plots the sample data sets with the found partitions:
 ## TO-DO
 
 -   \[ \] Discuss several recent unsupervised methods in the literature (papers available on bibliography folder).
+
+-   \[ \] Add methods discussed in <https://geographicdata.science/book/notebooks/05_choropleth.html#quantitative-data-classification>
