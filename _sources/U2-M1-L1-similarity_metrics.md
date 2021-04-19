@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Lacking response and class information, most unsupervised algorithms search for patterns based on how alike or different are observations with respect to each other. One consequence of this is that the outcome of these algorithms will depend on what we mean by two observations being alike or similar. In this lesson, we\'ll review several measures of proximity, quantifying either similarity or dissimilarity between pair of observations, or sets of observations. Most of the present material was adapted from references {cite}`theodorodis2009pattern`.
+Lacking response and class information, most unsupervised algorithms search for patterns based on how alike or different are observations with respect to each other. One consequence of this is that the outcome of these algorithms will depend on what we mean by two observations being alike or similar. In this lesson, we\'ll review several measures of proximity, quantifying either similarity or dissimilarity between pair of observations, or sets of observations. Most of the present material was adapted from references {cite}`theodorodis2009pattern,aggarwal2015data`.
 
 ## What is a proximity measure?
 
@@ -975,13 +975,86 @@ s_i =
 \end{cases}
 \end{align}
 ```
-TODO: Implement general function for mixed variables. TODO: Implement Gower similarity (verify definition in original paper, the weights seems different from the generic weights $\lambda$).
+TODO: Implement general function for mixed variables.
+
+TODO: Implement Gower similarity (verify definition in original paper, the weights seems different from the generic weights $\lambda$).
 
 ## Fuzzy measures
 
+Here we consider the case of probability vectors, or vectors with coordinates in the $[0,1]$ range that encode the degree or belief of some characteristic or property. This is a generalization of binary logic, which works with binary vectors, called fuzzy logic, where we deal with uncertain measurements.
+
+In binary logic, two variables x and y are equivalent if the following expression evaluates to 1 (true)
+
+$$
+((NOT\ x)\ AND\ (NOT\ y))\ OR\ (x\ AND\ y)
+$$
+
+The AND and the OR operator can be implemented with the `min` and `max` functions, respectively. The not operator may be implemented as `1-x`. This implementations can be extended to fuzzy variables, thus the fuzzy similarity between variables may be defined as
+
+$$
+s_{fzzy} = \max(\min(1-x_i, 1-y_i), \min(x_i, y_i))
+$$
+
+For vectors, we can define
+
+$$
+s_{fzzy}^q = \left( \sum_{i=1}^D s_{fzzy}(x_i,y_i)^q  \right)^{\frac{1}{q}}
+$$
+
+``` python
+def s_fzzy(x, y, q):
+    c1 = np.minimum(1-x, 1-y)
+    c2 = np.minimum(x, y)
+    return np.sum(np.maximum(c1, c2)**q)**(1/q)
+```
+
+Lets consider the scalar case,
+
+``` python
+p_list = np.linspace(0, 1, 100)
+
+x_g, y_g = np.meshgrid(p_list, p_list)
+
+s_list = [s_fzzy(xi, yi, 1)
+          for xi,yi in zip(x_g.ravel(), y_g.ravel())]
+s_arr = np.reshape(s_list, (100,100))
+
+fig = plt.figure()
+c = plt.pcolormesh(x_g, y_g, s_arr, shading='auto')
+fig.colorbar(c);
+```
+
+![](./.ob-jupyter/0417070ef017c2394b3c399428eff795db989d70.png)
+
+The similarity of a scalar (vector) with itself is not always 1. It takes into account the associated uncertainty of the true identity of the variable, i.e., the probability that two variables are actually equivalent.
+
 ## Missing data
 
-## Measures between sets of observations
+When dealing with missing we have the following options:
+
+1.  Discard all observations with missing values. Not feasible is a large proportions of observations have missing values.
+
+2.  Impute missing values.
+
+3.  Calculate the proximity using only available pair of coordinates, and scale its value to take into account the reduction in magnitude due to missing dimensions. Let $b$ be the number of unavailable pairs,
+
+    $$
+      p(\vec{x},\vec{y}) = \frac{D}{D - b} p(\vec{x}_{i \notin b},\vec{y}_{i \notin b})
+      $$
+
+    A good measure is the Manhattan distance, since it ensures that the range of the reduced measure is the same as that of the complete measure.
+
+4.  Find the average scalar proximity for all features among the whole data set. Calculate vector proximities as the sum of scalar proximities, if a scalar value is not available for a vector pair, use the average proximity for the dimension.
+
+    $$
+      p(\vec{x},\vec{y}) = \sum_{i=1}^{D} \psi(x_i, y_i)
+      $$
+
+    where $\psi(x_i, y_i)$ is the scalar proximity if both $x_i$ and $y_i$ are available, and the average proximity of the ith feature if not.
+
+## Proximity between a point and a set
+
+## Proximity among sets
 
 Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of measures between observations to measures between sets by considering pairwise measures between the set elements. Then, the measure is a function $U\times U \rightarrow \matbb{R}$ where $U$ is the set of all subsets $D_i \subset X$.
 
