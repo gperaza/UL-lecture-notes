@@ -270,6 +270,37 @@
      </span>
      -norm, Minkowski Distance
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#l-1-manhattan-distance">
+       <span class="math notranslate nohighlight">
+        \(l_1\)
+       </span>
+       , Manhattan distance
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#l-2-euclidean-distance">
+       <span class="math notranslate nohighlight">
+        \(l_2\)
+       </span>
+       , Euclidean distance
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#l-infty-chebyshev-distance">
+       <span class="math notranslate nohighlight">
+        \(l_\infty\)
+       </span>
+       , Chebyshev distance
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#canberra-distance">
+     Canberra distance
+    </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#mahalanobis-distance">
@@ -287,6 +318,21 @@
     <a class="reference internal nav-link" href="#cosine-similarity">
      Cosine similarity
     </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#l-2-normalized-euclidean-distance">
+       <span class="math notranslate nohighlight">
+        \(l_2\)
+       </span>
+       -normalized Euclidean distance
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#soft-cosine">
+       Soft cosine
+      </a>
+     </li>
+    </ul>
    </li>
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#pearson-s-correlation-coefficient">
@@ -294,8 +340,13 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#tanimoto-measure">
-     Tanimoto measure
+    <a class="reference internal nav-link" href="#spearman-correlation">
+     Spearman correlation
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#tanimoto-similarity">
+     Tanimoto similarity
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -310,8 +361,8 @@
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#dissimilarity-measures-for-categorical-data">
-   Dissimilarity measures for categorical data
+  <a class="reference internal nav-link" href="#categorical-data-test-data">
+   Categorical data, test data
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -320,13 +371,18 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#jaccard-coefficient">
-     Jaccard coefficient
+    <a class="reference internal nav-link" href="#simple-matching-coefficient-smc">
+     Simple matching coefficient (SMC)
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#coincidence-coefficient">
-     Coincidence coefficient
+    <a class="reference internal nav-link" href="#jaccard-or-tanimoto-coefficient-jc">
+     Jaccard or Tanimoto coefficient (JC)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sorensen-dice-coefficient">
+     Sørensen–Dice coefficient
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
@@ -337,8 +393,40 @@
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#geodesic-distance">
-   Geodesic distance
+  <a class="reference internal nav-link" href="#dissimilarity-measures-for-categorical-data">
+   Dissimilarity measures for categorical data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hamming-distance">
+     Hamming distance
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#edit-distance-dynamic-measures">
+     Edit distance (Dynamic measures)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mixed-features">
+   Mixed features
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fuzzy-measures">
+   Fuzzy measures
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#missing-data">
+   Missing data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#measures-between-sets-of-observations">
+   Measures between sets of observations
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -352,19 +440,16 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#proximity-measure-for-ordinal-data">
-   Proximity measure for ordinal data
+  <a class="reference internal nav-link" href="#proximity-measures-on-graps">
+   Proximity measures on graps
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#mixed-features">
-   Mixed features
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#measures-between-sets-of-observations">
-   Measures between sets of observations
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#geodesic-distance">
+     Geodesic distance
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
@@ -386,7 +471,7 @@
 <h1>(Dis)similarity metrics<a class="headerlink" href="#dis-similarity-metrics" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>Lacking response and class information, most unsupervised algorithms search for patterns based on how alike or different are observations with respect to each other. One consequence of this is that the outcome of these algorithms will depend on what we mean by two observations being alike or similar. In this lesson, we’ll review several measures of proximity, quantifying either similarity or dissimilarity between pair of observations, or sets of observations. Most of the present material was adapted from references <span id="id1">[<a class="reference internal" href="#id33"><span>1</span></a>]</span>.</p>
+<p>Lacking response and class information, most unsupervised algorithms search for patterns based on how alike or different are observations with respect to each other. One consequence of this is that the outcome of these algorithms will depend on what we mean by two observations being alike or similar. In this lesson, we’ll review several measures of proximity, quantifying either similarity or dissimilarity between pair of observations, or sets of observations. Most of the present material was adapted from references <span id="id1">[<a class="reference internal" href="#id41"><span>1</span></a>]</span>.</p>
 </div>
 <div class="section" id="what-is-a-proximity-measure">
 <h2>What is a proximity measure?<a class="headerlink" href="#what-is-a-proximity-measure" title="Permalink to this headline">¶</a></h2>
@@ -428,6 +513,7 @@
 <li><p><span class="math notranslate nohighlight">\(d' = -\ln(d_{max} + k - d)\)</span> for <span class="math notranslate nohighlight">\(d(\vec{x},\vec{y})&gt;0\)</span> and <span class="math notranslate nohighlight">\(k&gt;0\)</span>.</p></li>
 <li><p><span class="math notranslate nohighlight">\(d' = \frac{kd}{1+d}\)</span> for <span class="math notranslate nohighlight">\(d(\vec{x},\vec{y})&gt;0\)</span> and <span class="math notranslate nohighlight">\(k&gt;0\)</span>.</p></li>
 <li><p><span class="math notranslate nohighlight">\(s' = \frac{1}{1-s}\)</span> for <span class="math notranslate nohighlight">\(s &lt; 1\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(s = \frac{1}{1+d}\)</span> is a common transformation</p></li>
 </ul>
 </div>
 </div>
@@ -487,13 +573,13 @@ d(x_n,x_1) &amp; d(x_n,x_2) &amp; \dots &amp; d(x_n,x_n)
 
 <span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">y</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">mds</span><span class="p">:</span>
         <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
         <span class="c1"># MDS projection</span>
         <span class="n">mds</span> <span class="o">=</span> <span class="n">MDS</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dissimilarity</span><span class="o">=</span><span class="s1">&#39;precomputed&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">fdata</span> <span class="o">=</span> <span class="n">mds</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">fdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">fdata</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">fdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">fdata</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
@@ -546,7 +632,7 @@ d_p(\vec{x},\vec{y}) = \left ( \sum_{i=1}^D w_i\left | x_i - y_i \right |^p \rig
 
 </pre></div>
 </div>
-<p><img alt="" src="_images/697dc9a787cfb43a376d0d48ba0b4f0e74c12035.png" /></p>
+<p><img alt="" src="_images/6b8c6b328c4c6fea6d82b82e2f62d64fcd1594ef.png" /></p>
 <p>In general the distance decreases with <span class="math notranslate nohighlight">\(p\)</span> as we now show. We need to prove that <span class="math notranslate nohighlight">\(|\vec{x}|_{p} \geq |\vec{x}|_{p+1}\)</span>. For <span class="math notranslate nohighlight">\(\vec{x} = 0\)</span> the equality holds. For <span class="math notranslate nohighlight">\(\vec{x} \neq 0\)</span>, let <span class="math notranslate nohighlight">\(y_i = |x_i|/|\vec{x}|_{p+1}\leq 1\)</span>. Then,</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
@@ -564,14 +650,14 @@ y_i^{p+1} &amp;\leq y_i^{p}\\
 \end{align}\end{split}\]</div>
 <p>thus, proving the asseveration.</p>
 <p><img alt="The following figure shows unit circles (the set of all points that are at the unit distance from the centre) with various values of . Source: https://en.wikipedia.org/wiki/Minkowski_distance" src="_images/2D_unit_balls.svg" /></p>
-<ol>
-<li><p><span class="math notranslate nohighlight">\(l_1\)</span>, Manhattan distance</p>
+<div class="section" id="l-1-manhattan-distance">
+<h4><span class="math notranslate nohighlight">\(l_1\)</span>, Manhattan distance<a class="headerlink" href="#l-1-manhattan-distance" title="Permalink to this headline">¶</a></h4>
 <p>The <span class="math notranslate nohighlight">\(l_1\)</span> normal, also called the Manhattan distance, or the city-block distance, is defined as</p>
 <div class="math notranslate nohighlight">
 \[
-    d_1(\vec{x},\vec{y}) =  \sum_{i=1}^D \left | x_i - y_i \right | \right
-    \]</div>
-<p>It’s called the city block distance, since it sums the absolute difference of each component, akin to summing the orthogonal distances transversed when moving on a squared road network. It is preferred over the <span class="math notranslate nohighlight">\(l_2\)</span> norm when outliers are present.</p>
+d_1(\vec{x},\vec{y}) =  \sum_{i=1}^D \left | x_i - y_i \right |
+\]</div>
+<p>It’s called the city block distance, since it sums the absolute difference of each component, akin to summing the orthogonal distances transversed when moving on a squared road network. It is preferred over the <span class="math notranslate nohighlight">\(l_2\)</span> norm when outliers are present. A good standardization for the Manhattan distance is to divide each its feature by its range.</p>
 <p><img alt="Taxicab geometry versus Euclidean distance: In taxicab geometry, the red, yellow, and blue paths all have the same shortest path length of 12. In Euclidean geometry, the green line has length and is the unique shortest path. Source: https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg" src="_images/Manhattan_distance.svg" /></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">minkowski_d</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -582,8 +668,8 @@ y_i^{p+1} &amp;\leq y_i^{p}\\
 <p>One possible weighted transformation for the Manhattan distance, which greatly exaggerates large distances, is</p>
 <div class="math notranslate nohighlight">
 \[
-    d_G(\vec{x},\vec{y}) = -log_{10}\left( 1 - \frac{1}{D}\sum_{i=1}^D \frac{|x_i - y_i|}{b_i - a_i}  \right)
-    \]</div>
+d_G(\vec{x},\vec{y}) = -log_{10}\left( 1 - \frac{1}{D}\sum_{i=1}^D \frac{|x_i - y_i|}{b_i - a_i}  \right)
+\]</div>
 <p>where <span class="math notranslate nohighlight">\(b_i\)</span> and <span class="math notranslate nohighlight">\(a_i\)</span> are the maximum and minimum values among the ith features of N vectors of X, respectively.</p>
 <p>Since <span class="math notranslate nohighlight">\(d_G\)</span> depends on the whole set X, through <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span>, we need to pass those vectors explicitly.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">d_g</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -601,12 +687,13 @@ y_i^{p+1} &amp;\leq y_i^{p}\\
 </pre></div>
 </div>
 <p><img alt="" src="_images/591169c9a8c739509e2592bff2f063ccf0f772c3.png" /></p>
-</li>
-<li><p><span class="math notranslate nohighlight">\(l_2\)</span>, Euclidean distance</p>
+</div>
+<div class="section" id="l-2-euclidean-distance">
+<h4><span class="math notranslate nohighlight">\(l_2\)</span>, Euclidean distance<a class="headerlink" href="#l-2-euclidean-distance" title="Permalink to this headline">¶</a></h4>
 <div class="math notranslate nohighlight">
 \[
-    d_2(\vec{x},\vec{y}) = \sqrt{\left ( \sum_{i=1}^D \left (x_i - y_i \right )^2 \right )}
-    \]</div>
+d_2(\vec{x},\vec{y}) = \sqrt{\left ( \sum_{i=1}^D \left (x_i - y_i \right )^2 \right )}
+\]</div>
 <p>We have already implemented the <span class="math notranslate nohighlight">\(l_2\)</span> norm as the euclidean distance before. We can verify the output of the Minkowsky distance with <span class="math notranslate nohighlight">\(p=2\)</span> is the same.</p>
 <p>This is probably the most common distance metric, and many learning algorithms are design to work with Euclidean distance, such a KNN and K-means.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">minkowski_d</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -615,54 +702,46 @@ y_i^{p+1} &amp;\leq y_i^{p}\\
 </pre></div>
 </div>
 <p><img alt="" src="_images/2c1c083c8777fef628e34f098291b3bff600b01b.png" /></p>
-</li>
-<li><p><span class="math notranslate nohighlight">\(l_\infty\)</span>, Chebyshev distance</p>
+</div>
+<div class="section" id="l-infty-chebyshev-distance">
+<h4><span class="math notranslate nohighlight">\(l_\infty\)</span>, Chebyshev distance<a class="headerlink" href="#l-infty-chebyshev-distance" title="Permalink to this headline">¶</a></h4>
 <p>In the limit <span class="math notranslate nohighlight">\(p \rightarrow \infty\)</span> the Minkowski distance becomes the Chebyshev distance, i.e., the maximum difference, component-wise.</p>
 <div class="math notranslate nohighlight">
 \[
-    d_\infty(\vec{x},\vec{y}) = \underset{1\leq i \leq D}{\operatorname{max}} \left | x_i - y_i  \right |
-    \]</div>
-<div class="figure align-default">
+d_\infty(\vec{x},\vec{y}) = \underset{1\leq i \leq D}{\operatorname{max}} \left | x_i - y_i  \right |
+\]</div>
+<div class="figure align-default" id="id51">
 <img alt="_images/chess.png" src="_images/chess.png" />
+<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev_distance">https://en.wikipedia.org/wiki/Chebyshev_distance</a></span><a class="headerlink" href="#id51" title="Permalink to this image">¶</a></p>
 </div>
-</li>
-</ol>
-<p>The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev_distance">https://en.wikipedia.org/wiki/Chebyshev_distance</a></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-    ``` python
-    def chebyshev_d(x, y):
-        return np.max(np.abs(x - y))
-    ```
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">chebyshev_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">chebyshev_d</span><span class="p">)</span>
 
-    ``` python
-    D = proximity_matrix(X, measure=chebyshev_d)
-
-    plot_prox(D, mds=True)
-    ```
-
-    ![](./.ob-jupyter/8dee37640746e6705547cde6166387377ff50ce8.png)
-
-### Canberra distance
-
-Text from {cite}`web:canberra`.
-
-The Canberra distance is a metric function often used for data scattered around an origin. It was introduced in 1966 (Lance &amp; Williams 1966) and is today mainly used in the form of 1967 (Lance &amp; Williams 1967).
-
-The Canberra metric is similar to the Manhattan distance (which itself is a special form of the Minkowski distance). The distinction is that the absolute difference between the variables of the two objects is divided by the sum of the absolute variable values prior to summing. The generalised equation is given in the form:
-
-$$
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/8dee37640746e6705547cde6166387377ff50ce8.png" /></p>
+</div>
+</div>
+<div class="section" id="canberra-distance">
+<h3>Canberra distance<a class="headerlink" href="#canberra-distance" title="Permalink to this headline">¶</a></h3>
+<p>Text from <span id="id2">[<a class="reference internal" href="#id42"><span>2</span></a>]</span>.</p>
+<p>The Canberra distance is a metric function often used for data scattered around an origin. It was introduced in 1966 (Lance &amp; Williams 1966) and is today mainly used in the form of 1967 (Lance &amp; Williams 1967).</p>
+<p>The Canberra metric is similar to the Manhattan distance (which itself is a special form of the Minkowski distance). The distinction is that the absolute difference between the variables of the two objects is divided by the sum of the absolute variable values prior to summing. The generalised equation is given in the form:</p>
+<div class="math notranslate nohighlight">
+\[
 d_C(\vec{x},\vec{y}) = \sum_{i=1}^D \frac{|x_i - y_i|}{|x_i| + |y_i|}
-$$
+\]</div>
+<p>This metric has the property that the result becomes unity when the variables are of opposite sign. It is useful in the special case where signs represent differences in kind rather than in degree. Anyhow, it is mainly used for values &gt; 0. This metric is easily biased for measures around the origin and very sensitive for values close to 0, where it is more sensitive to proportional than to absolute differences. This feature becomes more apparent in higher dimensional space, respectively an increasing number of variables. It is in turn less influenced than the Manhattan distance by variables with high values. As a very sensitive measurement it is applicable to identify deviations from normal readings.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">canberra_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
 
-This metric has the property that the result becomes unity when the variables are of opposite sign. It is useful in the special case where signs represent differences in kind rather than in degree. Anyhow, it is mainly used for values \&gt; 0. This metric is easily biased for measures around the origin and very sensitive for values close to 0, where it is more sensitive to proportional than to absolute differences. This feature becomes more apparent in higher dimensional space, respectively an increasing number of variables. It is in turn less influenced than the Manhattan distance by variables with high values. As a very sensitive measurement it is applicable to identify deviations from normal readings.
+<span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">canberra_d</span><span class="p">)</span>
 
-``` python
-def canberra_d(x, y):
-    return np.sum(np.abs(x - y)/(np.abs(x) + np.abs(y)))
-
-D = proximity_matrix(X, measure=canberra_d)
-
-plot_prox(D, mds=True)
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="" src="_images/7e3732b5499d6618e3ab78d66a1f3355a0b73597.png" /></p>
@@ -683,7 +762,7 @@ d_Q(\vec{x},\vec{y}) = \sqrt{\frac{1}{D}\sum_{i=1}^D \left(\frac{x_i-y_i}{x_i+y_
 <p>Yet, another similar metric is the Bray-Curtis distance. The Bray-Curtis distance is in the range [0, 1] if all coordinates are positive, and is undefined if the inputs are of length zero.</p>
 <div class="math notranslate nohighlight">
 \[
-d_BC(\vec{x},\vec{y}) = \frac{\sum_{i=1}^D |x_i-y_i|}{\sum_{i=1}^D |x_i+y_i|}
+d_{BC}(\vec{x},\vec{y}) = \frac{\sum_{i=1}^D |x_i-y_i|}{\sum_{i=1}^D |x_i+y_i|}
 \]</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bc_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">))</span>
@@ -739,7 +818,7 @@ d^2 = (\vec{x} - \vec{y})^T U \Lambda^{-1} U^T (\vec{x} - \vec{y})
 <h2>Similarity measures for numerical data<a class="headerlink" href="#similarity-measures-for-numerical-data" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="cosine-similarity">
 <h3>Cosine similarity<a class="headerlink" href="#cosine-similarity" title="Permalink to this headline">¶</a></h3>
-<p>Some text from <span id="id2">[<a class="reference internal" href="#id35"><span>2</span></a>]</span>.</p>
+<p>Some text from <span id="id3">[<a class="reference internal" href="#id43"><span>3</span></a>]</span>.</p>
 <p>Cosine similarity is a similarity metric based on the inner product of two vectors. It takes its name from the geometrical interpretation of the inner product, which gives the cosine of the angle between two vectors as</p>
 <div class="math notranslate nohighlight">
 \[
@@ -797,8 +876,8 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 </pre></div>
 </div>
 <p><img alt="" src="_images/5056aff084cceda093e9c95dfcfb0a11f821a77c.png" /></p>
-<ol>
-<li><p><span class="math notranslate nohighlight">\(l_2\)</span>-normalized Euclidean distance</p>
+<div class="section" id="l-2-normalized-euclidean-distance">
+<h4><span class="math notranslate nohighlight">\(l_2\)</span>-normalized Euclidean distance<a class="headerlink" href="#l-2-normalized-euclidean-distance" title="Permalink to this headline">¶</a></h4>
 <p>Another effective proxy for Cosine Distance can be obtained by <span class="math notranslate nohighlight">\(l_2\)</span> normalisation of the vectors, followed by the application of normal Euclidean distance. Using this technique each term in each vector is first divided by the magnitude of the vector, yielding a vector of unit length, which lies on the unit circle. Then, it is clear, the Euclidean distance over the end-points of any two vectors is a proper metric which gives the same ordering as the Cosine distance for any comparison of vectors (imagine drawing lines between vector points on the unit circle), and furthermore avoids the potentially expensive trigonometric operations required to yield a proper metric. Once the normalization has occurred, the vector space can be used with the full range of techniques available to any Euclidean space, notably standard dimensionality reduction techniques. This normalized form distance is notably used within many Deep Learning algorithms.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">d2_normlzd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -811,356 +890,288 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 </pre></div>
 </div>
 <p><img alt="" src="_images/d804c1c7bb028fdf45f7cebdbb27ea9f29c7ce87.png" /></p>
-</li>
-</ol>
+</div>
+<div class="section" id="soft-cosine">
+<h4>Soft cosine<a class="headerlink" href="#soft-cosine" title="Permalink to this headline">¶</a></h4>
+<p>Finally, cosine similarity assumes features are completely independent. If we believe there exist an intrinsic similarity among some features, e.g. some words as “game” and “play”, we may introduce such similarity through a series of weights relating feature <span class="math notranslate nohighlight">\(i\)</span> to feature <span class="math notranslate nohighlight">\(j\)</span>, <span class="math notranslate nohighlight">\(s_{ij}\)</span>, and calculate the “soft cosine similarity” as</p>
+<div class="math notranslate nohighlight">
+\[
+\operatorname {soft\_cosine} _{1}(\vec{x},\vec{y}) =
+\frac {\sum \nolimits_{i,j}^{D} s_{ij} x_{i} y_{j}}
+{\sqrt {\sum \nolimits_{i,j}^{D} s_{ij} x_{i} x_{j}}
+ \sqrt {\sum \nolimits_{i,j}^{D} s_{ij} y_{i} y_{j}}},
+\]</div>
+</div>
 </div>
 <div class="section" id="pearson-s-correlation-coefficient">
 <h3>Pearson’s correlation coefficient<a class="headerlink" href="#pearson-s-correlation-coefficient" title="Permalink to this headline">¶</a></h3>
 <p>The correlation coefficient is equivalent to a centered cosine similarity.</p>
+<div class="math notranslate nohighlight">
+\[
+\rho(\vec{x},\vec{y}) = \frac{COV(\vec{x},\vec{y})}{\sigma_{x}\sigma{y}}
+= \frac{(\vec{x}-\mu_{x})^T(\vec{y}-\mu_{y})}
+       {|(\vec{x}-\mu_{x})||(\vec{y}-\mu_{y})|}
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(-1 \leq \rho \leq 1\)</span>. A related dissimilarity measure being</p>
+<div class="math notranslate nohighlight">
+\[
+d_{\rho}(\vec{x}m\vec{y}) = \frac{1 - \rho}{2}
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(0 \leq d_{\rho} \leq 1\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pearson_s</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">cosine_s</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">pearson_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pearson_s</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">pearson_d</span><span class="p">)</span>
+
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="tanimoto-measure">
-<h3>Tanimoto measure<a class="headerlink" href="#tanimoto-measure" title="Permalink to this headline">¶</a></h3>
+<p><img alt="" src="_images/877e1cab484ff1883f3bfa74a4c2e45cb11b7992.png" /></p>
+</div>
+<div class="section" id="spearman-correlation">
+<h3>Spearman correlation<a class="headerlink" href="#spearman-correlation" title="Permalink to this headline">¶</a></h3>
+<p>Spearman correlation is similar to Pearson correlation, but only uses rank information (positions within a list of values), rather than the actual values. This makes Spearman correlation less sensitive to outliers in the data, and allows its use with ordinal data.</p>
+<p>From <span id="id4">[<a class="reference internal" href="#id44"><span>4</span></a>]</span>. The Spearman correlation between two variables is equal to the Pearson correlation between the rank values of those two variables; while Pearson’s correlation assesses linear relationships, Spearman’s correlation assesses monotonic relationships (whether linear or not). If there are no repeated data values, a perfect Spearman correlation of +1 or −1 occurs when each of the variables is a perfect monotone function of the other.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spearman_s</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">xr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">yr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pearson_s</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span><span class="n">yr</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">spearman_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">spearman_s</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">spearman_d</span><span class="p">)</span>
+
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/0e0a17c7549246605107bd06a3ef6ee7a9e3dbd4.png" /></p>
+</div>
+<div class="section" id="tanimoto-similarity">
+<h3>Tanimoto similarity<a class="headerlink" href="#tanimoto-similarity" title="Permalink to this headline">¶</a></h3>
+<p>More typically used for categorical data, the Jaccard, or Tanimoto, coefficient can be also used with real valued vectors. It is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+s_T(\vec{x},\vec{y}) = \frac{\vec{x}^T\vec{y}}
+                            {|\vec{x}|^2 + |\vec{y}|^2 - \vec{x}^T\vec{y}}
+= \frac{1}{1 + \frac{(\vec{x}-\vec{y})^T(\vec{x}-\vec{y})}{\vec{x}^T\vec{y}}}
+\]</div>
+<p>The Tanimoto measure is inversely proportional to the squared Euclidean distance divided by the inner product. Since the inner product can thought as a measure of correlation, the more correlated the vectors are, the larger the value of <span class="math notranslate nohighlight">\(s_T\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">tanimoto_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">y</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span> <span class="o">@</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">@</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">tanimoto_d</span><span class="p">)</span>
+
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/1a251c4e4809b97960da25f00ce4cbea57fee059.png" /></p>
 </div>
 <div class="section" id="based-on-weighted-l-2-norm">
 <h3>Based on weighted <span class="math notranslate nohighlight">\(l_2\)</span> norm<a class="headerlink" href="#based-on-weighted-l-2-norm" title="Permalink to this headline">¶</a></h3>
+<p>Another measure that is sometimes used is, which also shares some properties with the Canberra distance, is the Euclidean distance weighted by the sum of the length of both vectors</p>
+<div class="math notranslate nohighlight">
+\[
+s_c(\vec{x},\vec{y}) = 1 - \frac{d_2(\vec{x},\vec{y})}{|\vec{x}|+|\vec{y}|}
+\]</div>
+<p><span class="math notranslate nohighlight">\(s_c\)</span> takes its maximum value, 1, when <span class="math notranslate nohighlight">\(\vec{x}=\vec{y}\)</span> and its minimum, 0, when <span class="math notranslate nohighlight">\(\vec{x} = -\vec{y}\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">w_d2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span>
+                                <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">w_d2</span><span class="p">)</span>
+
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/bb98ff4ba4fcf6b6246d552527a5c36640b1a728.png" /></p>
 </div>
 </div>
-<div class="section" id="dissimilarity-measures-for-categorical-data">
-<h2>Dissimilarity measures for categorical data<a class="headerlink" href="#dissimilarity-measures-for-categorical-data" title="Permalink to this headline">¶</a></h2>
-<p>Before introducing proximity measures for categorical data, we need an appropriate example data set with categorical variables. We will use the <a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/mushroom">mushroom data set</a> from <a class="reference external" href="https://archive.ics.uci.edu/ml/datasets.php">UCI Machine Learning repository</a>.</p>
-<p>From the official description: This data set includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family (pp. 500-525). Each species is identified as definitely edible, definitely poisonous, or of unknown edibility and not recommended. This latter class was combined with the poisonous one. The Guide clearly states that there is no simple rule for determining the edibility of a mushroom; no rule like ``leaflets three, let it be’’ for Poisonous Oak and Ivy.</p>
+<div class="section" id="categorical-data-test-data">
+<h2>Categorical data, test data<a class="headerlink" href="#categorical-data-test-data" title="Permalink to this headline">¶</a></h2>
+<p>Before introducing proximity measures for categorical data, we need an appropriate example data set with categorical variables. We will use the <a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/Breast+Cancer">breast cancer data set</a> from <a class="reference external" href="https://archive.ics.uci.edu/ml/datasets.php">UCI Machine Learning repository</a>.</p>
+<p>From the official description:</p>
+<p>This is one of three domains provided by the Oncology Institute that has repeatedly appeared in the machine learning literature. (See also lymphography and primary-tumor.) This data set includes 201 instances of one class and 85 instances of another class. The instances are described by 9 attributes, some of which are linear and some are nominal.</p>
 <p>The attributes of the data set are, with their respective possible classes:</p>
 <ol class="simple">
-<li><p>cap-shape: bell=b,conical=c,convex=x,flat=f, knobbed=k,sunken=s</p></li>
-<li><p>cap-surface: fibrous=f,grooves=g,scaly=y,smooth=s</p></li>
-<li><p>cap-color: brown=n,buff=b,cinnamon=c,gray=g,green=r, pink=p,purple=u,red=e,white=w,yellow=y</p></li>
-<li><p>bruises?: bruises=t,no=f</p></li>
-<li><p>odor: almond=a,anise=l,creosote=c,fishy=y,foul=f, musty=m,none=n,pungent=p,spicy=s</p></li>
-<li><p>gill-attachment: attached=a,descending=d,free=f,notched=n</p></li>
-<li><p>gill-spacing: close=c,crowded=w,distant=d</p></li>
-<li><p>gill-size: broad=b,narrow=n</p></li>
-<li><p>gill-color: black=k,brown=n,buff=b,chocolate=h,gray=g, green=r,orange=o,pink=p,purple=u,red=e, white=w,yellow=y</p></li>
-<li><p>stalk-shape: enlarging=e,tapering=t</p></li>
-<li><p>stalk-root: bulbous=b,club=c,cup=u,equal=e, rhizomorphs=z,rooted=r,missing=?</p></li>
-<li><p>stalk-surface-above-ring: fibrous=f,scaly=y,silky=k,smooth=s</p></li>
-<li><p>stalk-surface-below-ring: fibrous=f,scaly=y,silky=k,smooth=s</p></li>
-<li><p>stalk-color-above-ring: brown=n,buff=b,cinnamon=c,gray=g,orange=o, pink=p,red=e,white=w,yellow=y</p></li>
-<li><p>stalk-color-below-ring: brown=n,buff=b,cinnamon=c,gray=g,orange=o, pink=p,red=e,white=w,yellow=y</p></li>
-<li><p>veil-type: partial=p,universal=u</p></li>
-<li><p>veil-color: brown=n,orange=o,white=w,yellow=y</p></li>
-<li><p>ring-number: none=n,one=o,two=t</p></li>
-<li><p>ring-type: cobwebby=c,evanescent=e,flaring=f,large=l, none=n,pendant=p,sheathing=s,zone=z</p></li>
-<li><p>spore-print-color: black=k,brown=n,buff=b,chocolate=h,green=r, orange=o,purple=u,white=w,yellow=y</p></li>
-<li><p>population: abundant=a,clustered=c,numerous=n, scattered=s,several=v,solitary=y</p></li>
-<li><p>habitat: grasses=g,leaves=l,meadows=m,paths=p, urban=u,waste=w,woods=d</p></li>
+<li><p>class: no-recurrence-events, recurrence-events</p></li>
+<li><p>age: 10-19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90-99.</p></li>
+<li><p>menopause: lt40, ge40, premeno.</p></li>
+<li><p>tumor-size: 0-4, 5-9, 10-14, 15-19, 20-24, 25-29, 30-34, 35-39, 40-44, 45-49, 50-54, 55-59.</p></li>
+<li><p>inv-nodes: 0-2, 3-5, 6-8, 9-11, 12-14, 15-17, 18-20, 21-23, 24-26, 27-29, 30-32, 33-35, 36-39.</p></li>
+<li><p>node-caps: yes, no.</p></li>
+<li><p>deg-malig: 1, 2, 3.</p></li>
+<li><p>breast: left, right.</p></li>
+<li><p>breast-quad: left-up, left-low, right-up, right-low, central.</p></li>
+<li><p>irradiat: yes, no.</p></li>
 </ol>
-<p>We now import the <a href="Data/mushrooms.csv">mushrooms.csv</a> file.</p>
-<p>We will define our metrics to work with binary data, or one-hot encoded features. So we ask pandas to do that for us.</p>
+<p>We now import the <a href="Data/breast-cancer.csv">breast-cancer.csv</a> file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">mushrooms</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data/mushrooms.csv&#39;</span><span class="p">,</span> <span class="n">na_values</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">)</span>
-<span class="n">mushrooms</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">cancer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data/breast-cancer.csv&#39;</span><span class="p">)</span>
+<span class="n">cancer</span> <span class="o">=</span> <span class="n">cancer</span><span class="p">[</span><span class="n">cancer</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+<span class="n">cancer</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 <table class="colwidths-auto table">
 <thead>
 <tr class="row-odd"><th class="head"><p></p></th>
 <th class="head"><p>class</p></th>
-<th class="head"><p>cap-shape</p></th>
-<th class="head"><p>cap-surface</p></th>
-<th class="head"><p>cap-color</p></th>
-<th class="head"><p>bruises</p></th>
-<th class="head"><p>odor</p></th>
-<th class="head"><p>gill-attachment</p></th>
-<th class="head"><p>gill-spacing</p></th>
-<th class="head"><p>gill-size</p></th>
-<th class="head"><p>gill-color</p></th>
-<th class="head"><p>stalk-shape</p></th>
-<th class="head"><p>stalk-root</p></th>
-<th class="head"><p>stalk-surface-above-ring</p></th>
-<th class="head"><p>stalk-surface-below-ring</p></th>
-<th class="head"><p>stalk-color-above-ring</p></th>
-<th class="head"><p>stalk-color-below-ring</p></th>
-<th class="head"><p>veil-type</p></th>
-<th class="head"><p>veil-color</p></th>
-<th class="head"><p>ring-number</p></th>
-<th class="head"><p>ring-type</p></th>
-<th class="head"><p>spore-print-color</p></th>
-<th class="head"><p>population</p></th>
-<th class="head"><p>habitat</p></th>
+<th class="head"><p>age</p></th>
+<th class="head"><p>menopause</p></th>
+<th class="head"><p>tumor-size</p></th>
+<th class="head"><p>inv-nodes</p></th>
+<th class="head"><p>node-caps</p></th>
+<th class="head"><p>deg-malig</p></th>
+<th class="head"><p>breast</p></th>
+<th class="head"><p>breast-quad</p></th>
+<th class="head"><p>irradiat</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
-<td><p>p</p></td>
-<td><p>x</p></td>
-<td><p>s</p></td>
-<td><p>n</p></td>
-<td><p>t</p></td>
-<td><p>p</p></td>
-<td><p>f</p></td>
-<td><p>c</p></td>
-<td><p>n</p></td>
-<td><p>k</p></td>
-<td><p>e</p></td>
-<td><p>e</p></td>
-<td><p>s</p></td>
-<td><p>s</p></td>
-<td><p>w</p></td>
-<td><p>w</p></td>
-<td><p>p</p></td>
-<td><p>w</p></td>
-<td><p>o</p></td>
-<td><p>p</p></td>
-<td><p>k</p></td>
-<td><p>s</p></td>
-<td><p>u</p></td>
+<td><p>no-recurrence-events</p></td>
+<td><p>30-39</p></td>
+<td><p>premeno</p></td>
+<td><p>30-34</p></td>
+<td><p>0-2</p></td>
+<td><p>no</p></td>
+<td><p>3</p></td>
+<td><p>left</p></td>
+<td><p>left~low~</p></td>
+<td><p>no</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
-<td><p>e</p></td>
-<td><p>x</p></td>
-<td><p>s</p></td>
-<td><p>y</p></td>
-<td><p>t</p></td>
-<td><p>a</p></td>
-<td><p>f</p></td>
-<td><p>c</p></td>
-<td><p>b</p></td>
-<td><p>k</p></td>
-<td><p>e</p></td>
-<td><p>c</p></td>
-<td><p>s</p></td>
-<td><p>s</p></td>
-<td><p>w</p></td>
-<td><p>w</p></td>
-<td><p>p</p></td>
-<td><p>w</p></td>
-<td><p>o</p></td>
-<td><p>p</p></td>
-<td><p>n</p></td>
-<td><p>n</p></td>
-<td><p>g</p></td>
+<td><p>no-recurrence-events</p></td>
+<td><p>40-49</p></td>
+<td><p>premeno</p></td>
+<td><p>20-24</p></td>
+<td><p>0-2</p></td>
+<td><p>no</p></td>
+<td><p>2</p></td>
+<td><p>right</p></td>
+<td><p>right~up~</p></td>
+<td><p>no</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
-<td><p>e</p></td>
-<td><p>b</p></td>
-<td><p>s</p></td>
-<td><p>w</p></td>
-<td><p>t</p></td>
-<td><p>l</p></td>
-<td><p>f</p></td>
-<td><p>c</p></td>
-<td><p>b</p></td>
-<td><p>n</p></td>
-<td><p>e</p></td>
-<td><p>c</p></td>
-<td><p>s</p></td>
-<td><p>s</p></td>
-<td><p>w</p></td>
-<td><p>w</p></td>
-<td><p>p</p></td>
-<td><p>w</p></td>
-<td><p>o</p></td>
-<td><p>p</p></td>
-<td><p>n</p></td>
-<td><p>n</p></td>
-<td><p>m</p></td>
+<td><p>no-recurrence-events</p></td>
+<td><p>40-49</p></td>
+<td><p>premeno</p></td>
+<td><p>20-24</p></td>
+<td><p>0-2</p></td>
+<td><p>no</p></td>
+<td><p>2</p></td>
+<td><p>left</p></td>
+<td><p>left~low~</p></td>
+<td><p>no</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
-<td><p>p</p></td>
-<td><p>x</p></td>
-<td><p>y</p></td>
-<td><p>w</p></td>
-<td><p>t</p></td>
-<td><p>p</p></td>
-<td><p>f</p></td>
-<td><p>c</p></td>
-<td><p>n</p></td>
-<td><p>n</p></td>
-<td><p>e</p></td>
-<td><p>e</p></td>
-<td><p>s</p></td>
-<td><p>s</p></td>
-<td><p>w</p></td>
-<td><p>w</p></td>
-<td><p>p</p></td>
-<td><p>w</p></td>
-<td><p>o</p></td>
-<td><p>p</p></td>
-<td><p>k</p></td>
-<td><p>s</p></td>
-<td><p>u</p></td>
+<td><p>no-recurrence-events</p></td>
+<td><p>60-69</p></td>
+<td><p>ge40</p></td>
+<td><p>15-19</p></td>
+<td><p>0-2</p></td>
+<td><p>no</p></td>
+<td><p>2</p></td>
+<td><p>right</p></td>
+<td><p>left~up~</p></td>
+<td><p>no</p></td>
 </tr>
 <tr class="row-even"><td><p>4</p></td>
-<td><p>e</p></td>
-<td><p>x</p></td>
-<td><p>s</p></td>
-<td><p>g</p></td>
-<td><p>f</p></td>
-<td><p>n</p></td>
-<td><p>f</p></td>
-<td><p>w</p></td>
-<td><p>b</p></td>
-<td><p>k</p></td>
-<td><p>t</p></td>
-<td><p>e</p></td>
-<td><p>s</p></td>
-<td><p>s</p></td>
-<td><p>w</p></td>
-<td><p>w</p></td>
-<td><p>p</p></td>
-<td><p>w</p></td>
-<td><p>o</p></td>
-<td><p>e</p></td>
-<td><p>n</p></td>
-<td><p>a</p></td>
-<td><p>g</p></td>
+<td><p>no-recurrence-events</p></td>
+<td><p>40-49</p></td>
+<td><p>premeno</p></td>
+<td><p>0-4</p></td>
+<td><p>0-2</p></td>
+<td><p>no</p></td>
+<td><p>2</p></td>
+<td><p>right</p></td>
+<td><p>right~low~</p></td>
+<td><p>no</p></td>
 </tr>
 </tbody>
 </table>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mushrooms</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">mushrooms</span><span class="p">)</span>
-<span class="n">mushrooms</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<p>We can explore the relationship between pairs of variables using a scatter-plot. Due to large number of features, here we show only a single pair. To interactively explore different combination pairs, please run the code locally.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="n">cancer</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">i</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">j</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">cancer</span><span class="p">[</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">cancer</span><span class="p">[</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span>
+<span class="c1"># Add jitter</span>
+<span class="n">x1</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x1</span><span class="p">))</span>
+<span class="n">y1</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">y1</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">cancer</span><span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/28f63ff11664fd309f294f9e7bb628cc1cd11d03.png" /></p>
+<p>We will define some of our metrics to work with one-hot encoded data. So we ask pandas to do that for us.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cancer_oh</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">cancer</span><span class="p">)</span>
+<span class="n">cancer_oh</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 <table class="colwidths-auto table">
 <thead>
 <tr class="row-odd"><th class="head"><p></p></th>
-<th class="head"><p>class~e~</p></th>
-<th class="head"><p>class~p~</p></th>
-<th class="head"><p>cap-shape~b~</p></th>
-<th class="head"><p>cap-shape~c~</p></th>
-<th class="head"><p>cap-shape~f~</p></th>
-<th class="head"><p>cap-shape~k~</p></th>
-<th class="head"><p>cap-shape~s~</p></th>
-<th class="head"><p>cap-shape~x~</p></th>
-<th class="head"><p>cap-surface~f~</p></th>
-<th class="head"><p>cap-surface~g~</p></th>
-<th class="head"><p>cap-surface~s~</p></th>
-<th class="head"><p>cap-surface~y~</p></th>
-<th class="head"><p>cap-color~b~</p></th>
-<th class="head"><p>cap-color~c~</p></th>
-<th class="head"><p>cap-color~e~</p></th>
-<th class="head"><p>cap-color~g~</p></th>
-<th class="head"><p>cap-color~n~</p></th>
-<th class="head"><p>cap-color~p~</p></th>
-<th class="head"><p>cap-color~r~</p></th>
-<th class="head"><p>cap-color~u~</p></th>
-<th class="head"><p>cap-color~w~</p></th>
-<th class="head"><p>cap-color~y~</p></th>
-<th class="head"><p>bruises~f~</p></th>
-<th class="head"><p>bruises~t~</p></th>
-<th class="head"><p>odor~a~</p></th>
-<th class="head"><p>odor~c~</p></th>
-<th class="head"><p>odor~f~</p></th>
-<th class="head"><p>odor~l~</p></th>
-<th class="head"><p>odor~m~</p></th>
-<th class="head"><p>odor~n~</p></th>
-<th class="head"><p>odor~p~</p></th>
-<th class="head"><p>odor~s~</p></th>
-<th class="head"><p>odor~y~</p></th>
-<th class="head"><p>gill-attachment~a~</p></th>
-<th class="head"><p>gill-attachment~f~</p></th>
-<th class="head"><p>gill-spacing~c~</p></th>
-<th class="head"><p>gill-spacing~w~</p></th>
-<th class="head"><p>gill-size~b~</p></th>
-<th class="head"><p>gill-size~n~</p></th>
-<th class="head"><p>gill-color~b~</p></th>
-<th class="head"><p>gill-color~e~</p></th>
-<th class="head"><p>gill-color~g~</p></th>
-<th class="head"><p>gill-color~h~</p></th>
-<th class="head"><p>gill-color~k~</p></th>
-<th class="head"><p>gill-color~n~</p></th>
-<th class="head"><p>gill-color~o~</p></th>
-<th class="head"><p>gill-color~p~</p></th>
-<th class="head"><p>gill-color~r~</p></th>
-<th class="head"><p>gill-color~u~</p></th>
-<th class="head"><p>gill-color~w~</p></th>
-<th class="head"><p>gill-color~y~</p></th>
-<th class="head"><p>stalk-shape~e~</p></th>
-<th class="head"><p>stalk-shape~t~</p></th>
-<th class="head"><p>stalk-root~b~</p></th>
-<th class="head"><p>stalk-root~c~</p></th>
-<th class="head"><p>stalk-root~e~</p></th>
-<th class="head"><p>stalk-root~r~</p></th>
-<th class="head"><p>stalk-surface-above-ring~f~</p></th>
-<th class="head"><p>stalk-surface-above-ring~k~</p></th>
-<th class="head"><p>stalk-surface-above-ring~s~</p></th>
-<th class="head"><p>stalk-surface-above-ring~y~</p></th>
-<th class="head"><p>stalk-surface-below-ring~f~</p></th>
-<th class="head"><p>stalk-surface-below-ring~k~</p></th>
-<th class="head"><p>stalk-surface-below-ring~s~</p></th>
-<th class="head"><p>stalk-surface-below-ring~y~</p></th>
-<th class="head"><p>stalk-color-above-ring~b~</p></th>
-<th class="head"><p>stalk-color-above-ring~c~</p></th>
-<th class="head"><p>stalk-color-above-ring~e~</p></th>
-<th class="head"><p>stalk-color-above-ring~g~</p></th>
-<th class="head"><p>stalk-color-above-ring~n~</p></th>
-<th class="head"><p>stalk-color-above-ring~o~</p></th>
-<th class="head"><p>stalk-color-above-ring~p~</p></th>
-<th class="head"><p>stalk-color-above-ring~w~</p></th>
-<th class="head"><p>stalk-color-above-ring~y~</p></th>
-<th class="head"><p>stalk-color-below-ring~b~</p></th>
-<th class="head"><p>stalk-color-below-ring~c~</p></th>
-<th class="head"><p>stalk-color-below-ring~e~</p></th>
-<th class="head"><p>stalk-color-below-ring~g~</p></th>
-<th class="head"><p>stalk-color-below-ring~n~</p></th>
-<th class="head"><p>stalk-color-below-ring~o~</p></th>
-<th class="head"><p>stalk-color-below-ring~p~</p></th>
-<th class="head"><p>stalk-color-below-ring~w~</p></th>
-<th class="head"><p>stalk-color-below-ring~y~</p></th>
-<th class="head"><p>veil-type~p~</p></th>
-<th class="head"><p>veil-color~n~</p></th>
-<th class="head"><p>veil-color~o~</p></th>
-<th class="head"><p>veil-color~w~</p></th>
-<th class="head"><p>veil-color~y~</p></th>
-<th class="head"><p>ring-number~n~</p></th>
-<th class="head"><p>ring-number~o~</p></th>
-<th class="head"><p>ring-number~t~</p></th>
-<th class="head"><p>ring-type~e~</p></th>
-<th class="head"><p>ring-type~f~</p></th>
-<th class="head"><p>ring-type~l~</p></th>
-<th class="head"><p>ring-type~n~</p></th>
-<th class="head"><p>ring-type~p~</p></th>
-<th class="head"><p>spore-print-color~b~</p></th>
-<th class="head"><p>spore-print-color~h~</p></th>
-<th class="head"><p>spore-print-color~k~</p></th>
-<th class="head"><p>spore-print-color~n~</p></th>
-<th class="head"><p>spore-print-color~o~</p></th>
-<th class="head"><p>spore-print-color~r~</p></th>
-<th class="head"><p>spore-print-color~u~</p></th>
-<th class="head"><p>spore-print-color~w~</p></th>
-<th class="head"><p>spore-print-color~y~</p></th>
-<th class="head"><p>population~a~</p></th>
-<th class="head"><p>population~c~</p></th>
-<th class="head"><p>population~n~</p></th>
-<th class="head"><p>population~s~</p></th>
-<th class="head"><p>population~v~</p></th>
-<th class="head"><p>population~y~</p></th>
-<th class="head"><p>habitat~d~</p></th>
-<th class="head"><p>habitat~g~</p></th>
-<th class="head"><p>habitat~l~</p></th>
-<th class="head"><p>habitat~m~</p></th>
-<th class="head"><p>habitat~p~</p></th>
-<th class="head"><p>habitat~u~</p></th>
-<th class="head"><p>habitat~w~</p></th>
+<th class="head"><p>class~no~-recurrence-events</p></th>
+<th class="head"><p>class~recurrence~-events</p></th>
+<th class="head"><p>age~20~-29</p></th>
+<th class="head"><p>age~30~-39</p></th>
+<th class="head"><p>age~40~-49</p></th>
+<th class="head"><p>age~50~-59</p></th>
+<th class="head"><p>age~60~-69</p></th>
+<th class="head"><p>age~70~-79</p></th>
+<th class="head"><p>menopause~ge40~</p></th>
+<th class="head"><p>menopause~lt40~</p></th>
+<th class="head"><p>menopause~premeno~</p></th>
+<th class="head"><p>tumor-size~0~-4</p></th>
+<th class="head"><p>tumor-size~10~-14</p></th>
+<th class="head"><p>tumor-size~15~-19</p></th>
+<th class="head"><p>tumor-size~20~-24</p></th>
+<th class="head"><p>tumor-size~25~-29</p></th>
+<th class="head"><p>tumor-size~30~-34</p></th>
+<th class="head"><p>tumor-size~35~-39</p></th>
+<th class="head"><p>tumor-size~40~-44</p></th>
+<th class="head"><p>tumor-size~45~-49</p></th>
+<th class="head"><p>tumor-size~5~-9</p></th>
+<th class="head"><p>tumor-size~50~-54</p></th>
+<th class="head"><p>inv-nodes~0~-2</p></th>
+<th class="head"><p>inv-nodes~12~-14</p></th>
+<th class="head"><p>inv-nodes~15~-17</p></th>
+<th class="head"><p>inv-nodes~24~-26</p></th>
+<th class="head"><p>inv-nodes~3~-5</p></th>
+<th class="head"><p>inv-nodes~6~-8</p></th>
+<th class="head"><p>inv-nodes~9~-11</p></th>
+<th class="head"><p>node-caps_?</p></th>
+<th class="head"><p>node-caps~no~</p></th>
+<th class="head"><p>node-caps~yes~</p></th>
+<th class="head"><p>deg-malig~1~</p></th>
+<th class="head"><p>deg-malig~2~</p></th>
+<th class="head"><p>deg-malig~3~</p></th>
+<th class="head"><p>breast~left~</p></th>
+<th class="head"><p>breast~right~</p></th>
+<th class="head"><p>breast-quad_?</p></th>
+<th class="head"><p>breast-quad~central~</p></th>
+<th class="head"><p>breast-quad~leftlow~</p></th>
+<th class="head"><p>breast-quad~leftup~</p></th>
+<th class="head"><p>breast-quad~rightlow~</p></th>
+<th class="head"><p>breast-quad~rightup~</p></th>
+<th class="head"><p>irradiat~no~</p></th>
+<th class="head"><p>irradiat~yes~</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>1</p></td>
@@ -1176,16 +1187,8 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1203,63 +1206,11 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1271,91 +1222,6 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1379,101 +1245,28 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
 <td><p>0</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>1</p></td>
@@ -1501,13 +1294,24 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
+<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
 <td><p>0</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1516,57 +1320,8 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1587,9 +1342,6 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1600,27 +1352,7 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>1</p></td>
@@ -1631,39 +1363,6 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1671,26 +1370,9 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1707,9 +1389,6 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
@@ -1718,53 +1397,275 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>0</p></td>
 <td><p>1</p></td>
 <td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>1</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
-<td><p>0</p></td>
 <td><p>0</p></td>
 </tr>
 </tbody>
 </table>
-<p>We now have 118 binary features.</p>
+<p>We now have 45 binary features, but beware, the ones referring to same original feature are not independent.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Xc</span> <span class="o">=</span> <span class="n">cancer_oh</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;class_no-recurrence-events&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;class_recurrence-events&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">values</span>
+<span class="n">yc</span> <span class="o">=</span> <span class="n">cancer_oh</span><span class="p">[</span><span class="s1">&#39;class_recurrence-events&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+<p>It is important to take care when using the proximity measures, since depending on the representation (original vs one-hot) the way of calculating each measure may change. We will point out such differences when appropriate.</p>
 </div>
 <div class="section" id="similarity-measures-for-categorical-data">
 <h2>Similarity measures for categorical data<a class="headerlink" href="#similarity-measures-for-categorical-data" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="jaccard-coefficient">
-<h3>Jaccard coefficient<a class="headerlink" href="#jaccard-coefficient" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="simple-matching-coefficient-smc">
+<h3>Simple matching coefficient (SMC)<a class="headerlink" href="#simple-matching-coefficient-smc" title="Permalink to this headline">¶</a></h3>
+<p>The Simple Matching Coefficient just counts how many entries match for both vectors. It is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\text{SMC} = \frac {\text{number of matching attributes}}{\text{number of attributes}}
+\]</div>
+<p>When dealing with categorical vectors in the original representation, the above equation must be applied directly.</p>
+<p>When dealing with one-hot encoded vectors, counting the matches is equivalent to counting the number of matching ones, ignoring the zeroes, which in turn is equivalent to the dot product of both vectors, over the number of original dimensions</p>
+<div class="math notranslate nohighlight">
+\[
+SMC_{oh}(\vec{x},\vec{y}) = \frac{\vec{x}^T\vec{y}}{D_{orignal}}
+= \frac{\vec{x}^T\vec{y}}{|x|_1 + |y|_1 - \vec{x}^T\vec{y}}
+\]</div>
+<p>This last definition is equivalent to the Jaccard index for binary vectors.</p>
+<p>We need to distinguish between one-hot encoded binary vectors, and natural binary vectors, for which the original representation consists of only two classes encoded as 1 and 0. If the attributes are symmetrical, (1s and 0s are equivalently important, i.e., carry equivalent information), the SMC must count matches of both ones and zeroes, and the above equation does not apply, and we must fall back to the first definition. As an example, consider gender encoded as male:0 and female:1. It is clear that both 1s and 0s are equally important.</p>
+<p>For asymmetric natural binary vectors, for which the 0s do not carry the same amount of information as 1s, the Jaccard index (see below) is a more appropriate metric. For example (from <span id="id5">[<a class="reference internal" href="#id46"><span>5</span></a>]</span>), in market basket analysis, the basket of two consumers who we wish to compare might only contain a small fraction of all the available products in the store, so the SMC will usually return very high values of similarities even when the baskets bear very little resemblance, thus making the Jaccard index a more appropriate measure of similarity in that context. For example, consider a supermarket with 1000 products and two customers. The basket of the first customer contains salt and pepper and the basket of the second contains salt and sugar. In this scenario, the similarity between the two baskets as measured by the Jaccard index would be 1/3, but the similarity becomes 0.998 using the SMC.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">smc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">one_hot</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;one_hot&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">one_hot</span><span class="p">:</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">(</span><span class="n">xi</span> <span class="o">==</span> <span class="n">yi</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">matcher</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">@</span> <span class="n">y</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">d_smc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">smc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">d_smc</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">yc</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="coincidence-coefficient">
-<h3>Coincidence coefficient<a class="headerlink" href="#coincidence-coefficient" title="Permalink to this headline">¶</a></h3>
+<p><img alt="" src="_images/f1ffc63445d982b896f6ef92ed36ec4184927d70.png" /></p>
+</div>
+<div class="section" id="jaccard-or-tanimoto-coefficient-jc">
+<h3>Jaccard or Tanimoto coefficient (JC)<a class="headerlink" href="#jaccard-or-tanimoto-coefficient-jc" title="Permalink to this headline">¶</a></h3>
+<p>The Jaccardor Tanimoto coefficient was designed as a similarly coefficient among sets, the original definition being</p>
+<div class="math notranslate nohighlight">
+\[
+s_J(A,B) = \frac{|A \cap B |}{|A \cup B|}
+= \frac{|A \cap B |}{|A| + |B| - |A \cap B |}
+\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(0 \leq s_J\ leq 1\)</span>, and if both sets are empty, we define <span class="math notranslate nohighlight">\(s_J=1\)</span>.</p>
+<p>The index is also used with binary categorical feature vectors, for which it takes the form</p>
+<div class="math notranslate nohighlight">
+\[
+s_J = \frac{\vec{x}^T\vec{y}}{|x| + |y| - \vec{x}^T\vec{y}}
+\]</div>
+<p>When working with natural binary vectors, the Jaccard index is more appropriate than the SMC for asymmetric features, for example, in market basket analysis, where ones indicate the presence of an item in a set, and zeros signal the absence of an item in a set. When working with symmetric features the SMC is more appropriate, as discussed in the preceding section. The Jaccard index is also the most popular similarity measure for comparing chemical structures represented by means of fingerprints <span id="id6">[<a class="reference internal" href="#id47"><span>6</span></a>]</span>.</p>
+<p>In the case of one-hot encoded binary vectors, the Jaccard index is equivalent to the SMC in the original representation, and was implement above.</p>
+<p>For integer categorical vectors, where each coordinates contains, for example, the degree or strength of a feature (0 meaning total absence), the Jaccard index takes the form</p>
+<div class="math notranslate nohighlight">
+\[
+s_J = \frac{n_{matches}}{n_x + n_y - n_{x,y&gt;0}}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_x\)</span> and <span class="math notranslate nohighlight">\(n_y\)</span> are the number of non-zero entries of <span class="math notranslate nohighlight">\(\vec{x}\)</span> and <span class="math notranslate nohighlight">\(\vec{y}\)</span>, <span class="math notranslate nohighlight">\(n_{matches}\)</span> are the number of non-zero matches, and <span class="math notranslate nohighlight">\(n_{x,y &gt; 0}\)</span> is the number entries in x and y that are simultaneously larger than zero.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">s_j</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">binary</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">@</span> <span class="n">y</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Binarize vectors</span>
+        <span class="n">xb</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">yb</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="n">xb</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="n">yb</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">nxy</span> <span class="o">=</span> <span class="n">xb</span> <span class="o">@</span> <span class="n">yb</span>
+        <span class="n">n_matches</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="n">nxy</span>
+        <span class="k">return</span> <span class="n">n_matches</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">+</span> <span class="n">ny</span> <span class="o">-</span> <span class="n">nxy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sorensen-dice-coefficient">
+<h3>Sørensen–Dice coefficient<a class="headerlink" href="#sorensen-dice-coefficient" title="Permalink to this headline">¶</a></h3>
 </div>
 <div class="section" id="ochiai-coefficient">
 <h3>Ochiai coefficient<a class="headerlink" href="#ochiai-coefficient" title="Permalink to this headline">¶</a></h3>
-<p>This is the cosine similarity among bit vectors, and its equivalent to</p>
+<p>In biology, a categorical equivalent to the cosine similarity is the Ochiai coefficient which can be represented as <span id="id7">[<span>enwiki:cosine:</span>]</span></p>
+<div class="math notranslate nohighlight">
+\[
+K= \frac {|A \cap B|}{\sqrt {|A|\times |B|}}
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> are sets, and <span class="math notranslate nohighlight">\(|A|\)</span> is the number of elements in <span class="math notranslate nohighlight">\(A\)</span>, not the norm of <span class="math notranslate nohighlight">\(A\)</span>.</p>
+<p>If sets are represented as bit vectors, the Otsuka-Ochiai coefficient can be seen to be the same as the cosine similarity.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">cosine_d</span><span class="p">)</span>
+
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">yc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/1fea390cb7effdbf16ded6d34338b635b5e9d3e4.png" /></p>
 </div>
 </div>
-<div class="section" id="geodesic-distance">
-<h2>Geodesic distance<a class="headerlink" href="#geodesic-distance" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dissimilarity-measures-for-categorical-data">
+<h2>Dissimilarity measures for categorical data<a class="headerlink" href="#dissimilarity-measures-for-categorical-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="hamming-distance">
+<h3>Hamming distance<a class="headerlink" href="#hamming-distance" title="Permalink to this headline">¶</a></h3>
+<p>Defined as the number of places where two vectors differ. If vectors are in their original representation, the implementation follows the definition</p>
+<div class="math notranslate nohighlight">
+\[
+d_H = n_{x \neq y}
+\]</div>
+<p>If vectors are natural binary vectors, then the hamming distance is equivalent to the Manhattan distance and the squared Euclidean distance, also equal to the sum of a XOR element wise operation</p>
+<div class="math notranslate nohighlight">
+\[
+d_H = d_1 = d_2^2
+\]</div>
+<p>When dealing with one-hot encoded vectors the number of mismatches can be found from the number of matches minus the original dimension, or as the element wise XOR sum over 2</p>
+<div class="math notranslate nohighlight">
+\[
+d_{H,oh} = \vec{x}^T \vec{y} - (|\vec{x}| + |\vec{y}| - \vec{x}^T\vec{y})
+= 2\vec{x}^T \vec{y} - |\vec{x}| - |\vec{y}|
+\]</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">d_hamming</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">one_hot</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;one_hot&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">one_hot</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">Xc</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">d_hamming</span><span class="p">,</span> <span class="n">one_hot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">yc</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/b61af4f3b55dbdf23a4df46af84946c3cd430858.png" /></p>
+</div>
+<div class="section" id="edit-distance-dynamic-measures">
+<h3>Edit distance (Dynamic measures)<a class="headerlink" href="#edit-distance-dynamic-measures" title="Permalink to this headline">¶</a></h3>
+<p>The Hamming distance is a particular case of the edit distance between two vectors. The edit distance is typically used for strings, but can also be implemented for categorical vectors. Is defined as the number of operations required to transform one vector or string into another. In the most general case, the edit distance can be calculated for vectors of different length, if either the operation of addition or deletion is defined.</p>
+<p>Different types of edit distance allow different sets of string operations <span id="id8">[<a class="reference internal" href="#id48"><span>7</span></a>]</span>. For instance:</p>
+<ul class="simple">
+<li><p>The Levenshtein distance allows deletion, insertion and substitution.</p></li>
+<li><p>The Longest common subsequence (LCS) distance allows only insertion and deletion, not substitution.</p></li>
+<li><p>The Hamming distance allows only substitution, hence, it only applies to strings of the same length.</p></li>
+<li><p>The Damerau–Levenshtein distance allows insertion, deletion, substitution, and the transposition of two adjacent characters.</p></li>
+<li><p>The Jaro distance allows only transposition.</p></li>
+</ul>
+<p>In Levenshtein’s original definition, each of these operations has unit cost, so the Levenshtein distance is equal to the minimum number of operations required to transform a to b. A more general definition associates non-negative weight functions with the operations.</p>
+<p>For example, the Levenshtein distance between “kitten” and “sitting” is 3. A minimal edit script that transforms the former into the latter is:</p>
+<ol class="simple">
+<li><p>kitten → sitten (substitute “s” for “k”)</p></li>
+<li><p>sitten → sittin (substitute “i” for “e”)</p></li>
+<li><p>sittin → sitting (insert “g” at the end)</p></li>
+</ol>
+<p>Edit distance finds applications in computational biology and natural language processing.</p>
+<p>A common algorithm that implements the Levenshtein Distance is the Wagner–Fischer algorithm <span id="id9">[<a class="reference internal" href="#id49"><span>8</span></a>]</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">leveshtein_d</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">dest</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
+
+    <span class="c1"># for all i and j, d[i,j] will hold the Levenshtein distance</span>
+    <span class="c1"># between the first i characters of src</span>
+    <span class="c1"># and the first j characters of dest</span>
+    <span class="c1"># note that d has (n+1)*(m+1) values to account for the</span>
+    <span class="c1"># empty string</span>
+
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># source prefixes can be transformed into empty string by</span>
+    <span class="c1"># dropping all characters, i deletions</span>
+    <span class="n">D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># target prefixes can be reached from empty source prefix</span>
+    <span class="c1"># by inserting every character, j intertions</span>
+    <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Build strings recursively from prefixes</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="c1"># Deletion distance, the distance between src[:i], dest[:j]</span>
+        <span class="c1"># by deleting a the ith character of src</span>
+        <span class="n">del_d</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1"># Insertion distance, the distance between src[:i], dest[:j]</span>
+        <span class="c1"># by interting the jth character of dest</span>
+        <span class="n">ins_d</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1">#Subs distance, the distance between src[:i], dest[:j]</span>
+        <span class="c1"># by substituting the ith character of src</span>
+        <span class="c1"># by the jth character of dest, no cost if already equal</span>
+        <span class="n">subs_d</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">dest</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">del_d</span><span class="p">,</span> <span class="n">ins_d</span><span class="p">,</span> <span class="n">subs_d</span><span class="p">)</span>
+    <span class="c1"># print(D)</span>
+    <span class="k">return</span> <span class="n">D</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">leveshtein_d</span><span class="p">(</span><span class="s1">&#39;sitting&#39;</span><span class="p">,</span> <span class="s1">&#39;kitten&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>3.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="mixed-features">
+<h2>Mixed features<a class="headerlink" href="#mixed-features" title="Permalink to this headline">¶</a></h2>
+<p>If our vectors have both real and categorical attributed, we two different options at our disposal, either transform the vectors to vectors of a single type, or define a measure that treats each set of features differently and then sum the pair of measures with appropriate weights.</p>
+<p>The simplest approach it to label encode categorical attributes as integers, and apply a proximity measure for real valued vectors. It is a good idea to standardize or normalize each feature, as to allow a fair comparison between features of different scales.</p>
+<p>An alternative to above approach is to discretize all real valued features to obtain a categorical vector, then use some measure for categorical feature vectors.</p>
+<p>A more elaborate approach is to partition both vectors into a categorical and real subset of features and deal with each of them independently. Let <span class="math notranslate nohighlight">\(\vec{x} = (\vec{x}_R, \vec{x}_{C})^T\)</span> and <span class="math notranslate nohighlight">\(\vec{y} = (\vec{y}_R, \vec{y}_{C})^T\)</span>, the similarity (distance) between <span class="math notranslate nohighlight">\(\vec{x}\)</span> and <span class="math notranslate nohighlight">\(\vec{y}\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[
+s(\vec{x},\vec{y}) = \lambda s_R(\vec{x}_R,\vec{y}_R) + (1-\lambda)s_C(\vec{x},\vec{y})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(s_R\)</span> and <span class="math notranslate nohighlight">\(s_{C}\)</span> are real and categorical similarity measures, respectively, and <span class="math notranslate nohighlight">\(\lambda\)</span> regulates the relative importance of the categorical and numerical attributes. Missing domain knowledge, a good initial choice is to set lambda to the fraction of real features of the data set.</p>
+<p>Optionally, instead of standardizing each feature prior to finding the proximity values, we can instead standardize each similarity measure (categorical, real) by its standard deviation, i.e., this is the deviation of the similarities (distances), not the deviations of each feature</p>
+<div class="math notranslate nohighlight">
+\[
+s(\vec{x},\vec{y}) = \frac{\lambda}{\sigma_R} s_R(\vec{x}_R,\vec{y}_R) + \frac{(1-\lambda)}{\sigma_C} s_C(\vec{x},\vec{y}).
+\]</div>
+<p>An option that uses the one minus the range-normalized Manhattan distance and the Jaccard coefficient as similarity measures is the Gower similarity <span id="id10">[<a class="reference internal" href="#id50"><span>9</span></a>]</span>.</p>
+<div class="math notranslate nohighlight">
+\[
+s_{Gower} = \frac{\sum_{i=1}^{D} s_i}{\sum_{i=1}^{D} w_i}
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+w_i =
+\begin{cases}
+0 &amp; \text{if either $x_i$ or $y_i$ are undefined}\\
+0 &amp; \text{if the ith feature is binary and  $x_i = y_i = 0$}\\
+1 &amp; \text{otherwise}
+\end{cases}
+\end{align}\end{split}\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+s_i =
+\begin{cases}
+1 &amp; \text{if the ith feature is binary and  $x_i = y_i = 1$}\\
+1 &amp; \text{if the ith feature is categorical and  $x_i = y_i$}\\
+1 - \frac{|x_i - y_i|}{\text{range}_i} &amp; \text{if the ith feature is real}\\
+0 &amp; \text{otherwise}
+\end{cases}
+\end{align}\end{split}\]</div>
+<p>TODO: Implement general function for mixed variables. TODO: Implement Gower similarity (verify definition in original paper, the weights seems different from the generic weights <span class="math notranslate nohighlight">\(\lambda\)</span>).</p>
+</div>
+<div class="section" id="fuzzy-measures">
+<h2>Fuzzy measures<a class="headerlink" href="#fuzzy-measures" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="missing-data">
+<h2>Missing data<a class="headerlink" href="#missing-data" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="measures-between-sets-of-observations">
+<h2>Measures between sets of observations<a class="headerlink" href="#measures-between-sets-of-observations" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of measures between observations to measures between sets by considering pairwise measures between the set elements. Then, the measure is a function <span class="math notranslate nohighlight">\(U\times U \rightarrow \matbb{R}\)</span> where <span class="math notranslate nohighlight">\(U\)</span> is the set of all subsets <span class="math notranslate nohighlight">\(D_i \subset X\)</span>.</p>
 </div>
 <div class="section" id="kl-divergence">
 <h2>KL-divergence<a class="headerlink" href="#kl-divergence" title="Permalink to this headline">¶</a></h2>
@@ -1772,24 +1673,41 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 <div class="section" id="reachability-distance">
 <h2>Reachability distance<a class="headerlink" href="#reachability-distance" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="proximity-measure-for-ordinal-data">
-<h2>Proximity measure for ordinal data<a class="headerlink" href="#proximity-measure-for-ordinal-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="proximity-measures-on-graps">
+<h2>Proximity measures on graps<a class="headerlink" href="#proximity-measures-on-graps" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="geodesic-distance">
+<h3>Geodesic distance<a class="headerlink" href="#geodesic-distance" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="mixed-features">
-<h2>Mixed features<a class="headerlink" href="#mixed-features" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="measures-between-sets-of-observations">
-<h2>Measures between sets of observations<a class="headerlink" href="#measures-between-sets-of-observations" title="Permalink to this headline">¶</a></h2>
-<p>Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of measures between observations to measures between sets by considering pairwise measures between the set elements. Then, the measure is a function <span class="math notranslate nohighlight">\(U\times U \rightarrow \matbb{R}\)</span> where <span class="math notranslate nohighlight">\(U\)</span> is the set of all subsets <span class="math notranslate nohighlight">\(D_i \subset X\)</span>.</p>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id3"><dl class="citation">
-<dt class="label" id="id33"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id11"><dl class="citation">
+<dt class="label" id="id41"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Sergios Theodoridis and Konstantinos Koutroumbas. <em>Pattern Recognition</em>. Elsevier, 2009. URL: <a class="reference external" href="https://doi.org/10.1016/b978-1-59749-272-0.x0001-2">https://doi.org/10.1016/b978-1-59749-272-0.x0001-2</a>, <a class="reference external" href="https://doi.org/10.1016/b978-1-59749-272-0.x0001-2">doi:10.1016/b978-1-59749-272-0.x0001-2</a>.</p>
 </dd>
-<dt class="label" id="id35"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id42"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Jan Schulz. Canberra distance. 2007. [Online; accessed 12-April-2021]. URL: <a class="reference external" href="http://www.code10.info/index.php?option=com_content&amp;view=article&amp;id=49:article_canberra-distance&amp;catid=38:cat_coding_algorithms_data-similarity&amp;Itemid=57">http://www.code10.info/index.php?option=com_content&amp;view=article&amp;id=49:article_canberra-distance&amp;catid=38:cat_coding_algorithms_data-similarity&amp;Itemid=57</a>.</p>
+</dd>
+<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
 <dd><p>Wikipedia contributors. Cosine similarity — Wikipedia, the free encyclopedia. 2021. [Online; accessed 13-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Cosine_similarity&amp;oldid=1017252556">https://en.wikipedia.org/w/index.php?title=Cosine_similarity&amp;oldid=1017252556</a>.</p>
+</dd>
+<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dd><p>Wikipedia contributors. Spearman's rank correlation coefficient — Wikipedia, the free encyclopedia. 2021. [Online; accessed 15-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Spearman%27s_rank_correlation_coefficient&amp;oldid=1013762125">https://en.wikipedia.org/w/index.php?title=Spearman%27s_rank_correlation_coefficient&amp;oldid=1013762125</a>.</p>
+</dd>
+<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
+<dd><p>Wikipedia contributors. Simple matching coefficient — Wikipedia, the free encyclopedia. 2021. [Online; accessed 16-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Simple_matching_coefficient&amp;oldid=1007400537">https://en.wikipedia.org/w/index.php?title=Simple_matching_coefficient&amp;oldid=1007400537</a>.</p>
+</dd>
+<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id6">6</a></span></dt>
+<dd><p>Wikipedia contributors. Chemical similarity — Wikipedia, the free encyclopedia. 2021. [Online; accessed 18-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Chemical_similarity&amp;oldid=1016793498">https://en.wikipedia.org/w/index.php?title=Chemical_similarity&amp;oldid=1016793498</a>.</p>
+</dd>
+<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
+<dd><p>Wikipedia contributors. Edit distance — Wikipedia, the free encyclopedia. 2021. [Online; accessed 18-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Edit_distance&amp;oldid=1013329630">https://en.wikipedia.org/w/index.php?title=Edit_distance&amp;oldid=1013329630</a>.</p>
+</dd>
+<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
+<dd><p>Wikipedia contributors. Wagner-fischer algorithm — Wikipedia, the free encyclopedia. 2021. [Online; accessed 18-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/wiki/Wagner-Fischer_algorithm">https://en.wikipedia.org/wiki/Wagner-Fischer_algorithm</a>.</p>
+</dd>
+<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id10">9</a></span></dt>
+<dd><p>John C Gower. A general coefficient of similarity and some of its properties. <em>Biometrics</em>, pages 857–871, 1971.</p>
 </dd>
 </dl>
 </p>

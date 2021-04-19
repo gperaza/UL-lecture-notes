@@ -49,6 +49,7 @@ It is relatively simple to transform from a similarity metric to a dissimilarity
 -   $d' = -\ln(d_{max} + k - d)$ for $d(\vec{x},\vec{y})>0$ and $k>0$.
 -   $d' = \frac{kd}{1+d}$ for $d(\vec{x},\vec{y})>0$ and $k>0$.
 -   $s' = \frac{1}{1-s}$ for $s < 1$.
+-   $s = \frac{1}{1+d}$ is a common transformation
 
 ## The dissimilarity (similarity) matrix
 
@@ -114,13 +115,13 @@ from sklearn.manifold import MDS
 
 D = proximity_matrix(X)
 
-def plot_prox(D, mds=True):
+def plot_prox(D, mds=True, labels=y):
     if mds:
         fig, (ax1, ax2, ax3) = plt.subplots(figsize=(24, 8), ncols=3)
         # MDS projection
         mds = MDS(n_components=2, dissimilarity='precomputed', random_state=0)
         fdata = mds.fit_transform(D)
-        ax3.scatter(fdata[:, 0], fdata[:, 1], c=y, s=100)
+        ax3.scatter(fdata[:, 0], fdata[:, 1], c=labels, s=100)
     else:
         fig, (ax1, ax2) = plt.subplots(figsize=(16, 8), ncols=2)
 
@@ -180,7 +181,7 @@ for i in range(10):
 
 ```
 
-![](./.ob-jupyter/697dc9a787cfb43a376d0d48ba0b4f0e74c12035.png)
+![](./.ob-jupyter/6b8c6b328c4c6fea6d82b82e2f62d64fcd1594ef.png)
 
 In general the distance decreases with $p$ as we now show. We need to prove that $|\vec{x}|_{p} \geq |\vec{x}|_{p+1}$. For $\vec{x} = 0$ the equality holds. For $\vec{x} \neq 0$, let $y_i = |x_i|/|\vec{x}|_{p+1}\leq 1$. Then,
 
@@ -205,95 +206,95 @@ thus, proving the asseveration.
 
 ![The following figure shows unit circles (the set of all points that are at the unit distance from the centre) with various values of $p$. Source: <https://en.wikipedia.org/wiki/Minkowski_distance>](Figures/2D_unit_balls.svg)
 
-1.  $l_1$, Manhattan distance
+#### $l_1$, Manhattan distance
 
-    The $l_1$ normal, also called the Manhattan distance, or the city-block distance, is defined as
+The $l_1$ normal, also called the Manhattan distance, or the city-block distance, is defined as
 
-    $$
-    d_1(\vec{x},\vec{y}) =  \sum_{i=1}^D \left | x_i - y_i \right | \right
-    $$
+$$
+d_1(\vec{x},\vec{y}) =  \sum_{i=1}^D \left | x_i - y_i \right |
+$$
 
-    It\'s called the city block distance, since it sums the absolute difference of each component, akin to summing the orthogonal distances transversed when moving on a squared road network. It is preferred over the $l_2$ norm when outliers are present.
+It\'s called the city block distance, since it sums the absolute difference of each component, akin to summing the orthogonal distances transversed when moving on a squared road network. It is preferred over the $l_2$ norm when outliers are present. A good standardization for the Manhattan distance is to divide each its feature by its range.
 
-    ![Taxicab geometry versus Euclidean distance: In taxicab geometry, the red, yellow, and blue paths all have the same shortest path length of 12. In Euclidean geometry, the green line has length and is the unique shortest path. Source: <https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg>](Figures/Manhattan_distance.svg)
+![Taxicab geometry versus Euclidean distance: In taxicab geometry, the red, yellow, and blue paths all have the same shortest path length of 12. In Euclidean geometry, the green line has length and is the unique shortest path. Source: <https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg>](Figures/Manhattan_distance.svg)
 
-    ``` python
-    D = proximity_matrix(X, measure=minkowski_d, p=1)
+``` python
+D = proximity_matrix(X, measure=minkowski_d, p=1)
 
-    plot_prox(D, mds=True)
-    ```
+plot_prox(D, mds=True)
+```
 
-    ![](./.ob-jupyter/01521b2040a5cccf701b562acd135ac8da18ca67.png)
+![](./.ob-jupyter/01521b2040a5cccf701b562acd135ac8da18ca67.png)
 
-    One possible weighted transformation for the Manhattan distance, which greatly exaggerates large distances, is
+One possible weighted transformation for the Manhattan distance, which greatly exaggerates large distances, is
 
-    $$
-    d_G(\vec{x},\vec{y}) = -log_{10}\left( 1 - \frac{1}{D}\sum_{i=1}^D \frac{|x_i - y_i|}{b_i - a_i}  \right)
-    $$
+$$
+d_G(\vec{x},\vec{y}) = -log_{10}\left( 1 - \frac{1}{D}\sum_{i=1}^D \frac{|x_i - y_i|}{b_i - a_i}  \right)
+$$
 
-    where $b_i$ and $a_i$ are the maximum and minimum values among the ith features of N vectors of X, respectively.
+where $b_i$ and $a_i$ are the maximum and minimum values among the ith features of N vectors of X, respectively.
 
-    Since $d_G$ depends on the whole set X, through $a$ and $b$, we need to pass those vectors explicitly.
+Since $d_G$ depends on the whole set X, through $a$ and $b$, we need to pass those vectors explicitly.
 
-    ``` python
-    def d_g(x, y, **kwargs):
-        a = kwargs['a']
-        b = kwargs['b']
+``` python
+def d_g(x, y, **kwargs):
+    a = kwargs['a']
+    b = kwargs['b']
 
-        return -np.log10(1 - np.sum(np.abs(x - y)/(b - a))/len(x))
+    return -np.log10(1 - np.sum(np.abs(x - y)/(b - a))/len(x))
 
-    a = np.min(X, axis=0)
-    b = np.max(X, axis=0)
+a = np.min(X, axis=0)
+b = np.max(X, axis=0)
 
-    D = proximity_matrix(X, d_g, a=a, b=b)
+D = proximity_matrix(X, d_g, a=a, b=b)
 
-    plot_prox(D, mds=True)
-    ```
+plot_prox(D, mds=True)
+```
 
-    ![](./.ob-jupyter/591169c9a8c739509e2592bff2f063ccf0f772c3.png)
+![](./.ob-jupyter/591169c9a8c739509e2592bff2f063ccf0f772c3.png)
 
-2.  $l_2$, Euclidean distance
+#### $l_2$, Euclidean distance
 
-    $$
-    d_2(\vec{x},\vec{y}) = \sqrt{\left ( \sum_{i=1}^D \left (x_i - y_i \right )^2 \right )}
-    $$
+$$
+d_2(\vec{x},\vec{y}) = \sqrt{\left ( \sum_{i=1}^D \left (x_i - y_i \right )^2 \right )}
+$$
 
-    We have already implemented the $l_2$ norm as the euclidean distance before. We can verify the output of the Minkowsky distance with $p=2$ is the same.
+We have already implemented the $l_2$ norm as the euclidean distance before. We can verify the output of the Minkowsky distance with $p=2$ is the same.
 
-    This is probably the most common distance metric, and many learning algorithms are design to work with Euclidean distance, such a KNN and K-means.
+This is probably the most common distance metric, and many learning algorithms are design to work with Euclidean distance, such a KNN and K-means.
 
-    ``` python
-    D = proximity_matrix(X, measure=minkowski_d, p=2)
+``` python
+D = proximity_matrix(X, measure=minkowski_d, p=2)
 
-    plot_prox(D, mds=True)
-    ```
+plot_prox(D, mds=True)
+```
 
-    ![](./.ob-jupyter/2c1c083c8777fef628e34f098291b3bff600b01b.png)
+![](./.ob-jupyter/2c1c083c8777fef628e34f098291b3bff600b01b.png)
 
-3.  $l_\infty$, Chebyshev distance
+#### $l_\infty$, Chebyshev distance
 
-    In the limit $p \rightarrow \infty$ the Minkowski distance becomes the Chebyshev distance, i.e., the maximum difference, component-wise.
+In the limit $p \rightarrow \infty$ the Minkowski distance becomes the Chebyshev distance, i.e., the maximum difference, component-wise.
 
-    $$
-    d_\infty(\vec{x},\vec{y}) = \underset{1\leq i \leq D}{\operatorname{max}} \left | x_i - y_i  \right |
-    $$
+$$
+d_\infty(\vec{x},\vec{y}) = \underset{1\leq i \leq D}{\operatorname{max}} \left | x_i - y_i  \right |
+$$
 
-    ```{figure} Figures/chess.png
+```{figure} Figures/chess.png
 The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <https://en.wikipedia.org/wiki/Chebyshev_distance>
 ```
 
-    ``` python
-    def chebyshev_d(x, y):
-        return np.max(np.abs(x - y))
-    ```
+``` python
+def chebyshev_d(x, y):
+    return np.max(np.abs(x - y))
+```
 
-    ``` python
-    D = proximity_matrix(X, measure=chebyshev_d)
+``` python
+D = proximity_matrix(X, measure=chebyshev_d)
 
-    plot_prox(D, mds=True)
-    ```
+plot_prox(D, mds=True)
+```
 
-    ![](./.ob-jupyter/8dee37640746e6705547cde6166387377ff50ce8.png)
+![](./.ob-jupyter/8dee37640746e6705547cde6166387377ff50ce8.png)
 
 ### Canberra distance
 
@@ -340,7 +341,7 @@ plot_prox(D, mds=True)
 Yet, another similar metric is the Bray-Curtis distance. The Bray-Curtis distance is in the range \[0, 1\] if all coordinates are positive, and is undefined if the inputs are of length zero.
 
 $$
-d_BC(\vec{x},\vec{y}) = \frac{\sum_{i=1}^D |x_i-y_i|}{\sum_{i=1}^D |x_i+y_i|}
+d_{BC}(\vec{x},\vec{y}) = \frac{\sum_{i=1}^D |x_i-y_i|}{\sum_{i=1}^D |x_i+y_i|}
 $$
 
 ``` python
@@ -484,119 +485,513 @@ plot_prox(D, mds=True)
 
 ![](./.ob-jupyter/5056aff084cceda093e9c95dfcfb0a11f821a77c.png)
 
-1.  $l_2$-normalized Euclidean distance
+#### $l_2$-normalized Euclidean distance
 
-    Another effective proxy for Cosine Distance can be obtained by $l_2$ normalisation of the vectors, followed by the application of normal Euclidean distance. Using this technique each term in each vector is first divided by the magnitude of the vector, yielding a vector of unit length, which lies on the unit circle. Then, it is clear, the Euclidean distance over the end-points of any two vectors is a proper metric which gives the same ordering as the Cosine distance for any comparison of vectors (imagine drawing lines between vector points on the unit circle), and furthermore avoids the potentially expensive trigonometric operations required to yield a proper metric. Once the normalization has occurred, the vector space can be used with the full range of techniques available to any Euclidean space, notably standard dimensionality reduction techniques. This normalized form distance is notably used within many Deep Learning algorithms.
+Another effective proxy for Cosine Distance can be obtained by $l_2$ normalisation of the vectors, followed by the application of normal Euclidean distance. Using this technique each term in each vector is first divided by the magnitude of the vector, yielding a vector of unit length, which lies on the unit circle. Then, it is clear, the Euclidean distance over the end-points of any two vectors is a proper metric which gives the same ordering as the Cosine distance for any comparison of vectors (imagine drawing lines between vector points on the unit circle), and furthermore avoids the potentially expensive trigonometric operations required to yield a proper metric. Once the normalization has occurred, the vector space can be used with the full range of techniques available to any Euclidean space, notably standard dimensionality reduction techniques. This normalized form distance is notably used within many Deep Learning algorithms.
 
-    ``` python
-    def d2_normlzd(x, y):
-        x = x/np.linalg.norm(x)
-        y = y/np.linalg.norm(y)
-        return np.sqrt(np.sum((x - y)**2))
+``` python
+def d2_normlzd(x, y):
+    x = x/np.linalg.norm(x)
+    y = y/np.linalg.norm(y)
+    return np.sqrt(np.sum((x - y)**2))
 
-    D = proximity_matrix(X, measure=d2_normlzd)
+D = proximity_matrix(X, measure=d2_normlzd)
 
-    plot_prox(D, mds=True)
-    ```
+plot_prox(D, mds=True)
+```
 
-    ![](./.ob-jupyter/d804c1c7bb028fdf45f7cebdbb27ea9f29c7ce87.png)
+![](./.ob-jupyter/d804c1c7bb028fdf45f7cebdbb27ea9f29c7ce87.png)
+
+#### Soft cosine
+
+Finally, cosine similarity assumes features are completely independent. If we believe there exist an intrinsic similarity among some features, e.g. some words as \"game\" and \"play\", we may introduce such similarity through a series of weights relating feature $i$ to feature $j$, $s_{ij}$, and calculate the \"soft cosine similarity\" as
+
+$$
+\operatorname {soft\_cosine} _{1}(\vec{x},\vec{y}) =
+\frac {\sum \nolimits_{i,j}^{D} s_{ij} x_{i} y_{j}}
+{\sqrt {\sum \nolimits_{i,j}^{D} s_{ij} x_{i} x_{j}}
+ \sqrt {\sum \nolimits_{i,j}^{D} s_{ij} y_{i} y_{j}}},
+$$
 
 ### Pearson\'s correlation coefficient
 
 The correlation coefficient is equivalent to a centered cosine similarity.
 
-### Tanimoto measure
+$$
+\rho(\vec{x},\vec{y}) = \frac{COV(\vec{x},\vec{y})}{\sigma_{x}\sigma{y}}
+= \frac{(\vec{x}-\mu_{x})^T(\vec{y}-\mu_{y})}
+       {|(\vec{x}-\mu_{x})||(\vec{y}-\mu_{y})|}
+$$
+
+with $-1 \leq \rho \leq 1$. A related dissimilarity measure being
+
+$$
+d_{\rho}(\vec{x}m\vec{y}) = \frac{1 - \rho}{2}
+$$
+
+with $0 \leq d_{\rho} \leq 1$.
+
+``` python
+def pearson_s(x, y):
+    x = x - x.mean()
+    y = y - y.mean()
+    return cosine_s(x,y)
+
+def pearson_d(x, y):
+    return 0.5*(1 - pearson_s(x,y))
+
+D = proximity_matrix(X, measure=pearson_d)
+
+plot_prox(D, mds=True)
+```
+
+![](./.ob-jupyter/877e1cab484ff1883f3bfa74a4c2e45cb11b7992.png)
+
+### Spearman correlation
+
+Spearman correlation is similar to Pearson correlation, but only uses rank information (positions within a list of values), rather than the actual values. This makes Spearman correlation less sensitive to outliers in the data, and allows its use with ordinal data.
+
+From {cite}`enwiki:spearman`. The Spearman correlation between two variables is equal to the Pearson correlation between the rank values of those two variables; while Pearson\'s correlation assesses linear relationships, Spearman\'s correlation assesses monotonic relationships (whether linear or not). If there are no repeated data values, a perfect Spearman correlation of +1 or −1 occurs when each of the variables is a perfect monotone function of the other.
+
+``` python
+def spearman_s(x, y):
+    xr = np.argsort(x)
+    yr = np.argsort(y)
+    return pearson_s(xr,yr)
+
+def spearman_d(x, y):
+    return 0.5*(1 - spearman_s(x,y))
+
+D = proximity_matrix(X, measure=spearman_d)
+
+plot_prox(D, mds=True)
+```
+
+![](./.ob-jupyter/0e0a17c7549246605107bd06a3ef6ee7a9e3dbd4.png)
+
+### Tanimoto similarity
+
+More typically used for categorical data, the Jaccard, or Tanimoto, coefficient can be also used with real valued vectors. It is defined as
+
+$$
+s_T(\vec{x},\vec{y}) = \frac{\vec{x}^T\vec{y}}
+                            {|\vec{x}|^2 + |\vec{y}|^2 - \vec{x}^T\vec{y}}
+= \frac{1}{1 + \frac{(\vec{x}-\vec{y})^T(\vec{x}-\vec{y})}{\vec{x}^T\vec{y}}}
+$$
+
+The Tanimoto measure is inversely proportional to the squared Euclidean distance divided by the inner product. Since the inner product can thought as a measure of correlation, the more correlated the vectors are, the larger the value of $s_T$.
+
+``` python
+def tanimoto_d(x, y):
+    return 1 - x @ y / (x @ x + y @ y - x @ y)
+
+D = proximity_matrix(X, measure=tanimoto_d)
+
+plot_prox(D, mds=True)
+```
+
+![](./.ob-jupyter/1a251c4e4809b97960da25f00ce4cbea57fee059.png)
 
 ### Based on weighted $l_2$ norm
 
-## Dissimilarity measures for categorical data
+Another measure that is sometimes used is, which also shares some properties with the Canberra distance, is the Euclidean distance weighted by the sum of the length of both vectors
 
-Before introducing proximity measures for categorical data, we need an appropriate example data set with categorical variables. We will use the [mushroom data set](https://archive.ics.uci.edu/ml/datasets/mushroom) from [UCI Machine Learning repository](https://archive.ics.uci.edu/ml/datasets.php).
+$$
+s_c(\vec{x},\vec{y}) = 1 - \frac{d_2(\vec{x},\vec{y})}{|\vec{x}|+|\vec{y}|}
+$$
 
-From the official description: This data set includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family (pp. 500-525). Each species is identified as definitely edible, definitely poisonous, or of unknown edibility and not recommended. This latter class was combined with the poisonous one. The Guide clearly states that there is no simple rule for determining the edibility of a mushroom; no rule like \`\`leaflets three, let it be\'\' for Poisonous Oak and Ivy.
+$s_c$ takes its maximum value, 1, when $\vec{x}=\vec{y}$ and its minimum, 0, when $\vec{x} = -\vec{y}$.
+
+``` python
+def w_d2(x, y):
+    return np.linalg.norm(x-y)/(np.linalg.norm(x) +
+                                np.linalg.norm(y))
+
+D = proximity_matrix(X, measure=w_d2)
+
+plot_prox(D, mds=True)
+```
+
+![](./.ob-jupyter/bb98ff4ba4fcf6b6246d552527a5c36640b1a728.png)
+
+## Categorical data, test data
+
+Before introducing proximity measures for categorical data, we need an appropriate example data set with categorical variables. We will use the [breast cancer data set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer) from [UCI Machine Learning repository](https://archive.ics.uci.edu/ml/datasets.php).
+
+From the official description:
+
+This is one of three domains provided by the Oncology Institute that has repeatedly appeared in the machine learning literature. (See also lymphography and primary-tumor.) This data set includes 201 instances of one class and 85 instances of another class. The instances are described by 9 attributes, some of which are linear and some are nominal.
 
 The attributes of the data set are, with their respective possible classes:
 
-1.  cap-shape: bell=b,conical=c,convex=x,flat=f, knobbed=k,sunken=s
-2.  cap-surface: fibrous=f,grooves=g,scaly=y,smooth=s
-3.  cap-color: brown=n,buff=b,cinnamon=c,gray=g,green=r, pink=p,purple=u,red=e,white=w,yellow=y
-4.  bruises?: bruises=t,no=f
-5.  odor: almond=a,anise=l,creosote=c,fishy=y,foul=f, musty=m,none=n,pungent=p,spicy=s
-6.  gill-attachment: attached=a,descending=d,free=f,notched=n
-7.  gill-spacing: close=c,crowded=w,distant=d
-8.  gill-size: broad=b,narrow=n
-9.  gill-color: black=k,brown=n,buff=b,chocolate=h,gray=g, green=r,orange=o,pink=p,purple=u,red=e, white=w,yellow=y
-10. stalk-shape: enlarging=e,tapering=t
-11. stalk-root: bulbous=b,club=c,cup=u,equal=e, rhizomorphs=z,rooted=r,missing=?
-12. stalk-surface-above-ring: fibrous=f,scaly=y,silky=k,smooth=s
-13. stalk-surface-below-ring: fibrous=f,scaly=y,silky=k,smooth=s
-14. stalk-color-above-ring: brown=n,buff=b,cinnamon=c,gray=g,orange=o, pink=p,red=e,white=w,yellow=y
-15. stalk-color-below-ring: brown=n,buff=b,cinnamon=c,gray=g,orange=o, pink=p,red=e,white=w,yellow=y
-16. veil-type: partial=p,universal=u
-17. veil-color: brown=n,orange=o,white=w,yellow=y
-18. ring-number: none=n,one=o,two=t
-19. ring-type: cobwebby=c,evanescent=e,flaring=f,large=l, none=n,pendant=p,sheathing=s,zone=z
-20. spore-print-color: black=k,brown=n,buff=b,chocolate=h,green=r, orange=o,purple=u,white=w,yellow=y
-21. population: abundant=a,clustered=c,numerous=n, scattered=s,several=v,solitary=y
-22. habitat: grasses=g,leaves=l,meadows=m,paths=p, urban=u,waste=w,woods=d
+1.  class: no-recurrence-events, recurrence-events
+2.  age: 10-19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90-99.
+3.  menopause: lt40, ge40, premeno.
+4.  tumor-size: 0-4, 5-9, 10-14, 15-19, 20-24, 25-29, 30-34, 35-39, 40-44, 45-49, 50-54, 55-59.
+5.  inv-nodes: 0-2, 3-5, 6-8, 9-11, 12-14, 15-17, 18-20, 21-23, 24-26, 27-29, 30-32, 33-35, 36-39.
+6.  node-caps: yes, no.
+7.  deg-malig: 1, 2, 3.
+8.  breast: left, right.
+9.  breast-quad: left-up, left-low, right-up, right-low, central.
+10. irradiat: yes, no.
 
-We now import the <a href="Data/mushrooms.csv">mushrooms.csv</a> file.
-
-We will define our metrics to work with binary data, or one-hot encoded features. So we ask pandas to do that for us.
+We now import the <a href="Data/breast-cancer.csv">breast-cancer.csv</a> file.
 
 ``` python
 import pandas as pd
 
-mushrooms = pd.read_csv('Data/mushrooms.csv', na_values='?')
-mushrooms.head()
+cancer = pd.read_csv('Data/breast-cancer.csv')
+cancer = cancer[cancer.columns].astype('category')
+cancer.head()
 ```
 
-|     | class | cap-shape | cap-surface | cap-color | bruises | odor | gill-attachment | gill-spacing | gill-size | gill-color | stalk-shape | stalk-root | stalk-surface-above-ring | stalk-surface-below-ring | stalk-color-above-ring | stalk-color-below-ring | veil-type | veil-color | ring-number | ring-type | spore-print-color | population | habitat |
-|-----|-------|-----------|-------------|-----------|---------|------|-----------------|--------------|-----------|------------|-------------|------------|--------------------------|--------------------------|------------------------|------------------------|-----------|------------|-------------|-----------|-------------------|------------|---------|
-| 0   | p     | x         | s           | n         | t       | p    | f               | c            | n         | k          | e           | e          | s                        | s                        | w                      | w                      | p         | w          | o           | p         | k                 | s          | u       |
-| 1   | e     | x         | s           | y         | t       | a    | f               | c            | b         | k          | e           | c          | s                        | s                        | w                      | w                      | p         | w          | o           | p         | n                 | n          | g       |
-| 2   | e     | b         | s           | w         | t       | l    | f               | c            | b         | n          | e           | c          | s                        | s                        | w                      | w                      | p         | w          | o           | p         | n                 | n          | m       |
-| 3   | p     | x         | y           | w         | t       | p    | f               | c            | n         | n          | e           | e          | s                        | s                        | w                      | w                      | p         | w          | o           | p         | k                 | s          | u       |
-| 4   | e     | x         | s           | g         | f       | n    | f               | w            | b         | k          | t           | e          | s                        | s                        | w                      | w                      | p         | w          | o           | e         | n                 | a          | g       |
+|     | class                | age   | menopause | tumor-size | inv-nodes | node-caps | deg-malig | breast | breast-quad | irradiat |
+|-----|----------------------|-------|-----------|------------|-----------|-----------|-----------|--------|-------------|----------|
+| 0   | no-recurrence-events | 30-39 | premeno   | 30-34      | 0-2       | no        | 3         | left   | left~low~   | no       |
+| 1   | no-recurrence-events | 40-49 | premeno   | 20-24      | 0-2       | no        | 2         | right  | right~up~   | no       |
+| 2   | no-recurrence-events | 40-49 | premeno   | 20-24      | 0-2       | no        | 2         | left   | left~low~   | no       |
+| 3   | no-recurrence-events | 60-69 | ge40      | 15-19      | 0-2       | no        | 2         | right  | left~up~    | no       |
+| 4   | no-recurrence-events | 40-49 | premeno   | 0-4        | 0-2       | no        | 2         | right  | right~low~  | no       |
+
+We can explore the relationship between pairs of variables using a scatter-plot. Due to large number of features, here we show only a single pair. To interactively explore different combination pairs, please run the code locally.
 
 ``` python
-mushrooms = pd.get_dummies(mushrooms)
-mushrooms.head()
+cols = cancer.columns
+i = 4
+j = 5
+
+x1 = cancer[cols[i]].cat.codes
+y1 = cancer[cols[i]].cat.codes
+# Add jitter
+x1 += np.random.normal(loc=0, scale=0.1, size=len(x1))
+y1 += np.random.normal(loc=0, scale=0.1, size=len(y1))
+
+fig = plt.figure(figsize=(8,8))
+plt.xlabel(cols[i])
+plt.ylabel(cols[j])
+plt.scatter(x1, y1, c=cancer['class'].cat.codes, alpha=0.5);
 ```
 
-|     | class~e~ | class~p~ | cap-shape~b~ | cap-shape~c~ | cap-shape~f~ | cap-shape~k~ | cap-shape~s~ | cap-shape~x~ | cap-surface~f~ | cap-surface~g~ | cap-surface~s~ | cap-surface~y~ | cap-color~b~ | cap-color~c~ | cap-color~e~ | cap-color~g~ | cap-color~n~ | cap-color~p~ | cap-color~r~ | cap-color~u~ | cap-color~w~ | cap-color~y~ | bruises~f~ | bruises~t~ | odor~a~ | odor~c~ | odor~f~ | odor~l~ | odor~m~ | odor~n~ | odor~p~ | odor~s~ | odor~y~ | gill-attachment~a~ | gill-attachment~f~ | gill-spacing~c~ | gill-spacing~w~ | gill-size~b~ | gill-size~n~ | gill-color~b~ | gill-color~e~ | gill-color~g~ | gill-color~h~ | gill-color~k~ | gill-color~n~ | gill-color~o~ | gill-color~p~ | gill-color~r~ | gill-color~u~ | gill-color~w~ | gill-color~y~ | stalk-shape~e~ | stalk-shape~t~ | stalk-root~b~ | stalk-root~c~ | stalk-root~e~ | stalk-root~r~ | stalk-surface-above-ring~f~ | stalk-surface-above-ring~k~ | stalk-surface-above-ring~s~ | stalk-surface-above-ring~y~ | stalk-surface-below-ring~f~ | stalk-surface-below-ring~k~ | stalk-surface-below-ring~s~ | stalk-surface-below-ring~y~ | stalk-color-above-ring~b~ | stalk-color-above-ring~c~ | stalk-color-above-ring~e~ | stalk-color-above-ring~g~ | stalk-color-above-ring~n~ | stalk-color-above-ring~o~ | stalk-color-above-ring~p~ | stalk-color-above-ring~w~ | stalk-color-above-ring~y~ | stalk-color-below-ring~b~ | stalk-color-below-ring~c~ | stalk-color-below-ring~e~ | stalk-color-below-ring~g~ | stalk-color-below-ring~n~ | stalk-color-below-ring~o~ | stalk-color-below-ring~p~ | stalk-color-below-ring~w~ | stalk-color-below-ring~y~ | veil-type~p~ | veil-color~n~ | veil-color~o~ | veil-color~w~ | veil-color~y~ | ring-number~n~ | ring-number~o~ | ring-number~t~ | ring-type~e~ | ring-type~f~ | ring-type~l~ | ring-type~n~ | ring-type~p~ | spore-print-color~b~ | spore-print-color~h~ | spore-print-color~k~ | spore-print-color~n~ | spore-print-color~o~ | spore-print-color~r~ | spore-print-color~u~ | spore-print-color~w~ | spore-print-color~y~ | population~a~ | population~c~ | population~n~ | population~s~ | population~v~ | population~y~ | habitat~d~ | habitat~g~ | habitat~l~ | habitat~m~ | habitat~p~ | habitat~u~ | habitat~w~ |
-|-----|----------|----------|--------------|--------------|--------------|--------------|--------------|--------------|----------------|----------------|----------------|----------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|--------------|------------|------------|---------|---------|---------|---------|---------|---------|---------|---------|---------|--------------------|--------------------|-----------------|-----------------|--------------|--------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|---------------|----------------|----------------|---------------|---------------|---------------|---------------|-----------------------------|-----------------------------|-----------------------------|-----------------------------|-----------------------------|-----------------------------|-----------------------------|-----------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|---------------------------|--------------|---------------|---------------|---------------|---------------|----------------|----------------|----------------|--------------|--------------|--------------|--------------|--------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|----------------------|---------------|---------------|---------------|---------------|---------------|---------------|------------|------------|------------|------------|------------|------------|------------|
-| 0   | 0        | 1        | 0            | 0            | 0            | 0            | 0            | 1            | 0              | 0              | 1              | 0              | 0            | 0            | 0            | 0            | 1            | 0            | 0            | 0            | 0            | 0            | 0          | 1          | 0       | 0       | 0       | 0       | 0       | 0       | 1       | 0       | 0       | 0                  | 1                  | 1               | 0               | 0            | 1            | 0             | 0             | 0             | 0             | 1             | 0             | 0             | 0             | 0             | 0             | 0             | 0             | 1              | 0              | 0             | 0             | 1             | 0             | 0                           | 0                           | 1                           | 0                           | 0                           | 0                           | 1                           | 0                           | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 1            | 0             | 0             | 1             | 0             | 0              | 1              | 0              | 0            | 0            | 0            | 0            | 1            | 0                    | 0                    | 1                    | 0                    | 0                    | 0                    | 0                    | 0                    | 0                    | 0             | 0             | 0             | 1             | 0             | 0             | 0          | 0          | 0          | 0          | 0          | 1          | 0          |
-| 1   | 1        | 0        | 0            | 0            | 0            | 0            | 0            | 1            | 0              | 0              | 1              | 0              | 0            | 0            | 0            | 0            | 0            | 0            | 0            | 0            | 0            | 1            | 0          | 1          | 1       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0       | 0                  | 1                  | 1               | 0               | 1            | 0            | 0             | 0             | 0             | 0             | 1             | 0             | 0             | 0             | 0             | 0             | 0             | 0             | 1              | 0              | 0             | 1             | 0             | 0             | 0                           | 0                           | 1                           | 0                           | 0                           | 0                           | 1                           | 0                           | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 1            | 0             | 0             | 1             | 0             | 0              | 1              | 0              | 0            | 0            | 0            | 0            | 1            | 0                    | 0                    | 0                    | 1                    | 0                    | 0                    | 0                    | 0                    | 0                    | 0             | 0             | 1             | 0             | 0             | 0             | 0          | 1          | 0          | 0          | 0          | 0          | 0          |
-| 2   | 1        | 0        | 1            | 0            | 0            | 0            | 0            | 0            | 0              | 0              | 1              | 0              | 0            | 0            | 0            | 0            | 0            | 0            | 0            | 0            | 1            | 0            | 0          | 1          | 0       | 0       | 0       | 1       | 0       | 0       | 0       | 0       | 0       | 0                  | 1                  | 1               | 0               | 1            | 0            | 0             | 0             | 0             | 0             | 0             | 1             | 0             | 0             | 0             | 0             | 0             | 0             | 1              | 0              | 0             | 1             | 0             | 0             | 0                           | 0                           | 1                           | 0                           | 0                           | 0                           | 1                           | 0                           | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 1            | 0             | 0             | 1             | 0             | 0              | 1              | 0              | 0            | 0            | 0            | 0            | 1            | 0                    | 0                    | 0                    | 1                    | 0                    | 0                    | 0                    | 0                    | 0                    | 0             | 0             | 1             | 0             | 0             | 0             | 0          | 0          | 0          | 1          | 0          | 0          | 0          |
-| 3   | 0        | 1        | 0            | 0            | 0            | 0            | 0            | 1            | 0              | 0              | 0              | 1              | 0            | 0            | 0            | 0            | 0            | 0            | 0            | 0            | 1            | 0            | 0          | 1          | 0       | 0       | 0       | 0       | 0       | 0       | 1       | 0       | 0       | 0                  | 1                  | 1               | 0               | 0            | 1            | 0             | 0             | 0             | 0             | 0             | 1             | 0             | 0             | 0             | 0             | 0             | 0             | 1              | 0              | 0             | 0             | 1             | 0             | 0                           | 0                           | 1                           | 0                           | 0                           | 0                           | 1                           | 0                           | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 1            | 0             | 0             | 1             | 0             | 0              | 1              | 0              | 0            | 0            | 0            | 0            | 1            | 0                    | 0                    | 1                    | 0                    | 0                    | 0                    | 0                    | 0                    | 0                    | 0             | 0             | 0             | 1             | 0             | 0             | 0          | 0          | 0          | 0          | 0          | 1          | 0          |
-| 4   | 1        | 0        | 0            | 0            | 0            | 0            | 0            | 1            | 0              | 0              | 1              | 0              | 0            | 0            | 0            | 1            | 0            | 0            | 0            | 0            | 0            | 0            | 1          | 0          | 0       | 0       | 0       | 0       | 0       | 1       | 0       | 0       | 0       | 0                  | 1                  | 0               | 1               | 1            | 0            | 0             | 0             | 0             | 0             | 1             | 0             | 0             | 0             | 0             | 0             | 0             | 0             | 0              | 1              | 0             | 0             | 1             | 0             | 0                           | 0                           | 1                           | 0                           | 0                           | 0                           | 1                           | 0                           | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 0                         | 1                         | 0                         | 1            | 0             | 0             | 1             | 0             | 0              | 1              | 0              | 1            | 0            | 0            | 0            | 0            | 0                    | 0                    | 0                    | 1                    | 0                    | 0                    | 0                    | 0                    | 0                    | 1             | 0             | 0             | 0             | 0             | 0             | 0          | 1          | 0          | 0          | 0          | 0          | 0          |
+![](./.ob-jupyter/28f63ff11664fd309f294f9e7bb628cc1cd11d03.png)
 
-We now have 118 binary features.
+We will define some of our metrics to work with one-hot encoded data. So we ask pandas to do that for us.
+
+``` python
+cancer_oh = pd.get_dummies(cancer)
+cancer_oh.head()
+```
+
+|     | class~no~-recurrence-events | class~recurrence~-events | age~20~-29 | age~30~-39 | age~40~-49 | age~50~-59 | age~60~-69 | age~70~-79 | menopause~ge40~ | menopause~lt40~ | menopause~premeno~ | tumor-size~0~-4 | tumor-size~10~-14 | tumor-size~15~-19 | tumor-size~20~-24 | tumor-size~25~-29 | tumor-size~30~-34 | tumor-size~35~-39 | tumor-size~40~-44 | tumor-size~45~-49 | tumor-size~5~-9 | tumor-size~50~-54 | inv-nodes~0~-2 | inv-nodes~12~-14 | inv-nodes~15~-17 | inv-nodes~24~-26 | inv-nodes~3~-5 | inv-nodes~6~-8 | inv-nodes~9~-11 | node-caps\_? | node-caps~no~ | node-caps~yes~ | deg-malig~1~ | deg-malig~2~ | deg-malig~3~ | breast~left~ | breast~right~ | breast-quad\_? | breast-quad~central~ | breast-quad~leftlow~ | breast-quad~leftup~ | breast-quad~rightlow~ | breast-quad~rightup~ | irradiat~no~ | irradiat~yes~ |
+|-----|-----------------------------|--------------------------|------------|------------|------------|------------|------------|------------|-----------------|-----------------|--------------------|-----------------|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|-------------------|-----------------|-------------------|----------------|------------------|------------------|------------------|----------------|----------------|-----------------|--------------|---------------|----------------|--------------|--------------|--------------|--------------|---------------|----------------|----------------------|----------------------|---------------------|-----------------------|----------------------|--------------|---------------|
+| 0   | 1                           | 0                        | 0          | 1          | 0          | 0          | 0          | 0          | 0               | 0               | 1                  | 0               | 0                 | 0                 | 0                 | 0                 | 1                 | 0                 | 0                 | 0                 | 0               | 0                 | 1              | 0                | 0                | 0                | 0              | 0              | 0               | 0            | 1             | 0              | 0            | 0            | 1            | 1            | 0             | 0              | 0                    | 1                    | 0                   | 0                     | 0                    | 1            | 0             |
+| 1   | 1                           | 0                        | 0          | 0          | 1          | 0          | 0          | 0          | 0               | 0               | 1                  | 0               | 0                 | 0                 | 1                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0               | 0                 | 1              | 0                | 0                | 0                | 0              | 0              | 0               | 0            | 1             | 0              | 0            | 1            | 0            | 0            | 1             | 0              | 0                    | 0                    | 0                   | 0                     | 1                    | 1            | 0             |
+| 2   | 1                           | 0                        | 0          | 0          | 1          | 0          | 0          | 0          | 0               | 0               | 1                  | 0               | 0                 | 0                 | 1                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0               | 0                 | 1              | 0                | 0                | 0                | 0              | 0              | 0               | 0            | 1             | 0              | 0            | 1            | 0            | 1            | 0             | 0              | 0                    | 1                    | 0                   | 0                     | 0                    | 1            | 0             |
+| 3   | 1                           | 0                        | 0          | 0          | 0          | 0          | 1          | 0          | 1               | 0               | 0                  | 0               | 0                 | 1                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0               | 0                 | 1              | 0                | 0                | 0                | 0              | 0              | 0               | 0            | 1             | 0              | 0            | 1            | 0            | 0            | 1             | 0              | 0                    | 0                    | 1                   | 0                     | 0                    | 1            | 0             |
+| 4   | 1                           | 0                        | 0          | 0          | 1          | 0          | 0          | 0          | 0               | 0               | 1                  | 1               | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0                 | 0               | 0                 | 1              | 0                | 0                | 0                | 0              | 0              | 0               | 0            | 1             | 0              | 0            | 1            | 0            | 0            | 1             | 0              | 0                    | 0                    | 0                   | 1                     | 0                    | 1            | 0             |
+
+We now have 45 binary features, but beware, the ones referring to same original feature are not independent.
+
+``` python
+Xc = cancer_oh.drop(columns=['class_no-recurrence-events',
+                             'class_recurrence-events']).values
+yc = cancer_oh['class_recurrence-events'].values
+```
+
+It is important to take care when using the proximity measures, since depending on the representation (original vs one-hot) the way of calculating each measure may change. We will point out such differences when appropriate.
 
 ## Similarity measures for categorical data
 
-### Jaccard coefficient
+### Simple matching coefficient (SMC)
 
-### Coincidence coefficient
+The Simple Matching Coefficient just counts how many entries match for both vectors. It is defined as
+
+$$
+\text{SMC} = \frac {\text{number of matching attributes}}{\text{number of attributes}}
+$$
+
+When dealing with categorical vectors in the original representation, the above equation must be applied directly.
+
+When dealing with one-hot encoded vectors, counting the matches is equivalent to counting the number of matching ones, ignoring the zeroes, which in turn is equivalent to the dot product of both vectors, over the number of original dimensions
+
+$$
+SMC_{oh}(\vec{x},\vec{y}) = \frac{\vec{x}^T\vec{y}}{D_{orignal}}
+= \frac{\vec{x}^T\vec{y}}{|x|_1 + |y|_1 - \vec{x}^T\vec{y}}
+$$
+
+This last definition is equivalent to the Jaccard index for binary vectors.
+
+We need to distinguish between one-hot encoded binary vectors, and natural binary vectors, for which the original representation consists of only two classes encoded as 1 and 0. If the attributes are symmetrical, (1s and 0s are equivalently important, i.e., carry equivalent information), the SMC must count matches of both ones and zeroes, and the above equation does not apply, and we must fall back to the first definition. As an example, consider gender encoded as male:0 and female:1. It is clear that both 1s and 0s are equally important.
+
+For asymmetric natural binary vectors, for which the 0s do not carry the same amount of information as 1s, the Jaccard index (see below) is a more appropriate metric. For example (from {cite}`enwiki:smc`), in market basket analysis, the basket of two consumers who we wish to compare might only contain a small fraction of all the available products in the store, so the SMC will usually return very high values of similarities even when the baskets bear very little resemblance, thus making the Jaccard index a more appropriate measure of similarity in that context. For example, consider a supermarket with 1000 products and two customers. The basket of the first customer contains salt and pepper and the basket of the second contains salt and sugar. In this scenario, the similarity between the two baskets as measured by the Jaccard index would be 1/3, but the similarity becomes 0.998 using the SMC.
+
+``` python
+def smc(x,y, **kwargs):
+    one_hot = kwargs['one_hot']
+    if not one_hot:
+        matches = (xi == yi).sum()
+        return matcher/len(x)
+    else:
+        return x @ y / (x.sum() + y.sum() - x @ y)
+
+def d_smc(x, y, **kwargs):
+    return 1 - smc(x, y, **kwargs)
+
+D = proximity_matrix(Xc, measure=d_smc, one_hot=True)
+
+plot_prox(D, mds=True, labels=yc)
+```
+
+![](./.ob-jupyter/f1ffc63445d982b896f6ef92ed36ec4184927d70.png)
+
+### Jaccard or Tanimoto coefficient (JC)
+
+The Jaccardor Tanimoto coefficient was designed as a similarly coefficient among sets, the original definition being
+
+$$
+s_J(A,B) = \frac{|A \cap B |}{|A \cup B|}
+= \frac{|A \cap B |}{|A| + |B| - |A \cap B |}
+$$
+
+Note that $0 \leq s_J\ leq 1$, and if both sets are empty, we define $s_J=1$.
+
+The index is also used with binary categorical feature vectors, for which it takes the form
+
+$$
+s_J = \frac{\vec{x}^T\vec{y}}{|x| + |y| - \vec{x}^T\vec{y}}
+$$
+
+When working with natural binary vectors, the Jaccard index is more appropriate than the SMC for asymmetric features, for example, in market basket analysis, where ones indicate the presence of an item in a set, and zeros signal the absence of an item in a set. When working with symmetric features the SMC is more appropriate, as discussed in the preceding section. The Jaccard index is also the most popular similarity measure for comparing chemical structures represented by means of fingerprints {cite}`enwiki:chemsim`.
+
+In the case of one-hot encoded binary vectors, the Jaccard index is equivalent to the SMC in the original representation, and was implement above.
+
+For integer categorical vectors, where each coordinates contains, for example, the degree or strength of a feature (0 meaning total absence), the Jaccard index takes the form
+
+$$
+s_J = \frac{n_{matches}}{n_x + n_y - n_{x,y>0}}
+$$
+
+where $n_x$ and $n_y$ are the number of non-zero entries of $\vec{x}$ and $\vec{y}$, $n_{matches}$ are the number of non-zero matches, and $n_{x,y > 0}$ is the number entries in x and y that are simultaneously larger than zero.
+
+``` python
+def s_j(x,y, binary=True):
+    if binary:
+        return x @ y / (x.sum() + y.sum() - x @ y)
+    else:
+        # Binarize vectors
+        xb = (x > 0)
+        yb = (y > 0)
+        nx = xb.sum()
+        ny = yb.sum()
+        nxy = xb @ yb
+        n_matches = (x == y)*nxy
+        return n_matches / (nx + ny - nxy)
+```
+
+### Sørensen--Dice coefficient
 
 ### Ochiai coefficient
 
-This is the cosine similarity among bit vectors, and its equivalent to
+In biology, a categorical equivalent to the cosine similarity is the Ochiai coefficient which can be represented as {cite}`enwiki:cosine:`
 
-## Geodesic distance
+$$
+K= \frac {|A \cap B|}{\sqrt {|A|\times |B|}}
+$$
+
+Here, $A$ and $B$ are sets, and $|A|$ is the number of elements in $A$, not the norm of $A$.
+
+If sets are represented as bit vectors, the Otsuka-Ochiai coefficient can be seen to be the same as the cosine similarity.
+
+``` python
+D = proximity_matrix(Xc, measure=cosine_d)
+
+plot_prox(D, mds=True, labels=yc)
+```
+
+![](./.ob-jupyter/1fea390cb7effdbf16ded6d34338b635b5e9d3e4.png)
+
+## Dissimilarity measures for categorical data
+
+### Hamming distance
+
+Defined as the number of places where two vectors differ. If vectors are in their original representation, the implementation follows the definition
+
+$$
+d_H = n_{x \neq y}
+$$
+
+If vectors are natural binary vectors, then the hamming distance is equivalent to the Manhattan distance and the squared Euclidean distance, also equal to the sum of a XOR element wise operation
+
+$$
+d_H = d_1 = d_2^2
+$$
+
+When dealing with one-hot encoded vectors the number of mismatches can be found from the number of matches minus the original dimension, or as the element wise XOR sum over 2
+
+$$
+d_{H,oh} = \vec{x}^T \vec{y} - (|\vec{x}| + |\vec{y}| - \vec{x}^T\vec{y})
+= 2\vec{x}^T \vec{y} - |\vec{x}| - |\vec{y}|
+$$
+
+``` python
+def d_hamming(x, y, **kwargs):
+    one_hot = kwargs['one_hot']
+    if not one_hot:
+        return (x != y).sum()
+    else:
+        return (x != y).sum()/2
+
+D = proximity_matrix(Xc, measure=d_hamming, one_hot=True)
+
+plot_prox(D, mds=True, labels=yc)
+```
+
+![](./.ob-jupyter/b61af4f3b55dbdf23a4df46af84946c3cd430858.png)
+
+### Edit distance (Dynamic measures)
+
+The Hamming distance is a particular case of the edit distance between two vectors. The edit distance is typically used for strings, but can also be implemented for categorical vectors. Is defined as the number of operations required to transform one vector or string into another. In the most general case, the edit distance can be calculated for vectors of different length, if either the operation of addition or deletion is defined.
+
+Different types of edit distance allow different sets of string operations {cite}`enwiki:editdist`. For instance:
+
+-   The Levenshtein distance allows deletion, insertion and substitution.
+-   The Longest common subsequence (LCS) distance allows only insertion and deletion, not substitution.
+-   The Hamming distance allows only substitution, hence, it only applies to strings of the same length.
+-   The Damerau--Levenshtein distance allows insertion, deletion, substitution, and the transposition of two adjacent characters.
+-   The Jaro distance allows only transposition.
+
+In Levenshtein\'s original definition, each of these operations has unit cost, so the Levenshtein distance is equal to the minimum number of operations required to transform a to b. A more general definition associates non-negative weight functions with the operations.
+
+For example, the Levenshtein distance between \"kitten\" and \"sitting\" is 3. A minimal edit script that transforms the former into the latter is:
+
+1.  kitten → sitten (substitute \"s\" for \"k\")
+2.  sitten → sittin (substitute \"i\" for \"e\")
+3.  sittin → sitting (insert \"g\" at the end)
+
+Edit distance finds applications in computational biology and natural language processing.
+
+A common algorithm that implements the Levenshtein Distance is the Wagner--Fischer algorithm {cite}`enwiki:wagnerfisher`.
+
+``` python
+def leveshtein_d(src, dest):
+    n = len(src)
+    m = len(dest)
+
+    if type(src) == str:
+        src = list(src)
+    if type(dest) == str:
+        dest = list(dest)
+
+    # for all i and j, d[i,j] will hold the Levenshtein distance
+    # between the first i characters of src
+    # and the first j characters of dest
+    # note that d has (n+1)*(m+1) values to account for the
+    # empty string
+
+    D = np.zeros((n+1,m+1))
+
+    # source prefixes can be transformed into empty string by
+    # dropping all characters, i deletions
+    D[:, 0] = np.arange(n+1)
+
+    # target prefixes can be reached from empty source prefix
+    # by inserting every character, j intertions
+    D[0, :] = np.arange(m+1)
+
+    # Build strings recursively from prefixes
+    for i, j in product(range(1, n+1), range(1, m+1)):
+        # Deletion distance, the distance between src[:i], dest[:j]
+        # by deleting a the ith character of src
+        del_d = D[i-1, j] + 1
+        # Insertion distance, the distance between src[:i], dest[:j]
+        # by interting the jth character of dest
+        ins_d = D[i, j-1] + 1
+        #Subs distance, the distance between src[:i], dest[:j]
+        # by substituting the ith character of src
+        # by the jth character of dest, no cost if already equal
+        subs_d = D[i-1, j-1] + int(src[i-1] != dest[j-1])
+        D[i,j] = min(del_d, ins_d, subs_d)
+    # print(D)
+    return D[n,m]
+```
+
+``` python
+leveshtein_d('sitting', 'kitten')
+```
+
+``` example
+3.0
+```
+
+## Mixed features
+
+If our vectors have both real and categorical attributed, we two different options at our disposal, either transform the vectors to vectors of a single type, or define a measure that treats each set of features differently and then sum the pair of measures with appropriate weights.
+
+The simplest approach it to label encode categorical attributes as integers, and apply a proximity measure for real valued vectors. It is a good idea to standardize or normalize each feature, as to allow a fair comparison between features of different scales.
+
+An alternative to above approach is to discretize all real valued features to obtain a categorical vector, then use some measure for categorical feature vectors.
+
+A more elaborate approach is to partition both vectors into a categorical and real subset of features and deal with each of them independently. Let $\vec{x} = (\vec{x}_R, \vec{x}_{C})^T$ and $\vec{y} = (\vec{y}_R, \vec{y}_{C})^T$, the similarity (distance) between $\vec{x}$ and $\vec{y}$ is given by
+
+$$
+s(\vec{x},\vec{y}) = \lambda s_R(\vec{x}_R,\vec{y}_R) + (1-\lambda)s_C(\vec{x},\vec{y})
+$$
+
+where $s_R$ and $s_{C}$ are real and categorical similarity measures, respectively, and $\lambda$ regulates the relative importance of the categorical and numerical attributes. Missing domain knowledge, a good initial choice is to set lambda to the fraction of real features of the data set.
+
+Optionally, instead of standardizing each feature prior to finding the proximity values, we can instead standardize each similarity measure (categorical, real) by its standard deviation, i.e., this is the deviation of the similarities (distances), not the deviations of each feature
+
+$$
+s(\vec{x},\vec{y}) = \frac{\lambda}{\sigma_R} s_R(\vec{x}_R,\vec{y}_R) + \frac{(1-\lambda)}{\sigma_C} s_C(\vec{x},\vec{y}).
+$$
+
+An option that uses the one minus the range-normalized Manhattan distance and the Jaccard coefficient as similarity measures is the Gower similarity {cite}`gower1971general`.
+
+$$
+s_{Gower} = \frac{\sum_{i=1}^{D} s_i}{\sum_{i=1}^{D} w_i}
+$$
+
+where
+
+```{math}
+\begin{align}
+w_i =
+\begin{cases}
+0 & \text{if either $x_i$ or $y_i$ are undefined}\\
+0 & \text{if the ith feature is binary and  $x_i = y_i = 0$}\\
+1 & \text{otherwise}
+\end{cases}
+\end{align}
+```
+and
+
+```{math}
+\begin{align}
+s_i =
+\begin{cases}
+1 & \text{if the ith feature is binary and  $x_i = y_i = 1$}\\
+1 & \text{if the ith feature is categorical and  $x_i = y_i$}\\
+1 - \frac{|x_i - y_i|}{\text{range}_i} & \text{if the ith feature is real}\\
+0 & \text{otherwise}
+\end{cases}
+\end{align}
+```
+TODO: Implement general function for mixed variables. TODO: Implement Gower similarity (verify definition in original paper, the weights seems different from the generic weights $\lambda$).
+
+## Fuzzy measures
+
+## Missing data
+
+## Measures between sets of observations
+
+Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of measures between observations to measures between sets by considering pairwise measures between the set elements. Then, the measure is a function $U\times U \rightarrow \matbb{R}$ where $U$ is the set of all subsets $D_i \subset X$.
 
 ## KL-divergence
 
 ## Reachability distance
 
-## Proximity measure for ordinal data
+## Proximity measures on graps
 
-## Mixed features
-
-## Measures between sets of observations
-
-Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of measures between observations to measures between sets by considering pairwise measures between the set elements. Then, the measure is a function $U\times U \rightarrow \matbb{R}$ where $U$ is the set of all subsets $D_i \subset X$.
+### Geodesic distance
 
 ## References
 
