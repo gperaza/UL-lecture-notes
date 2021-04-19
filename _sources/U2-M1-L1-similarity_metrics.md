@@ -1054,13 +1054,131 @@ When dealing with missing we have the following options:
 
 ## Proximity between a point and a set
 
+In many clustering algorithms, to evaluate whether a point should belong to a cluster, we need to find its distance to such cluster. If the cluster $C$ is represented by a set of points, then we are asked to find the distance between a point $\vec{x}$ and a set (cluster) $\{\vec{y} \in C\}$.
+
+When we consider the complete set $C$, we can define the point-set distance from pairwise distances $d(\vec{x},\vec{y})$ (or similarities) between $\vec{x}$ and all elements of $C$. For example:
+
+-   **Max-proximity**:
+
+    $$
+     d(\vec{x}, C) = \underset{y \in C}{\operatorname{max}} d(\vec{x},\vec{y})
+     $$
+
+-   **Min-proximity**:
+
+    $$
+     d(\vec{x}, C) = \underset{y \in C}{\operatorname{min}} d(\vec{x},\vec{y})
+     $$
+
+-   **Average-proximity**:
+
+    $$
+     d(\vec{x}, C) = \frac{1}{|C|}\sum_{y \in C} d(\vec{x},\vec{y})
+     $$
+
+Another, perhaps more efficient option, is to represent each cluster by a prototype point or geometry, and to evaluate the distance to such prototype.
+
+### Point representatives
+
+For compact clusters, a point may be chosen as a representative. This points can be chosen or calculated in several ways, for example:
+
+-   **Mean vector**, appropriate for real valued features
+
+    $$
+     \vec{\mu} = \frac{1}{|C|}\sum_{y\in C}\vec{y}
+     $$
+
+-   **Mean center**. If categorical features are used, and we want the center to be a valid vector of categories, we may choose a point $\vec{m}_c$ of the cluster as the prototype, by finding the point that satisfies
+
+    $$
+     \sum_{y \in C} d(\vec{m_c},\vec{y}) \leq \sum_{y \in C} d(\vec{z},\vec{y}),\quad \forall \vec{z} \in C
+     $$
+
+-   **Median center**, appropriate if the distance is not a metric. The median center $\vec{m}_{med}$ is the point of the cluster that satisfies
+
+    $$
+     \text{med}(d(\vec{m_{med}},\vec{y})|\vec{y}\in C)
+     \leq \text{med}(d(\vec{z},\vec{y})|\vec{y}\in C),
+     \quad \forall \vec{z} \in C
+     $$
+
+### Hyper-plane representatives
+
+If the cluster is linear in shape, as in several computer vision applications, we can replace it by a fitting hyperplane, with equation
+
+$$
+\sum_{j=1}^{D} a_jx_j + a_0 = \vec{a}^T\vec{x} + a_0 = 0
+$$
+
+The distance from a point $\vec{x}$ to a hyperplane $H$ is
+
+$$
+d(\vec{x},H) = \underset{z \in H}{\operatorname{min}} \ d(\vec{x},\vec{z})
+$$
+
+which, in the case of Euclidean distance, becomes
+
+$$
+d(\vec{x},H) = \frac{|\vec{a}^T\vec{x} + a_0|}{|\vec{a}|_2}
+$$
+
+### Hyper-sphere representatives
+
+If the cluster are not compact, but resemble a blob, instead of a point representative, we may choose to use a hyper-sphere $Q$ with center at $\vec{c}$ and of radius $r$, with general equation
+
+$$
+(\vec{x} - \vec{c})^{T}(\vec{x} - \vec{c})=r^2
+$$
+
+with the distance given by
+
+$$
+d(\vec{x},Q) = \underset{z \in Q}{\operatorname{min}} \ d(\vec{x},\vec{z})
+$$
+
+where the Euclidean distance is commonly used.
+
 ## Proximity among sets
 
-Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of measures between observations to measures between sets by considering pairwise measures between the set elements. Then, the measure is a function $U\times U \rightarrow \matbb{R}$ where $U$ is the set of all subsets $D_i \subset X$.
+Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of proximity between observations to proximity between sets by considering pairwise measures between the set elements. Then, the proximity is a function $U\times U \rightarrow \mathbb{R}$ where $U$ is the set of all subsets $D_i \subset X$. Note that often the proximity between sets is not a metric, not even a measure, even if the pair-wise proximity function is a metric.
 
-## KL-divergence
+For example, for two sets $X$ and $Y$:
 
-## Reachability distance
+-   **Max-proximity**. If p is a DM, not a measure. If p is a SM, a measure, but not a metric.
+
+    $$
+     p(X, Y) = \underset{x \in X, y \in Y}{\operatorname{max}} p(\vec{x},\vec{y})
+     $$
+
+-   **Min-proximity**: If p is a SM, not a measure. If p is a DM, a measure, but not a metric.
+
+    $$
+     p(X, Y) = \underset{x \in X, y \in Y}{\operatorname{min}} p(\vec{x},\vec{y})
+     $$
+
+-   **Average-proximity**: Never a measure.
+
+    $$
+     p(X, Y) =\frac{1}{|X||Y|} \sum_{x \in X}\sum_{y \in Y} p(\vec{x},\vec{y})
+     $$
+
+-   **Mean proximity**: A measure if p is a measure. Proximity between point representatives.
+
+    $$
+     p(X, Y) = p(\vec{m}_x,\vec{m}_y)
+     $$
+
+-   **Ward proximity**:
+
+    $$
+     p(X,Y) = \sqrt{\frac{|X||Y|}{|X|+|Y|}}p(\vec{m}_x,\vec{m}_y)
+     $$
+
+## Proximity of distributions
+
+### KL-divergence
+
+### Jensen-Shannon distance
 
 ## Proximity measures on graps
 

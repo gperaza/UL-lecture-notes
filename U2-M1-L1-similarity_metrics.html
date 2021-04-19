@@ -428,6 +428,23 @@
   <a class="reference internal nav-link" href="#proximity-between-a-point-and-a-set">
    Proximity between a point and a set
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#point-representatives">
+     Point representatives
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hyper-plane-representatives">
+     Hyper-plane representatives
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#hyper-sphere-representatives">
+     Hyper-sphere representatives
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#proximity-among-sets">
@@ -435,14 +452,21 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#kl-divergence">
-   KL-divergence
+  <a class="reference internal nav-link" href="#proximity-of-distributions">
+   Proximity of distributions
   </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#reachability-distance">
-   Reachability distance
-  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#kl-divergence">
+     KL-divergence
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#jensen-shannon-distance">
+     Jensen-Shannon distance
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#proximity-measures-on-graps">
@@ -1728,16 +1752,133 @@ s_{fzzy}^q = \left( \sum_{i=1}^D s_{fzzy}(x_i,y_i)^q  \right)^{\frac{1}{q}}
 </div>
 <div class="section" id="proximity-between-a-point-and-a-set">
 <h2>Proximity between a point and a set<a class="headerlink" href="#proximity-between-a-point-and-a-set" title="Permalink to this headline">¶</a></h2>
+<p>In many clustering algorithms, to evaluate whether a point should belong to a cluster, we need to find its distance to such cluster. If the cluster <span class="math notranslate nohighlight">\(C\)</span> is represented by a set of points, then we are asked to find the distance between a point <span class="math notranslate nohighlight">\(\vec{x}\)</span> and a set (cluster) <span class="math notranslate nohighlight">\(\{\vec{y} \in C\}\)</span>.</p>
+<p>When we consider the complete set <span class="math notranslate nohighlight">\(C\)</span>, we can define the point-set distance from pairwise distances <span class="math notranslate nohighlight">\(d(\vec{x},\vec{y})\)</span> (or similarities) between <span class="math notranslate nohighlight">\(\vec{x}\)</span> and all elements of <span class="math notranslate nohighlight">\(C\)</span>. For example:</p>
+<ul>
+<li><p><strong>Max-proximity</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+     d(\vec{x}, C) = \underset{y \in C}{\operatorname{max}} d(\vec{x},\vec{y})
+     \]</div>
+</li>
+<li><p><strong>Min-proximity</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+     d(\vec{x}, C) = \underset{y \in C}{\operatorname{min}} d(\vec{x},\vec{y})
+     \]</div>
+</li>
+<li><p><strong>Average-proximity</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+     d(\vec{x}, C) = \frac{1}{|C|}\sum_{y \in C} d(\vec{x},\vec{y})
+     \]</div>
+</li>
+</ul>
+<p>Another, perhaps more efficient option, is to represent each cluster by a prototype point or geometry, and to evaluate the distance to such prototype.</p>
+<div class="section" id="point-representatives">
+<h3>Point representatives<a class="headerlink" href="#point-representatives" title="Permalink to this headline">¶</a></h3>
+<p>For compact clusters, a point may be chosen as a representative. This points can be chosen or calculated in several ways, for example:</p>
+<ul>
+<li><p><strong>Mean vector</strong>, appropriate for real valued features</p>
+<div class="math notranslate nohighlight">
+\[
+     \vec{\mu} = \frac{1}{|C|}\sum_{y\in C}\vec{y}
+     \]</div>
+</li>
+<li><p><strong>Mean center</strong>. If categorical features are used, and we want the center to be a valid vector of categories, we may choose a point <span class="math notranslate nohighlight">\(\vec{m}_c\)</span> of the cluster as the prototype, by finding the point that satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+     \sum_{y \in C} d(\vec{m_c},\vec{y}) \leq \sum_{y \in C} d(\vec{z},\vec{y}),\quad \forall \vec{z} \in C
+     \]</div>
+</li>
+<li><p><strong>Median center</strong>, appropriate if the distance is not a metric. The median center <span class="math notranslate nohighlight">\(\vec{m}_{med}\)</span> is the point of the cluster that satisfies</p>
+<div class="math notranslate nohighlight">
+\[
+     \text{med}(d(\vec{m_{med}},\vec{y})|\vec{y}\in C)
+     \leq \text{med}(d(\vec{z},\vec{y})|\vec{y}\in C),
+     \quad \forall \vec{z} \in C
+     \]</div>
+</li>
+</ul>
+</div>
+<div class="section" id="hyper-plane-representatives">
+<h3>Hyper-plane representatives<a class="headerlink" href="#hyper-plane-representatives" title="Permalink to this headline">¶</a></h3>
+<p>If the cluster is linear in shape, as in several computer vision applications, we can replace it by a fitting hyperplane, with equation</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{j=1}^{D} a_jx_j + a_0 = \vec{a}^T\vec{x} + a_0 = 0
+\]</div>
+<p>The distance from a point <span class="math notranslate nohighlight">\(\vec{x}\)</span> to a hyperplane <span class="math notranslate nohighlight">\(H\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+d(\vec{x},H) = \underset{z \in H}{\operatorname{min}} \ d(\vec{x},\vec{z})
+\]</div>
+<p>which, in the case of Euclidean distance, becomes</p>
+<div class="math notranslate nohighlight">
+\[
+d(\vec{x},H) = \frac{|\vec{a}^T\vec{x} + a_0|}{|\vec{a}|_2}
+\]</div>
+</div>
+<div class="section" id="hyper-sphere-representatives">
+<h3>Hyper-sphere representatives<a class="headerlink" href="#hyper-sphere-representatives" title="Permalink to this headline">¶</a></h3>
+<p>If the cluster are not compact, but resemble a blob, instead of a point representative, we may choose to use a hyper-sphere <span class="math notranslate nohighlight">\(Q\)</span> with center at <span class="math notranslate nohighlight">\(\vec{c}\)</span> and of radius <span class="math notranslate nohighlight">\(r\)</span>, with general equation</p>
+<div class="math notranslate nohighlight">
+\[
+(\vec{x} - \vec{c})^{T}(\vec{x} - \vec{c})=r^2
+\]</div>
+<p>with the distance given by</p>
+<div class="math notranslate nohighlight">
+\[
+d(\vec{x},Q) = \underset{z \in Q}{\operatorname{min}} \ d(\vec{x},\vec{z})
+\]</div>
+<p>where the Euclidean distance is commonly used.</p>
+</div>
 </div>
 <div class="section" id="proximity-among-sets">
 <h2>Proximity among sets<a class="headerlink" href="#proximity-among-sets" title="Permalink to this headline">¶</a></h2>
-<p>Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of measures between observations to measures between sets by considering pairwise measures between the set elements. Then, the measure is a function <span class="math notranslate nohighlight">\(U\times U \rightarrow \matbb{R}\)</span> where <span class="math notranslate nohighlight">\(U\)</span> is the set of all subsets <span class="math notranslate nohighlight">\(D_i \subset X\)</span>.</p>
+<p>Sometimes we need to quantify the dis(similarity) between sets of observations (for example, in hierarchical clustering). We can extend the definitions of proximity between observations to proximity between sets by considering pairwise measures between the set elements. Then, the proximity is a function <span class="math notranslate nohighlight">\(U\times U \rightarrow \mathbb{R}\)</span> where <span class="math notranslate nohighlight">\(U\)</span> is the set of all subsets <span class="math notranslate nohighlight">\(D_i \subset X\)</span>. Note that often the proximity between sets is not a metric, not even a measure, even if the pair-wise proximity function is a metric.</p>
+<p>For example, for two sets <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>:</p>
+<ul>
+<li><p><strong>Max-proximity</strong>. If p is a DM, not a measure. If p is a SM, a measure, but not a metric.</p>
+<div class="math notranslate nohighlight">
+\[
+     p(X, Y) = \underset{x \in X, y \in Y}{\operatorname{max}} p(\vec{x},\vec{y})
+     \]</div>
+</li>
+<li><p><strong>Min-proximity</strong>: If p is a SM, not a measure. If p is a DM, a measure, but not a metric.</p>
+<div class="math notranslate nohighlight">
+\[
+     p(X, Y) = \underset{x \in X, y \in Y}{\operatorname{min}} p(\vec{x},\vec{y})
+     \]</div>
+</li>
+<li><p><strong>Average-proximity</strong>: Never a measure.</p>
+<div class="math notranslate nohighlight">
+\[
+     p(X, Y) =\frac{1}{|X||Y|} \sum_{x \in X}\sum_{y \in Y} p(\vec{x},\vec{y})
+     \]</div>
+</li>
+<li><p><strong>Mean proximity</strong>: A measure if p is a measure. Proximity between point representatives.</p>
+<div class="math notranslate nohighlight">
+\[
+     p(X, Y) = p(\vec{m}_x,\vec{m}_y)
+     \]</div>
+</li>
+<li><p><strong>Ward proximity</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+     p(X,Y) = \sqrt{\frac{|X||Y|}{|X|+|Y|}}p(\vec{m}_x,\vec{m}_y)
+     \]</div>
+</li>
+</ul>
 </div>
+<div class="section" id="proximity-of-distributions">
+<h2>Proximity of distributions<a class="headerlink" href="#proximity-of-distributions" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="kl-divergence">
-<h2>KL-divergence<a class="headerlink" href="#kl-divergence" title="Permalink to this headline">¶</a></h2>
+<h3>KL-divergence<a class="headerlink" href="#kl-divergence" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="reachability-distance">
-<h2>Reachability distance<a class="headerlink" href="#reachability-distance" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="jensen-shannon-distance">
+<h3>Jensen-Shannon distance<a class="headerlink" href="#jensen-shannon-distance" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 <div class="section" id="proximity-measures-on-graps">
 <h2>Proximity measures on graps<a class="headerlink" href="#proximity-measures-on-graps" title="Permalink to this headline">¶</a></h2>
