@@ -402,9 +402,26 @@
      Hamming distance
     </a>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dynamic-measures">
+   Dynamic measures
+  </a>
+  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#edit-distance-dynamic-measures">
-     Edit distance (Dynamic measures)
+    <a class="reference internal nav-link" href="#edit-distance">
+     Edit Distance
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dynamic-time-warping-dtw">
+     Dynamic Time Warping (DTW)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#longest-common-subsequence-lcss">
+     Longest Common Subsequence (LCSS)
     </a>
    </li>
   </ul>
@@ -474,8 +491,25 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#geodesic-distance">
-     Geodesic distance
+    <a class="reference internal nav-link" href="#similarity-between-nodes-in-a-graph">
+     Similarity between nodes in a graph
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#structural-distance">
+       Structural distance
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#random-walk-based-similarity-pagerank">
+       Random Walk-based similarity (PageRank)
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#similarity-between-graphs">
+     Similarity between graphs
     </a>
    </li>
   </ul>
@@ -500,7 +534,7 @@
 <h1>(Dis)similarity metrics<a class="headerlink" href="#dis-similarity-metrics" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>Lacking response and class information, most unsupervised algorithms search for patterns based on how alike or different are observations with respect to each other. One consequence of this is that the outcome of these algorithms will depend on what we mean by two observations being alike or similar. In this lesson, we’ll review several measures of proximity, quantifying either similarity or dissimilarity between pair of observations, or sets of observations. Most of the present material was adapted from references <span id="id1">[<a class="reference internal" href="#id41"><span>1</span></a>,<a class="reference internal" href="#id51"><span>2</span></a>]</span>.</p>
+<p>Lacking response and class information, most unsupervised algorithms search for patterns based on how alike or different are observations with respect to each other. One consequence of this is that the outcome of these algorithms will depend on what we mean by two observations being alike or similar. In this lesson, we’ll review several measures of proximity, quantifying either similarity or dissimilarity between pair of observations, or sets of observations. Most of the present material was adapted from references <span id="id1">[<a class="reference internal" href="#id48"><span>1</span></a>,<a class="reference internal" href="#id58"><span>2</span></a>]</span>.</p>
 </div>
 <div class="section" id="what-is-a-proximity-measure">
 <h2>What is a proximity measure?<a class="headerlink" href="#what-is-a-proximity-measure" title="Permalink to this headline">¶</a></h2>
@@ -739,9 +773,9 @@ d_2(\vec{x},\vec{y}) = \sqrt{\left ( \sum_{i=1}^D \left (x_i - y_i \right )^2 \r
 \[
 d_\infty(\vec{x},\vec{y}) = \underset{1\leq i \leq D}{\operatorname{max}} \left | x_i - y_i  \right |
 \]</div>
-<div class="figure align-default" id="id52">
+<div class="figure align-default" id="id62">
 <img alt="_images/chess.png" src="_images/chess.png" />
-<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev_distance">https://en.wikipedia.org/wiki/Chebyshev_distance</a></span><a class="headerlink" href="#id52" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev_distance">https://en.wikipedia.org/wiki/Chebyshev_distance</a></span><a class="headerlink" href="#id62" title="Permalink to this image">¶</a></p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">chebyshev_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span>
@@ -757,7 +791,7 @@ d_\infty(\vec{x},\vec{y}) = \underset{1\leq i \leq D}{\operatorname{max}} \left 
 </div>
 <div class="section" id="canberra-distance">
 <h3>Canberra distance<a class="headerlink" href="#canberra-distance" title="Permalink to this headline">¶</a></h3>
-<p>Text from <span id="id2">[<a class="reference internal" href="#id42"><span>3</span></a>]</span>.</p>
+<p>Text from <span id="id2">[<a class="reference internal" href="#id49"><span>3</span></a>]</span>.</p>
 <p>The Canberra distance is a metric function often used for data scattered around an origin. It was introduced in 1966 (Lance &amp; Williams 1966) and is today mainly used in the form of 1967 (Lance &amp; Williams 1967).</p>
 <p>The Canberra metric is similar to the Manhattan distance (which itself is a special form of the Minkowski distance). The distinction is that the absolute difference between the variables of the two objects is divided by the sum of the absolute variable values prior to summing. The generalised equation is given in the form:</p>
 <div class="math notranslate nohighlight">
@@ -840,6 +874,19 @@ d^2 = (\vec{x} - \vec{y})^T U \Lambda^{-1} U^T (\vec{x} - \vec{y})
 \]</div>
 <p>which makes the equivalence explicit.</p>
 <p>You will implement the Mahalanobis distance in the assignment, as a function called <code class="docutils literal notranslate"><span class="pre">mahalanobis_d</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mahalanobis_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="s2">&quot; A required argument is the covariance matrix S. &quot;</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;S&#39;</span><span class="p">]</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">y</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="o">@</span> <span class="n">d</span><span class="p">)</span>
+
+<span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">mahalanobis_d</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">)</span>
+
+<span class="n">plot_prox</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">mds</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
 <p><img alt="" src="_images/fdb19a4e634220c4c246e64a08efd32a53d3268d.png" /></p>
 </div>
 </div>
@@ -847,7 +894,7 @@ d^2 = (\vec{x} - \vec{y})^T U \Lambda^{-1} U^T (\vec{x} - \vec{y})
 <h2>Similarity measures for numerical data<a class="headerlink" href="#similarity-measures-for-numerical-data" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="cosine-similarity">
 <h3>Cosine similarity<a class="headerlink" href="#cosine-similarity" title="Permalink to this headline">¶</a></h3>
-<p>Some text from <span id="id3">[<a class="reference internal" href="#id43"><span>4</span></a>]</span>.</p>
+<p>Some text from <span id="id3">[<a class="reference internal" href="#id50"><span>4</span></a>]</span>.</p>
 <p>Cosine similarity is a similarity metric based on the inner product of two vectors. It takes its name from the geometrical interpretation of the inner product, which gives the cosine of the angle between two vectors as</p>
 <div class="math notranslate nohighlight">
 \[
@@ -905,6 +952,7 @@ d_{\cos}(\vec{x},\vec{y}) = 1 - s_{\cos}(\vec{x},\vec{y})
 </pre></div>
 </div>
 <p><img alt="" src="_images/5056aff084cceda093e9c95dfcfb0a11f821a77c.png" /></p>
+<p>When working with text documents, often a damping function is applied to word frequencies, such as <code class="docutils literal notranslate"><span class="pre">sqrt</span></code> or <code class="docutils literal notranslate"><span class="pre">log</span></code>, to dampen the effect of high frequency counts. Also, to take into account that some words are more common than others, frequencies are weighted by the inverse document frequency, <span class="math notranslate nohighlight">\(\log(n/n_{i})\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is the number of documents in the collection, and <span class="math notranslate nohighlight">\(n_{i}\)</span> is the number of documents containing the ith word. For more information, refer to Section 3.3 of <span id="id4">[<a class="reference internal" href="#id58"><span>2</span></a>]</span>.</p>
 <div class="section" id="l-2-normalized-euclidean-distance">
 <h4><span class="math notranslate nohighlight">\(l_2\)</span>-normalized Euclidean distance<a class="headerlink" href="#l-2-normalized-euclidean-distance" title="Permalink to this headline">¶</a></h4>
 <p>Another effective proxy for Cosine Distance can be obtained by <span class="math notranslate nohighlight">\(l_2\)</span> normalisation of the vectors, followed by the application of normal Euclidean distance. Using this technique each term in each vector is first divided by the magnitude of the vector, yielding a vector of unit length, which lies on the unit circle. Then, it is clear, the Euclidean distance over the end-points of any two vectors is a proper metric which gives the same ordering as the Cosine distance for any comparison of vectors (imagine drawing lines between vector points on the unit circle), and furthermore avoids the potentially expensive trigonometric operations required to yield a proper metric. Once the normalization has occurred, the vector space can be used with the full range of techniques available to any Euclidean space, notably standard dimensionality reduction techniques. This normalized form distance is notably used within many Deep Learning algorithms.</p>
@@ -965,7 +1013,7 @@ d_{\rho}(\vec{x}m\vec{y}) = \frac{1 - \rho}{2}
 <div class="section" id="spearman-correlation">
 <h3>Spearman correlation<a class="headerlink" href="#spearman-correlation" title="Permalink to this headline">¶</a></h3>
 <p>Spearman correlation is similar to Pearson correlation, but only uses rank information (positions within a list of values), rather than the actual values. This makes Spearman correlation less sensitive to outliers in the data, and allows its use with ordinal data.</p>
-<p>From <span id="id4">[<a class="reference internal" href="#id44"><span>5</span></a>]</span>. The Spearman correlation between two variables is equal to the Pearson correlation between the rank values of those two variables; while Pearson’s correlation assesses linear relationships, Spearman’s correlation assesses monotonic relationships (whether linear or not). If there are no repeated data values, a perfect Spearman correlation of +1 or −1 occurs when each of the variables is a perfect monotone function of the other.</p>
+<p>From <span id="id5">[<a class="reference internal" href="#id51"><span>5</span></a>]</span>. The Spearman correlation between two variables is equal to the Pearson correlation between the rank values of those two variables; while Pearson’s correlation assesses linear relationships, Spearman’s correlation assesses monotonic relationships (whether linear or not). If there are no repeated data values, a perfect Spearman correlation of +1 or −1 occurs when each of the variables is a perfect monotone function of the other.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">spearman_s</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">xr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">yr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
@@ -1462,7 +1510,7 @@ SMC_{oh}(\vec{x},\vec{y}) = \frac{\vec{x}^T\vec{y}}{D_{orignal}}
 \]</div>
 <p>This last definition is equivalent to the Jaccard index for binary vectors.</p>
 <p>We need to distinguish between one-hot encoded binary vectors, and natural binary vectors, for which the original representation consists of only two classes encoded as 1 and 0. If the attributes are symmetrical, (1s and 0s are equivalently important, i.e., carry equivalent information), the SMC must count matches of both ones and zeroes, and the above equation does not apply, and we must fall back to the first definition. As an example, consider gender encoded as male:0 and female:1. It is clear that both 1s and 0s are equally important.</p>
-<p>For asymmetric natural binary vectors, for which the 0s do not carry the same amount of information as 1s, the Jaccard index (see below) is a more appropriate metric. For example (from <span id="id5">[<a class="reference internal" href="#id46"><span>6</span></a>]</span>), in market basket analysis, the basket of two consumers who we wish to compare might only contain a small fraction of all the available products in the store, so the SMC will usually return very high values of similarities even when the baskets bear very little resemblance, thus making the Jaccard index a more appropriate measure of similarity in that context. For example, consider a supermarket with 1000 products and two customers. The basket of the first customer contains salt and pepper and the basket of the second contains salt and sugar. In this scenario, the similarity between the two baskets as measured by the Jaccard index would be 1/3, but the similarity becomes 0.998 using the SMC.</p>
+<p>For asymmetric natural binary vectors, for which the 0s do not carry the same amount of information as 1s, the Jaccard index (see below) is a more appropriate metric. For example (from <span id="id6">[<a class="reference internal" href="#id53"><span>6</span></a>]</span>), in market basket analysis, the basket of two consumers who we wish to compare might only contain a small fraction of all the available products in the store, so the SMC will usually return very high values of similarities even when the baskets bear very little resemblance, thus making the Jaccard index a more appropriate measure of similarity in that context. For example, consider a supermarket with 1000 products and two customers. The basket of the first customer contains salt and pepper and the basket of the second contains salt and sugar. In this scenario, the similarity between the two baskets as measured by the Jaccard index would be 1/3, but the similarity becomes 0.998 using the SMC.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">smc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">one_hot</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;one_hot&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">one_hot</span><span class="p">:</span>
@@ -1495,7 +1543,7 @@ s_J(A,B) = \frac{|A \cap B |}{|A \cup B|}
 \[
 s_J = \frac{\vec{x}^T\vec{y}}{|x| + |y| - \vec{x}^T\vec{y}}
 \]</div>
-<p>When working with natural binary vectors, the Jaccard index is more appropriate than the SMC for asymmetric features, for example, in market basket analysis, where ones indicate the presence of an item in a set, and zeros signal the absence of an item in a set. When working with symmetric features the SMC is more appropriate, as discussed in the preceding section. The Jaccard index is also the most popular similarity measure for comparing chemical structures represented by means of fingerprints <span id="id6">[<a class="reference internal" href="#id47"><span>7</span></a>]</span>.</p>
+<p>When working with natural binary vectors, the Jaccard index is more appropriate than the SMC for asymmetric features, for example, in market basket analysis, where ones indicate the presence of an item in a set, and zeros signal the absence of an item in a set. When working with symmetric features the SMC is more appropriate, as discussed in the preceding section. The Jaccard index is also the most popular similarity measure for comparing chemical structures represented by means of fingerprints <span id="id7">[<a class="reference internal" href="#id54"><span>7</span></a>]</span>.</p>
 <p>In the case of one-hot encoded binary vectors, the Jaccard index is equivalent to the SMC in the original representation, and was implement above.</p>
 <p>For integer categorical vectors, where each coordinates contains, for example, the degree or strength of a feature (0 meaning total absence), the Jaccard index takes the form</p>
 <div class="math notranslate nohighlight">
@@ -1523,7 +1571,7 @@ s_J = \frac{n_{matches}}{n_x + n_y - n_{x,y&gt;0}}
 </div>
 <div class="section" id="ochiai-coefficient">
 <h3>Ochiai coefficient<a class="headerlink" href="#ochiai-coefficient" title="Permalink to this headline">¶</a></h3>
-<p>In biology, a categorical equivalent to the cosine similarity is the Ochiai coefficient which can be represented as <span id="id7">[<span>enwiki:cosine:</span>]</span></p>
+<p>In biology, a categorical equivalent to the cosine similarity is the Ochiai coefficient which can be represented as <span id="id8">[<span>enwiki:cosine:</span>]</span></p>
 <div class="math notranslate nohighlight">
 \[
 K= \frac {|A \cap B|}{\sqrt {|A|\times |B|}}
@@ -1572,10 +1620,13 @@ d_{H,oh} = \vec{x}^T \vec{y} - (|\vec{x}| + |\vec{y}| - \vec{x}^T\vec{y})
 </div>
 <p><img alt="" src="_images/b61af4f3b55dbdf23a4df46af84946c3cd430858.png" /></p>
 </div>
-<div class="section" id="edit-distance-dynamic-measures">
-<h3>Edit distance (Dynamic measures)<a class="headerlink" href="#edit-distance-dynamic-measures" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="dynamic-measures">
+<h2>Dynamic measures<a class="headerlink" href="#dynamic-measures" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="edit-distance">
+<h3>Edit Distance<a class="headerlink" href="#edit-distance" title="Permalink to this headline">¶</a></h3>
 <p>The Hamming distance is a particular case of the edit distance between two vectors. The edit distance is typically used for strings, but can also be implemented for categorical vectors. Is defined as the number of operations required to transform one vector or string into another. In the most general case, the edit distance can be calculated for vectors of different length, if either the operation of addition or deletion is defined.</p>
-<p>Different types of edit distance allow different sets of string operations <span id="id8">[<a class="reference internal" href="#id48"><span>8</span></a>]</span>. For instance:</p>
+<p>Different types of edit distance allow different sets of string operations <span id="id9">[<a class="reference internal" href="#id55"><span>8</span></a>]</span>. For instance:</p>
 <ul class="simple">
 <li><p>The Levenshtein distance allows deletion, insertion and substitution.</p></li>
 <li><p>The Longest common subsequence (LCS) distance allows only insertion and deletion, not substitution.</p></li>
@@ -1591,14 +1642,14 @@ d_{H,oh} = \vec{x}^T \vec{y} - (|\vec{x}| + |\vec{y}| - \vec{x}^T\vec{y})
 <li><p>sittin → sitting (insert “g” at the end)</p></li>
 </ol>
 <p>Edit distance finds applications in computational biology and natural language processing.</p>
-<p>A common algorithm that implements the Levenshtein Distance is the Wagner–Fischer algorithm <span id="id9">[<a class="reference internal" href="#id49"><span>9</span></a>]</span>.</p>
+<p>A common algorithm that implements the Levenshtein Distance is the Wagner–Fischer algorithm <span id="id10">[<a class="reference internal" href="#id56"><span>9</span></a>]</span>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">leveshtein_d</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
     <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">src</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">dest</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
 
     <span class="c1"># for all i and j, d[i,j] will hold the Levenshtein distance</span>
@@ -1641,6 +1692,119 @@ d_{H,oh} = \vec{x}^T \vec{y} - (|\vec{x}| + |\vec{y}| - \vec{x}^T\vec{y})
 </pre></div>
 </div>
 </div>
+<div class="section" id="dynamic-time-warping-dtw">
+<h3>Dynamic Time Warping (DTW)<a class="headerlink" href="#dynamic-time-warping-dtw" title="Permalink to this headline">¶</a></h3>
+<p>More typically used for time-series data, DTW allows for portions of sequence vectors to stretch or contract to allow for a better matching among pairs of vectors. In speech recognition, this property enables matching of patterns at different speaking speed.</p>
+<p>This stretching is accomplished by allowing many-to-one mapping of vector coordinates. This mapping is equivalent to repeating values in the wrapped sections, and then do a one-to-one mapping as usual, for which any proximity measure can be used, e.g., the <span class="math notranslate nohighlight">\(l_p\)</span> norm.</p>
+<p>An optimal wrapping can be found using a dynamic programming approach. For the Manhattan distance, a possible recursive implementation is as follows</p>
+<div class="math notranslate nohighlight">
+\[
+d_1(\vec{x}_{D=i}, \vec{y}_{D=i}) = |x_i - y_i| + d_1(\vec{x}_{D=i-1}, \vec{y}_{D=i-1})
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\vec{x}_{D=i}\)</span> is the i-dimensional vector up to the ith coordinate. The idea of DTW it that the indices of the rhs need not be reduced by one, effectively repeating one or more values,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+DTW(\vec{x}_{D=i},\vec{y}_{D=j}) = d(x_i, y_j) + min
+\begin{cases}
+DTW(\vec{x}_{D=i},\vec{y}_{D=j-1}) &amp; \text{repeat $x_i$}\\
+DTW(\vec{x}_{D=i-1},\vec{y}_{D=j}) &amp; \text{repeat $y_j$}\\
+DTW(\vec{x}_{D=i-1},\vec{y}_{D=j-1}) &amp; \text{repeat neither}
+\end{cases}
+\end{align}\end{split}\]</div>
+<p>We can fill the <span class="math notranslate nohighlight">\(|x|\times |y|\)</span> matrix recursively, to find all possible distances, then extract the term corresponding to the full vectors.</p>
+<p>An implementation using the Manhattan distance is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dtw_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># The matrix will hold initial values D[0,j], D[i,0]</span>
+    <span class="c1"># which mean nothing (distance to the empty vector)</span>
+    <span class="c1"># so set them to infty</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+
+    <span class="c1"># Intialize D[0,0]</span>
+    <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> \
+            <span class="nb">min</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># print(D)</span>
+    <span class="k">return</span> <span class="n">D</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
+
+<span class="n">dtw_d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>2.0
+</pre></div>
+</div>
+<p>A usual constraint used with DTW is that of locality. This constraint imposes a minimum level <span class="math notranslate nohighlight">\(w\)</span> of positional alignment between matched elements. The DTW will be computed only if <span class="math notranslate nohighlight">\(|i-j|&lt;\leq w\)</span>. See <span id="id11">[<a class="reference internal" href="#id58"><span>2</span></a>]</span> section 3.4.1.3.</p>
+</div>
+<div class="section" id="longest-common-subsequence-lcss">
+<h3>Longest Common Subsequence (LCSS)<a class="headerlink" href="#longest-common-subsequence-lcss" title="Permalink to this headline">¶</a></h3>
+<p>We define the LCSS of two sequence vectors as the longest subsequence shared by both vectors. A subsequence is a sub set of possibly discontinuous coordinates in the same order as in the original vector. The LCSS is a similarity function.</p>
+<p>For example <span id="id12">[<a class="reference internal" href="#id59"><span>10</span></a>,<span></span>]</span> consider the sequences (ABCD) and (ACBAD). They have 5 length-2 common subsequences: (AB), (AC), (AD), (BD), and (CD); 2 length-3 common subsequences: (ABD) and (ACD); and no longer common subsequences. So (ABD) and (ACD) are their longest common subsequences.</p>
+<p>Similarly as in the previous section, a the LCSS of two string can be build recursively from the LCSS of their prefixes. With the operator ^ signifying string concatenation,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+{\displaystyle {\mathit {LCS}}(X_{i},Y_{j})={\begin{cases}\emptyset &amp;{\mbox{if }}i=0{\mbox{ or }}j=0\\{\mathit {LCS}}(X_{i-1},Y_{j-1}){\hat {}}x_{i}&amp;{\mbox{if }}i,j&gt;0{\mbox{ and }}x_{i}=y_{j}\\\operatorname {\max } \{{\mathit {LCS}}(X_{i},Y_{j-1}),{\mathit {LCS}}(X_{i-1},Y_{j})\}&amp;{\mbox{if }}i,j&gt;0{\mbox{ and }}x_{i}\neq y_{j}.\end{cases}}}
+\end{split}\]</div>
+<p>To find the LCS of <span class="math notranslate nohighlight">\(X_{i}\)</span> and <span class="math notranslate nohighlight">\(Y_j\)</span>, compare <span class="math notranslate nohighlight">\(x_{i}\)</span> and <span class="math notranslate nohighlight">\(y_{j}\)</span>. If they are equal, then the sequence <span class="math notranslate nohighlight">\({\mathit {LCS}}(X_{i-1},Y_{j-1})\)</span> is extended by that element, <span class="math notranslate nohighlight">\(x_{i}\)</span>. If they are not equal, then the longer of the two sequences, <span class="math notranslate nohighlight">\({\mathit {LCS}}(X_{i},Y_{j-1})\)</span>, and <span class="math notranslate nohighlight">\({\mathit {LCS}}(X_{i-1},Y_{j})\)</span>, is retained. (If they are the same length, but not identical, then both are retained.) Not that even if either <span class="math notranslate nohighlight">\(x_{i}\)</span> or <span class="math notranslate nohighlight">\(y_{i}\)</span> have matched before, and they match again, it does not hurt to move the match to the new trailing elements. This is akin to either skip the previous match, or skip the current match. A worked out example can be found on <span id="id13">[<a class="reference internal" href="#id59"><span>10</span></a>]</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lccs_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># The matrix will hold initial values D[0,j], D[i,0]</span>
+    <span class="c1"># which mean nothing (distance to the empty vector)</span>
+    <span class="c1"># so set them to 0</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
+
+
+    <span class="c1"># Apply traceback to find set LCCS</span>
+    <span class="k">def</span> <span class="nf">backtrack</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">set</span><span class="p">({()})</span>
+        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+                    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">backtrack</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">)}</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="nb">set</span><span class="p">({})</span>
+        <span class="k">if</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]:</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">backtrack</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">R</span> <span class="o">|</span> <span class="n">backtrack</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">R</span>
+
+    <span class="n">lcs_set</span> <span class="o">=</span> <span class="n">backtrack</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">D</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">],</span> <span class="n">lcs_set</span>
+
+<span class="n">lccs_d</span><span class="p">(</span><span class="s1">&#39;GAC&#39;</span><span class="p">,</span><span class="s1">&#39;AGCAT&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2.0</p></td>
+<td><p>((A C) (G A) (G C))</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="section" id="mixed-features">
 <h2>Mixed features<a class="headerlink" href="#mixed-features" title="Permalink to this headline">¶</a></h2>
@@ -1658,7 +1822,7 @@ s(\vec{x},\vec{y}) = \lambda s_R(\vec{x}_R,\vec{y}_R) + (1-\lambda)s_C(\vec{x},\
 \[
 s(\vec{x},\vec{y}) = \frac{\lambda}{\sigma_R} s_R(\vec{x}_R,\vec{y}_R) + \frac{(1-\lambda)}{\sigma_C} s_C(\vec{x},\vec{y}).
 \]</div>
-<p>An option that uses the one minus the range-normalized Manhattan distance and the Jaccard coefficient as similarity measures is the Gower similarity <span id="id10">[<a class="reference internal" href="#id50"><span>10</span></a>]</span>.</p>
+<p>An option that uses the one minus the range-normalized Manhattan distance and the Jaccard coefficient as similarity measures is the Gower similarity <span id="id14">[<a class="reference internal" href="#id57"><span>11</span></a>]</span>.</p>
 <div class="math notranslate nohighlight">
 \[
 s_{Gower} = \frac{\sum_{i=1}^{D} s_i}{\sum_{i=1}^{D} w_i}
@@ -1882,42 +2046,91 @@ d(\vec{x},Q) = \underset{z \in Q}{\operatorname{min}} \ d(\vec{x},\vec{z})
 </div>
 <div class="section" id="proximity-measures-on-graps">
 <h2>Proximity measures on graps<a class="headerlink" href="#proximity-measures-on-graps" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="geodesic-distance">
-<h3>Geodesic distance<a class="headerlink" href="#geodesic-distance" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="similarity-between-nodes-in-a-graph">
+<h3>Similarity between nodes in a graph<a class="headerlink" href="#similarity-between-nodes-in-a-graph" title="Permalink to this headline">¶</a></h3>
+<p>Consider a graph <span class="math notranslate nohighlight">\(G=(N,E)\)</span>, where <span class="math notranslate nohighlight">\(N\)</span> is a set of nodes, and <span class="math notranslate nohighlight">\(E\)</span> is a set of edges. Two nodes in <span class="math notranslate nohighlight">\(G\)</span> are considered close is they are “connected”. There are several ways to measure this “connectedness”.</p>
+<div class="section" id="structural-distance">
+<h4>Structural distance<a class="headerlink" href="#structural-distance" title="Permalink to this headline">¶</a></h4>
+<p>For unweighted graphs, the <strong>geodesic distance</strong> between two nodes is the number of edges of the shortest path connecting them. For weighted graphs, the sum of the weights of the edges belonging to the shortest path are added to find the distance.</p>
+<p>The shortest path between a source node <span class="math notranslate nohighlight">\(s\)</span> and a node <span class="math notranslate nohighlight">\(j\)</span> can be found using the Dijkstra’s algorithm <span id="id15">[<a class="reference internal" href="#id60"><span>12</span></a>]</span>. The essence of this algorithm is the following:</p>
+<ol>
+<li><p>Initialize all distance <span class="math notranslate nohighlight">\(SP(i,j) = \infty\)</span>.</p></li>
+<li><p>Start at node <span class="math notranslate nohighlight">\(s\)</span> and set <span class="math notranslate nohighlight">\(SP(s,s) = 0\)</span>, do not consider <span class="math notranslate nohighlight">\(s\)</span> examined so far.</p></li>
+<li><p>For all un-examined nodes:</p>
+<ol>
+<li><p>Choose the one with minimum <span class="math notranslate nohighlight">\(SP(s,i)\)</span>.</p></li>
+<li><p>For each neighbor <span class="math notranslate nohighlight">\(j\)</span> of node <span class="math notranslate nohighlight">\(i\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+          SP(s,j) = min(SP(s,j), SP(s,i) + w_{ij})
+          \]</div>
+<p>Until all nodes are examined.</p>
+</li>
+<li><p>Set node <span class="math notranslate nohighlight">\(i\)</span> as examined.</p></li>
+</ol>
+</li>
+</ol>
+<p>Note that step 3.2 does not sets neighbors as examined, <span class="math notranslate nohighlight">\(SP(s,i)\)</span> can be updated more than once, until examined directly, keeping the minimum path so far at each step.</p>
+</div>
+<div class="section" id="random-walk-based-similarity-pagerank">
+<h4>Random Walk-based similarity (PageRank)<a class="headerlink" href="#random-walk-based-similarity-pagerank" title="Permalink to this headline">¶</a></h4>
+<p>Since shortest path algorithms only considers single path between nodes, as a proximity function, it ignores the fact that nodes connected by many paths should be considered closer in some applications.</p>
+<p>One way to take into account the multiplicity of paths is to use a restarting random walk. Start at the source node <span class="math notranslate nohighlight">\(s\)</span>, and move through the graph choosing an edge with probability proportional to decreasing function of its weight. Consider also the probability to restart the random walk at <span class="math notranslate nohighlight">\(s\)</span>. Nodes more connected to <span class="math notranslate nohighlight">\(s\)</span> will be visited more often. A possible implementation of this idea is the PageRank algorithm <span id="id16">[<a class="reference internal" href="#id61"><span>13</span></a>]</span>.</p>
+</div>
+</div>
+<div class="section" id="similarity-between-graphs">
+<h3>Similarity between graphs<a class="headerlink" href="#similarity-between-graphs" title="Permalink to this headline">¶</a></h3>
+<p>This is hard problem (It is NP-hard to match complete graphs.) The following ideas have been proposed:</p>
+<ul class="simple">
+<li><p>Maximum common subgraph distance. If two graphs share a large subgraph, they are considered more similar.</p></li>
+<li><p>Substructure-based similarity: Count frequent substructures between two graphs.</p></li>
+<li><p>Graph-edit distance: Number of edits required to transform a graph into another.</p></li>
+<li><p>Graph kernels: Kernel functions defined to measure similarity between graphs, such as the shortest path kernel and the random-walk kernel.</p></li>
+</ul>
+<p>For more information, see <span id="id17">[<a class="reference internal" href="#id58"><span>2</span></a>,<span></span>]</span> Chapter 17.</p>
 </div>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id11"><dl class="citation">
-<dt class="label" id="id41"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id18"><dl class="citation">
+<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Sergios Theodoridis and Konstantinos Koutroumbas. <em>Pattern Recognition</em>. Elsevier, 2009. URL: <a class="reference external" href="https://doi.org/10.1016/b978-1-59749-272-0.x0001-2">https://doi.org/10.1016/b978-1-59749-272-0.x0001-2</a>, <a class="reference external" href="https://doi.org/10.1016/b978-1-59749-272-0.x0001-2">doi:10.1016/b978-1-59749-272-0.x0001-2</a>.</p>
 </dd>
-<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id1">2</a></span></dt>
+<dt class="label" id="id58"><span class="brackets">2</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>,<a href="#id11">3</a>,<a href="#id17">4</a>)</span></dt>
 <dd><p>Charu C Aggarwal. <em>Data mining: the textbook</em>. Springer, 2015.</p>
 </dd>
-<dt class="label" id="id42"><span class="brackets"><a class="fn-backref" href="#id2">3</a></span></dt>
+<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id2">3</a></span></dt>
 <dd><p>Jan Schulz. Canberra distance. 2007. [Online; accessed 12-April-2021]. URL: <a class="reference external" href="http://www.code10.info/index.php?option=com_content&amp;view=article&amp;id=49:article_canberra-distance&amp;catid=38:cat_coding_algorithms_data-similarity&amp;Itemid=57">http://www.code10.info/index.php?option=com_content&amp;view=article&amp;id=49:article_canberra-distance&amp;catid=38:cat_coding_algorithms_data-similarity&amp;Itemid=57</a>.</p>
 </dd>
-<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id3">4</a></span></dt>
+<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id3">4</a></span></dt>
 <dd><p>Wikipedia contributors. Cosine similarity — Wikipedia, the free encyclopedia. 2021. [Online; accessed 13-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Cosine_similarity&amp;oldid=1017252556">https://en.wikipedia.org/w/index.php?title=Cosine_similarity&amp;oldid=1017252556</a>.</p>
 </dd>
-<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id4">5</a></span></dt>
+<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
 <dd><p>Wikipedia contributors. Spearman's rank correlation coefficient — Wikipedia, the free encyclopedia. 2021. [Online; accessed 15-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Spearman%27s_rank_correlation_coefficient&amp;oldid=1013762125">https://en.wikipedia.org/w/index.php?title=Spearman%27s_rank_correlation_coefficient&amp;oldid=1013762125</a>.</p>
 </dd>
-<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id5">6</a></span></dt>
+<dt class="label" id="id53"><span class="brackets"><a class="fn-backref" href="#id6">6</a></span></dt>
 <dd><p>Wikipedia contributors. Simple matching coefficient — Wikipedia, the free encyclopedia. 2021. [Online; accessed 16-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Simple_matching_coefficient&amp;oldid=1007400537">https://en.wikipedia.org/w/index.php?title=Simple_matching_coefficient&amp;oldid=1007400537</a>.</p>
 </dd>
-<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id6">7</a></span></dt>
+<dt class="label" id="id54"><span class="brackets"><a class="fn-backref" href="#id7">7</a></span></dt>
 <dd><p>Wikipedia contributors. Chemical similarity — Wikipedia, the free encyclopedia. 2021. [Online; accessed 18-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Chemical_similarity&amp;oldid=1016793498">https://en.wikipedia.org/w/index.php?title=Chemical_similarity&amp;oldid=1016793498</a>.</p>
 </dd>
-<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id8">8</a></span></dt>
+<dt class="label" id="id55"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
 <dd><p>Wikipedia contributors. Edit distance — Wikipedia, the free encyclopedia. 2021. [Online; accessed 18-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Edit_distance&amp;oldid=1013329630">https://en.wikipedia.org/w/index.php?title=Edit_distance&amp;oldid=1013329630</a>.</p>
 </dd>
-<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id9">9</a></span></dt>
+<dt class="label" id="id56"><span class="brackets"><a class="fn-backref" href="#id10">9</a></span></dt>
 <dd><p>Wikipedia contributors. Wagner-fischer algorithm — Wikipedia, the free encyclopedia. 2021. [Online; accessed 18-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/wiki/Wagner-Fischer_algorithm">https://en.wikipedia.org/wiki/Wagner-Fischer_algorithm</a>.</p>
 </dd>
-<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id10">10</a></span></dt>
+<dt class="label" id="id59"><span class="brackets">10</span><span class="fn-backref">(<a href="#id12">1</a>,<a href="#id13">2</a>)</span></dt>
+<dd><p>Wikipedia contributors. Longest common subsequence problem — Wikipedia, the free encyclopedia. 2021. [Online; accessed 20-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Longest_common_subsequence_problem&amp;oldid=1018929068">https://en.wikipedia.org/w/index.php?title=Longest_common_subsequence_problem&amp;oldid=1018929068</a>.</p>
+</dd>
+<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id14">11</a></span></dt>
 <dd><p>John C Gower. A general coefficient of similarity and some of its properties. <em>Biometrics</em>, pages 857–871, 1971.</p>
+</dd>
+<dt class="label" id="id60"><span class="brackets"><a class="fn-backref" href="#id15">12</a></span></dt>
+<dd><p>Wikipedia contributors. Dijkstra's algorithm — Wikipedia, the free encyclopedia. 2021. [Online; accessed 21-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Dijkstra%27s_algorithm&amp;oldid=1014900072">https://en.wikipedia.org/w/index.php?title=Dijkstra%27s_algorithm&amp;oldid=1014900072</a>.</p>
+</dd>
+<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id16">13</a></span></dt>
+<dd><p>Wikipedia contributors. Pagerank — Wikipedia, the free encyclopedia. 2021. [Online; accessed 21-April-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=PageRank&amp;oldid=1018352503">https://en.wikipedia.org/w/index.php?title=PageRank&amp;oldid=1018352503</a>.</p>
 </dd>
 </dl>
 </p>

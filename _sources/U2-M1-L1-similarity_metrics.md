@@ -403,6 +403,20 @@ which makes the equivalence explicit.
 
 You will implement the Mahalanobis distance in the assignment, as a function called `mahalanobis_d`.
 
+``` python
+def mahalanobis_d(x, y, **kwargs):
+    " A required argument is the covariance matrix S. "
+    S = kwargs['S']
+    d = x - y
+    d = d[:, np.newaxis]
+    return np.sqrt(d.T @ np.linalg.pinv(S) @ d)
+
+S = np.cov(X.T)
+D = proximity_matrix(X, measure=mahalanobis_d, S=S)
+
+plot_prox(D, mds=True)
+```
+
 ![](./.ob-jupyter/fdb19a4e634220c4c246e64a08efd32a53d3268d.png)
 
 ## Similarity measures for numerical data
@@ -484,6 +498,8 @@ plot_prox(D, mds=True)
 ```
 
 ![](./.ob-jupyter/5056aff084cceda093e9c95dfcfb0a11f821a77c.png)
+
+When working with text documents, often a damping function is applied to word frequencies, such as `sqrt` or `log`, to dampen the effect of high frequency counts. Also, to take into account that some words are more common than others, frequencies are weighted by the inverse document frequency, $\log(n/n_{i})$, where $n$ is the number of documents in the collection, and $n_{i}$ is the number of documents containing the ith word. For more information, refer to Section 3.3 of {cite}`aggarwal2015data`.
 
 #### $l_2$-normalized Euclidean distance
 
@@ -847,7 +863,9 @@ plot_prox(D, mds=True, labels=yc)
 
 ![](./.ob-jupyter/b61af4f3b55dbdf23a4df46af84946c3cd430858.png)
 
-### Edit distance (Dynamic measures)
+## Dynamic measures
+
+### Edit Distance
 
 The Hamming distance is a particular case of the edit distance between two vectors. The edit distance is typically used for strings, but can also be implemented for categorical vectors. Is defined as the number of operations required to transform one vector or string into another. In the most general case, the edit distance can be calculated for vectors of different length, if either the operation of addition or deletion is defined.
 
@@ -876,9 +894,9 @@ def leveshtein_d(src, dest):
     n = len(src)
     m = len(dest)
 
-    if type(src) == str:
+    if type(src) is str:
         src = list(src)
-    if type(dest) == str:
+    if type(dest) is str:
         dest = list(dest)
 
     # for all i and j, d[i,j] will hold the Levenshtein distance
@@ -921,6 +939,124 @@ leveshtein_d('sitting', 'kitten')
 ``` example
 3.0
 ```
+
+### Dynamic Time Warping (DTW)
+
+More typically used for time-series data, DTW allows for portions of sequence vectors to stretch or contract to allow for a better matching among pairs of vectors. In speech recognition, this property enables matching of patterns at different speaking speed.
+
+This stretching is accomplished by allowing many-to-one mapping of vector coordinates. This mapping is equivalent to repeating values in the wrapped sections, and then do a one-to-one mapping as usual, for which any proximity measure can be used, e.g., the $l_p$ norm.
+
+An optimal wrapping can be found using a dynamic programming approach. For the Manhattan distance, a possible recursive implementation is as follows
+
+$$
+d_1(\vec{x}_{D=i}, \vec{y}_{D=i}) = |x_i - y_i| + d_1(\vec{x}_{D=i-1}, \vec{y}_{D=i-1})
+$$
+
+where $\vec{x}_{D=i}$ is the i-dimensional vector up to the ith coordinate. The idea of DTW it that the indices of the rhs need not be reduced by one, effectively repeating one or more values,
+
+```{math}
+\begin{align}
+DTW(\vec{x}_{D=i},\vec{y}_{D=j}) = d(x_i, y_j) + min
+\begin{cases}
+DTW(\vec{x}_{D=i},\vec{y}_{D=j-1}) & \text{repeat $x_i$}\\
+DTW(\vec{x}_{D=i-1},\vec{y}_{D=j}) & \text{repeat $y_j$}\\
+DTW(\vec{x}_{D=i-1},\vec{y}_{D=j-1}) & \text{repeat neither}
+\end{cases}
+\end{align}
+```
+We can fill the $|x|\times |y|$ matrix recursively, to find all possible distances, then extract the term corresponding to the full vectors.
+
+An implementation using the Manhattan distance is:
+
+``` python
+def dtw_d(x, y):
+    n = len(x)
+    m = len(y)
+
+    # The matrix will hold initial values D[0,j], D[i,0]
+    # which mean nothing (distance to the empty vector)
+    # so set them to infty
+    D = np.full((n+1,m+1), np.inf)
+
+    # Intialize D[0,0]
+    D[0, 0] = 0
+
+    for i, j in product(range(1, n+1), range(1, m+1)):
+        D[i, j] = np.abs(x[i-1] - y[j-1]) + \
+            min(D[i, j-1], D[i-1, j], D[i-1, j-1])
+
+    # print(D)
+    return D[n, m]
+
+dtw_d([1,2,3], [1,2,3,5])
+```
+
+``` example
+2.0
+```
+
+A usual constraint used with DTW is that of locality. This constraint imposes a minimum level $w$ of positional alignment between matched elements. The DTW will be computed only if $|i-j|<\leq w$. See {cite}`aggarwal2015data` section 3.4.1.3.
+
+### Longest Common Subsequence (LCSS)
+
+We define the LCSS of two sequence vectors as the longest subsequence shared by both vectors. A subsequence is a sub set of possibly discontinuous coordinates in the same order as in the original vector. The LCSS is a similarity function.
+
+For example {cite}`enwiki:lcss,` consider the sequences (ABCD) and (ACBAD). They have 5 length-2 common subsequences: (AB), (AC), (AD), (BD), and (CD); 2 length-3 common subsequences: (ABD) and (ACD); and no longer common subsequences. So (ABD) and (ACD) are their longest common subsequences.
+
+Similarly as in the previous section, a the LCSS of two string can be build recursively from the LCSS of their prefixes. With the operator \^ signifying string concatenation,
+
+$$
+{\displaystyle {\mathit {LCS}}(X_{i},Y_{j})={\begin{cases}\emptyset &{\mbox{if }}i=0{\mbox{ or }}j=0\\{\mathit {LCS}}(X_{i-1},Y_{j-1}){\hat {}}x_{i}&{\mbox{if }}i,j>0{\mbox{ and }}x_{i}=y_{j}\\\operatorname {\max } \{{\mathit {LCS}}(X_{i},Y_{j-1}),{\mathit {LCS}}(X_{i-1},Y_{j})\}&{\mbox{if }}i,j>0{\mbox{ and }}x_{i}\neq y_{j}.\end{cases}}}
+$$
+
+To find the LCS of $X_{i}$ and $Y_j$, compare $x_{i}$ and $y_{j}$. If they are equal, then the sequence ${\mathit {LCS}}(X_{i-1},Y_{j-1})$ is extended by that element, $x_{i}$. If they are not equal, then the longer of the two sequences, ${\mathit {LCS}}(X_{i},Y_{j-1})$, and ${\mathit {LCS}}(X_{i-1},Y_{j})$, is retained. (If they are the same length, but not identical, then both are retained.) Not that even if either $x_{i}$ or $y_{i}$ have matched before, and they match again, it does not hurt to move the match to the new trailing elements. This is akin to either skip the previous match, or skip the current match. A worked out example can be found on {cite}`enwiki:lcss`.
+
+``` python
+def lccs_d(x, y):
+    n = len(x)
+    m = len(y)
+
+    if type(x) is str:
+        x = list(x)
+    if type(y) is str:
+        y = list(y)
+
+    # The matrix will hold initial values D[0,j], D[i,0]
+    # which mean nothing (distance to the empty vector)
+    # so set them to 0
+    D = np.zeros((n+1,m+1))
+
+    for i, j in product(range(1, n+1), range(1, m+1)):
+        if x[i-1] == y[j-1]:
+            D[i, j] = 1 + D[i-1, j-1]
+        else:
+            D[i, j] = max(D[i, j-1], D[i-1, j])
+
+
+    # Apply traceback to find set LCCS
+    def backtrack(i, j):
+        if i == 0 or j == 0:
+            return set({()})
+        if x[i-1] == y[j-1]:
+            return {tuple(list(s) + [x[i-1]])
+                    for s in backtrack(i-1, j-1)}
+        R = set({})
+        if D[i,j-1] >= D[i-1,j]:
+            R = backtrack(i, j-1)
+        if D[i-1,j] >= D[i,j-1]:
+            R = R | backtrack(i-1, j)
+        return R
+
+    lcs_set = backtrack(n, m)
+
+    return D[n, m], lcs_set
+
+lccs_d('GAC','AGCAT')
+```
+
+|     |                     |
+|-----|---------------------|
+| 2.0 | ((A C) (G A) (G C)) |
 
 ## Mixed features
 
@@ -1182,7 +1318,52 @@ For example, for two sets $X$ and $Y$:
 
 ## Proximity measures on graps
 
-### Geodesic distance
+### Similarity between nodes in a graph
+
+Consider a graph $G=(N,E)$, where $N$ is a set of nodes, and $E$ is a set of edges. Two nodes in $G$ are considered close is they are \"connected\". There are several ways to measure this \"connectedness\".
+
+#### Structural distance
+
+For unweighted graphs, the **geodesic distance** between two nodes is the number of edges of the shortest path connecting them. For weighted graphs, the sum of the weights of the edges belonging to the shortest path are added to find the distance.
+
+The shortest path between a source node $s$ and a node $j$ can be found using the Dijkstra\'s algorithm {cite}`enwiki:dijkstra-alg`. The essence of this algorithm is the following:
+
+1.  Initialize all distance $SP(i,j) = \infty$.
+2.  Start at node $s$ and set $SP(s,s) = 0$, do not consider $s$ examined so far.
+3.  For all un-examined nodes:
+    1.  Choose the one with minimum $SP(s,i)$.
+
+    2.  For each neighbor $j$ of node $i$:
+
+        $$
+          SP(s,j) = min(SP(s,j), SP(s,i) + w_{ij})
+          $$
+
+        Until all nodes are examined.
+
+    3.  Set node $i$ as examined.
+
+Note that step 3.2 does not sets neighbors as examined, $SP(s,i)$ can be updated more than once, until examined directly, keeping the minimum path so far at each step.
+
+#### Random Walk-based similarity (PageRank)
+
+Since shortest path algorithms only considers single path between nodes, as a proximity function, it ignores the fact that nodes connected by many paths should be considered closer in some applications.
+
+One way to take into account the multiplicity of paths is to use a restarting random walk. Start at the source node $s$, and move through the graph choosing an edge with probability proportional to decreasing function of its weight. Consider also the probability to restart the random walk at $s$. Nodes more connected to $s$ will be visited more often. A possible implementation of this idea is the PageRank algorithm {cite}`enwiki:pagerank`.
+
+### Similarity between graphs
+
+This is hard problem (It is NP-hard to match complete graphs.) The following ideas have been proposed:
+
+-   Maximum common subgraph distance. If two graphs share a large subgraph, they are considered more similar.
+
+-   Substructure-based similarity: Count frequent substructures between two graphs.
+
+-   Graph-edit distance: Number of edits required to transform a graph into another.
+
+-   Graph kernels: Kernel functions defined to measure similarity between graphs, such as the shortest path kernel and the random-walk kernel.
+
+For more information, see {cite}`aggarwal2015data,` Chapter 17.
 
 ## References
 
