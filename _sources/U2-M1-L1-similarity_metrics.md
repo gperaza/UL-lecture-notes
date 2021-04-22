@@ -563,6 +563,8 @@ plot_prox(D, mds=True)
 
 ![](./.ob-jupyter/877e1cab484ff1883f3bfa74a4c2e45cb11b7992.png)
 
+A nice property of correlation measures is that they account for biases of one vector with respect to another. For example, $\rho((5,4,5,4),(4,3,4,3)) = 1$, so they are sensible to similar linear patters in the data.
+
 ### Spearman correlation
 
 Spearman correlation is similar to Pearson correlation, but only uses rank information (positions within a list of values), rather than the actual values. This makes Spearman correlation less sensitive to outliers in the data, and allows its use with ordinal data.
@@ -773,7 +775,7 @@ Note that $0 \leq s_J\ leq 1$, and if both sets are empty, we define $s_J=1$.
 The index is also used with binary categorical feature vectors, for which it takes the form
 
 $$
-s_J = \frac{\vec{x}^T\vec{y}}{|x| + |y| - \vec{x}^T\vec{y}}
+s_J = \frac{\vec{x}^T\vec{y}}{|x|^2 + |y|^2 - \vec{x}^T\vec{y}}
 $$
 
 When working with natural binary vectors, the Jaccard index is more appropriate than the SMC for asymmetric features, for example, in market basket analysis, where ones indicate the presence of an item in a set, and zeros signal the absence of an item in a set. When working with symmetric features the SMC is more appropriate, as discussed in the preceding section. The Jaccard index is also the most popular similarity measure for comparing chemical structures represented by means of fingerprints {cite}`enwiki:chemsim`.
@@ -804,6 +806,22 @@ def s_j(x,y, binary=True):
 ```
 
 ### Sørensen--Dice coefficient
+
+The SD coefficient is defined, among two sets $A$ and $B$, as:
+
+$$
+SD = \frac{2|A \cap B|}{|A| + |B|}
+$$
+
+For binary data it takes the form
+
+$$
+SD = \frac{2\vec{x}^T\vec{y}}{|\vec{x}|^2+|\vec{y}|^2}
+$$
+
+The SD is not a metric, but it is equivalent to the Jaccard index, since one is a monotone function of the other, $J = S/(2-S)$.
+
+A generalization of both Jaccard and SD is the Tversky index {cite}`enwiki:tversky`.
 
 ### Ochiai coefficient
 
@@ -1314,7 +1332,11 @@ For example, for two sets $X$ and $Y$:
 
 ### KL-divergence
 
+From {cite}`enwiki:kldiv`.
+
 ### Jensen-Shannon distance
+
+From {cite}`enwiki:jsdiv`.
 
 ## Proximity measures on graps
 
