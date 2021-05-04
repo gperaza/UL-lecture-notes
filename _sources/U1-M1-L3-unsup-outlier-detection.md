@@ -48,21 +48,11 @@ We will use a Gaussian model to detect anomalous examples in your dataset. On th
 Let\'s begin with some standard imports:
 
 ``` python
-# used for manipulating directory paths
-import os
-
 # Scientific and vector computation for python
 import numpy as np
 
 # Plotting library
 import matplotlib.pyplot as plt
-import matplotlib as mpl
-
-# Optimization module in scipy
-from scipy import optimize
-
-# will be used to load MATLAB mat datafile format
-from scipy.io import loadmat
 
 # tells matplotlib to embed plots within the notebook
 %matplotlib inline
@@ -339,7 +329,7 @@ $$
 
 You will implement the distance matrix calculation in the assignment. There exists an efficient way to calculate this matrix using Numpy broadcasting. To do this, we need to transform our original data matrix $X$ into new 3D arrays that repeat X along a given dimension. The purpose is to obtain 3D array with all elements of the form $x_{ik} - x_{jk}$ indexed as $ijk$. If you are unfamiliar with broadcasting operations, you may wish to implement this as a nested for loop, at the cost of being slower.
 
-There are two variants of this algorithm, the kth-NN and the KNN algorithm. The kth-NN algorithm finds the distance to the kth neighbor, while the KNN algorithm uses the average distance from the first k neighbors. This distances are called scores. For both algorithm we need to find the scores, then sort according to those scores. The larger the score, the more likely a point is to be an outlier. You\'ll be ask to implement this functionality in the `scores_kthnn` and `scores_knn` functions in the assignment.
+There are two variants of this algorithm, the kth-NN and the KNN algorithm. The kth-NN algorithm finds the distance to the kth neighbor, while the KNN algorithm uses the average distance from the first k neighbors. This distances are called scores. For both algorithm we need to find the scores, then sort according to those scores. The larger the score, the more likely a point is to be an outlier. You\'ll be ask to implement this functionality in the `scores_knn` function in the assignment.
 
 The choice of the parameter $k$ is of course important for the results. If it is chosen too low, the density estimation for the records might be not reliable. On the other hand, if it is too large, density estimation may be too coarse. As a rule of thumb, k should be in the range 10 \< k \< 50.
 
@@ -352,9 +342,10 @@ from sklearn import preprocessing
 
 X_scaled = preprocessing.MinMaxScaler().fit_transform(X)
 
+# Submitt with k=10, you may test other options
 k = 10
-kthnn_scores = scores_kthnn(X_scaled, k)
-knn_scores = scores_knn(X_scaled, k)
+kthnn_scores = scores_knn(X_scaled, k, kth=True)
+knn_scores = scores_knn(X_scaled, k, kth=False)
 
 plt.rcParams.update({'font.size': 22})
 fig = plt.figure(figsize=(10,8))
@@ -374,7 +365,7 @@ plt.ylabel('Proline');
 
 ![](./.ob-jupyter/1278176ddcc7749d28954a68705a9a9a33c7c7ae.png)
 
-For large date sets, naive KNN algorithms become inefficient, as they scale as $O(n^2)$. Two modifications have been proposed to deal with scalability issues, mainly by avoiding unnecessary distance computations. One modification, ORCA {cite}`bay2003mining,` uses an Approximate Nearest Neighbor Search, which terminates as soon as the current score becomes smaller than the t-th largest score so far, as then x can never become an outlier. The second one, iORCA @bhaduri2011algorithms, further improves on ORCA by indexing observations using the distance from a reference point.
+For large date sets, naive KNN algorithms become inefficient, as they scale as $O(n^2)$. Two modifications have been proposed to deal with scalability issues, mainly by avoiding unnecessary distance computations. One modification, ORCA {cite}`bay2003mining`, uses an Approximate Nearest Neighbor Search, which terminates as soon as the current score becomes smaller than the t-th largest score so far, as then x can never become an outlier. The second one, iORCA {cite}`bhaduri2011algorithms`, further improves on ORCA by indexing observations using the distance from a reference point.
 
 Other drawback is that distance based algorithms cannot cope with in-homogeneously spaced data, i.e, data where density varies greatly, or with clusters of different local densities. In this cases, density based or angle based algorithms perform better.
 
@@ -436,7 +427,7 @@ plt.ylabel('Proline');
 
 Larger scores are associated with possible outliers. Use the above image to check your work. The main drawback of LOF is it scales as $O(n^2)$. Another one is that the resulting values are quotient-values and hard to interpret (text from {cite}`enwiki:992466888`). A value of 1 or even less indicates a clear inlier, but there is no clear rule for when a point is an outlier. In one data set, a value of 1.1 may already be an outlier, in another dataset and parameterization (with strong local fluctuations) a value of 2 could still be an inlier. These differences can also occur within a dataset due to the locality of the method. There exist extensions of LOF that try to improve over LOF in these aspects:
 
--   Feature Bagging for Outlier Detection {cite}`lazarevic2005feature` runs LOF on multiple projections and combines the results for improved detection qualities in high dimensions. This is the first ensemble learning approach to outlier detection, for other variants see @zimek2014ensembles.
+-   Feature Bagging for Outlier Detection {cite}`lazarevic2005feature` runs LOF on multiple projections and combines the results for improved detection qualities in high dimensions. This is the first ensemble learning approach to outlier detection, for other variants see {cite}`zimek2014ensembles`.
 
 -   Local Outlier Probability (LoOP) {cite}`kriegel2009loop` is a method derived from LOF but using inexpensive local statistics to become less sensitive to the choice of the parameter k. In addition, the resulting values are scaled to a value range of \[0:1\].
 
@@ -460,7 +451,7 @@ As a result of these considerations, an angle-based outlier factor (ABOF) can de
 
 ABOD has been proposed as able to perform outlier detection more reliably in high dimensional data sets than distance based methods.
 
-A problem of the basic approach ABOD is obvious: since for each point all pairs of points must be considered, the time-complexity is in O($n^3$), the original ABOD paper proposes two approximations to address this problem: FastABOD and LB-ABOD. These will not be discussed here. Another fast approximation, FastVOA {cite}`pham2012near,` estimates the first and the second moment of the variance independently using random projections and AMS sketches, at the expense of introducing many parameters.
+A problem of the basic approach ABOD is obvious: since for each point all pairs of points must be considered, the time-complexity is in O($n^3$), the original ABOD paper proposes two approximations to address this problem: FastABOD and LB-ABOD. These will not be discussed here. Another fast approximation, FastVOA {cite}`pham2012near`, estimates the first and the second moment of the variance independently using random projections and AMS sketches, at the expense of introducing many parameters.
 
 As an approach to assign the ABOF value to any object in the database $\mathcal{D}$, we compute the scalar product of the difference vectors of any triple of points (i.e. a query point $\vec{A} \in \mathcal{D}$ and all pairs $(\vec{B},\vec{C})$ of all remaining points in $\mathcal{D} \backslash \{\vec{A}\})$ normalized by the quadratic product of the length of the difference vectors, i.e. the angle is weighted less if the corresponding points are far from the query point. By this weighting factor, the distance influences the value after all, but only to a minor part. Nevertheless, this weighting of the variance is important since the angle to a pair of points varies naturally stronger for a bigger distance. The variance of this value over all pairs for the query point $\vec{A}$ constitutes the angle-based outlier factor (ABOF) of $\vec{A}$.
 
