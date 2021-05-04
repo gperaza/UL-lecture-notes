@@ -56,8 +56,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Anomaly and Outlier Detection" href="U1-M1-L3-unsup-outlier-detection.html" />
-    <link rel="prev" title="Data Normalization" href="U1-M1-L1-prep-normalization.html" />
+    <link rel="next" title="Assignment: Discretization" href="assignments-dummy/U1-M1-L2-prep-discretization.html" />
+    <link rel="prev" title="Assignment: Normalization" href="assignments-dummy/U1-M1-L1-prep-normalization.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -100,15 +100,33 @@
  </span>
 </p>
 <ul class="current nav sidenav_l1">
- <li class="toctree-l1">
+ <li class="toctree-l1 collapsible-parent">
   <a class="reference internal" href="U1-M1-L1-prep-normalization.html">
    Data Normalization
   </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U1-M1-L1-prep-normalization.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
  </li>
- <li class="toctree-l1 current active">
+ <li class="toctree-l1 current active collapsible-parent">
   <a class="current reference internal" href="#">
    Discretization
   </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U1-M1-L2-prep-discretization.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="U1-M1-L3-unsup-outlier-detection.html">
@@ -292,7 +310,7 @@
 <h1>Discretization<a class="headerlink" href="#discretization" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>In statistics and machine learning, discretization refers to the process of converting or partitioning continuous attributes, features or variables to discretized or nominal attributes/features/variables/intervals. Whenever continuous data is discretized, there is always some amount of discretization error. The goal is to reduce the amount to a level considered negligible for the modeling purposes at hand. Many machine learning algorithms are known to produce better models by discretizing continuous attributes. <span id="id1">[<a class="reference internal" href="#id14"><span>1</span></a>]</span></p>
+<p>In statistics and machine learning, discretization refers to the process of converting or partitioning continuous attributes, features or variables to discretized or nominal attributes/features/variables/intervals. Whenever continuous data is discretized, there is always some amount of discretization error. The goal is to reduce the amount to a level considered negligible for the modeling purposes at hand. Many machine learning algorithms are known to produce better models by discretizing continuous attributes. <span id="id1">[<a class="reference internal" href="#id16"><span>1</span></a>]</span></p>
 <p>In a supervised context, the performance of a particular discretization can be evaluated using class information. Many algorithms use this information to find the minimum number of partitions relative to some metric, such as mutual information. Among these methods we find Fayyad &amp; Irani’s MDL method, CAIM, CACC, and Ameva.</p>
 <p>When class information is not available, it becomes difficult to evaluate the partition. Typically data is discretized into partitions of K equal lengths/width (equal intervals) or K% of the total data (equal frequencies).</p>
 </div>
@@ -524,7 +542,7 @@ Feature 1
 \[
 h = \frac{2\ IQR}{n^{1/3}}
 \]</div>
-<p>The asymptotic (large <span class="math notranslate nohighlight">\(n\)</span>) optimal bin width was derived by Scott <span id="id2">[<a class="reference internal" href="freedman-diaconis.html#id9"><span>1</span></a>,<span></span>]</span> yet, its value depends on the derivative of the theoretical distribution, often not known. Freedman and Diaconis claimed &#64;freedman1981histogram the bin width can be robustly estimated by the formula above, which works well most of the time, under the requirements that the true distribution has squared integrable and continuous first and second derivatives.</p>
+<p>The asymptotic (large <span class="math notranslate nohighlight">\(n\)</span>) optimal bin width was derived by Scott <span id="id2">[<a class="reference internal" href="freedman-diaconis.html#id9"><span>1</span></a>]</span>, yet, its value depends on the derivative of the theoretical distribution, often not known. Freedman and Diaconis claimed <span id="id3">[<a class="reference internal" href="#id18"><span>3</span></a>]</span> the bin width can be robustly estimated by the formula above, which works well most of the time, under the requirements that the true distribution has squared integrable and continuous first and second derivatives.</p>
 <p>It is worth it to provide a rough derivation of the FD rule, as it is an nice exercise in the art of approximation. You can find such derivation in the <a class="reference internal" href="freedman-diaconis.html"><span class="doc std std-doc">Appendix</span></a>.</p>
 </div>
 <div class="section" id="equal-frequency">
@@ -541,7 +559,7 @@ h = \frac{2\ IQR}{n^{1/3}}
 <div class="section" id="d-k-means">
 <h3>1D K-means<a class="headerlink" href="#d-k-means" title="Permalink to this headline">¶</a></h3>
 <p>Discretizing a data set is similar to the clustering problem in the sense that we are looking for partitions with large within-class similarity and small intra-class similarity.</p>
-<p>One way to discretize a feature matrix is to apply a clustering algorithm to each individual feature. In the following we will implement discretization via the K-Means clustering algorithm. Since we have not yet implemented our own version of K-means (wait until unit 3), we’ll follow a method proposed by Daniela Joita in <span id="id3">[<a class="reference internal" href="#id12"><span>3</span></a>]</span> to cluster one dimensional features. This particular algorithm has a long history within quantitative geography, where it was first developed by Jenks and Caspall &#64;jenks1971error, and understandably known as the Jenks-Caspall algorithm, or <a class="reference external" href="https://en.wikipedia.org/wiki/Jenks_natural_breaks_optimization#cite_note-6">Jenks natural breaks algorithm</a>.</p>
+<p>One way to discretize a feature matrix is to apply a clustering algorithm to each individual feature. In the following we will implement discretization via the K-Means clustering algorithm. Since we have not yet implemented our own version of K-means (wait until unit 3), we’ll follow a method proposed by Daniela Joita in <span id="id4">[<a class="reference internal" href="#id14"><span>4</span></a>]</span> to cluster one dimensional features. This particular algorithm has a long history within quantitative geography, where it was first developed by Jenks and Caspall <span id="id5">[<a class="reference internal" href="#id19"><span>5</span></a>]</span>, and understandably known as the Jenks-Caspall algorithm, or <a class="reference external" href="https://en.wikipedia.org/wiki/Jenks_natural_breaks_optimization#cite_note-6">Jenks natural breaks algorithm</a>.</p>
 <p>The idea of the algorithm is to chose initial centers such that they are in increasing order. In this way, the recomputed centers are also in increasing order and therefore to determine the closest cluster for each value of the attribute A, the algorithm does less comparisons than in the general case. The closest cluster either remains the one in which the value belongs to or it is one of the two neighbouring clusters. In this way the number of comparisons done for reallocation of cluster is no longer k (one for each centroid) but 3. Also there is no need to order all the values in dom(A) like in the case of equal- frequency interval discretization.</p>
 <p>The cut points are defined as the minimum and maximum of the active domain of the attribute and the midpoints between the centers of the clusters.</p>
 <p>In the assignment, you will implement this algorithm starting with a 1D version of K-means, which is applied independently to each feature.</p>
@@ -551,17 +569,17 @@ h = \frac{2\ IQR}{n^{1/3}}
 </div>
 <div class="section" id="fisher-jenks">
 <h3>Fisher-Jenks<a class="headerlink" href="#fisher-jenks" title="Permalink to this headline">¶</a></h3>
-<p>Another modified version of the algorithm that uses dynamic programming to find the optimal partition is the Fisher-Jenks algorithm <span id="id4">[<a class="reference internal" href="#id18"><span>4</span></a>,<span></span>]</span> for which we are missing an implementation. The FJ algorithm tests all possible <strong>continuous</strong> partitions (reducing the search space) and selects the one that minimizes the clusters variance. Extra point awarded for whom can provide a working well documented implementation (possible project).</p>
+<p>Another modified version of the algorithm that uses dynamic programming to find the optimal partition is the Fisher-Jenks algorithm <span id="id6">[<a class="reference internal" href="#id20"><span>6</span></a>]</span>, for which we are missing an implementation. The FJ algorithm tests all possible <strong>continuous</strong> partitions (reducing the search space) and selects the one that minimizes the clusters variance. Extra point awarded for whom can provide a working well documented implementation (possible project).</p>
 <p>While in general there exist <span class="math notranslate nohighlight">\({N \choose K}\)</span> ways of partition N points into K groups, when restricting to ordered continuous partitions the total number of possible partitions is <span class="math notranslate nohighlight">\({N-1 \choose
 K-1}\)</span>. This is easily understood by considering the problem as choosing where to place the braking points in an ordered list. But, even with this reduction the number of possible partition is still impractical for moderate N and K.</p>
-<p>To address this, we can formulate the problem in terms of smaller sub-problems, involving finding partitions in subsets of the original data. Then reusing this work by aggregating sub-solutions into the optimal solution. This is possible, since the following lemma holds <span id="id5">[<span>fisher1958grouping:</span>]</span></p>
+<p>To address this, we can formulate the problem in terms of smaller sub-problems, involving finding partitions in subsets of the original data. Then reusing this work by aggregating sub-solutions into the optimal solution. This is possible, since the following lemma holds <span id="id7">[<a class="reference internal" href="#id20"><span>6</span></a>]</span>:</p>
 <p><em>Suboptimization Lemma</em>: If <span class="math notranslate nohighlight">\(A_1:A_2\)</span> denotes a partition of a set <span class="math notranslate nohighlight">\(A\)</span> into two disjoint subsets <span class="math notranslate nohighlight">\(A_1\)</span> and <span class="math notranslate nohighlight">\(A_2\)</span>, if <span class="math notranslate nohighlight">\(P_1^{*}\)</span> denotes a least squares partition of <span class="math notranslate nohighlight">\(A_1\)</span> into two <span class="math notranslate nohighlight">\(G_1\)</span> subsets and <span class="math notranslate nohighlight">\(P_2^{*}\)</span> denotes a least squares partition of <span class="math notranslate nohighlight">\(A_2\)</span> into <span class="math notranslate nohighlight">\(G_2\)</span> subsets; then, of the class of subpartitions of <span class="math notranslate nohighlight">\(A_1:A_2\)</span> employing <span class="math notranslate nohighlight">\(G_1\)</span> subsets over <span class="math notranslate nohighlight">\(A_1\)</span> and <span class="math notranslate nohighlight">\(G_2\)</span> subsets over <span class="math notranslate nohighlight">\(A_2\)</span> a least squares subpartition is <span class="math notranslate nohighlight">\(P_1^{*}:P_2^{*}\)</span>.</p>
 <p>From the lemma follows the recursive relationship</p>
 <div class="math notranslate nohighlight">
 \[
 P^{*}(k, U) = \min_L P^{*}(k-1, L-1) + D(L, U),\quad L=k-1 ,\ldots, U
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(P^{*}(k,U)\)</span> is the optimal partition of subset <span class="math notranslate nohighlight">\(x_1,\ldots,x_U\)</span> into <span class="math notranslate nohighlight">\(k\)</span> groups, and <span class="math notranslate nohighlight">\(D(a,b)\)</span> is the diameter of the cluster comprised of points <span class="math notranslate nohighlight">\(x_a,\ldots,x_b\)</span>. Using this recursion relation, build optimal partitions for <span class="math notranslate nohighlight">\(k\)</span> from previous calculated partitions for <span class="math notranslate nohighlight">\(k-1\)</span>, starting with <span class="math notranslate nohighlight">\(k=2\)</span>. An implementation can be found in <span id="id6">[<a class="reference internal" href="#id19"><span>5</span></a>]</span>. I have implemented the algorithm below, in such a ways that wastes a lot of memory, but is easier to understand. Try to optimize it as an exercise.</p>
+<p>where <span class="math notranslate nohighlight">\(P^{*}(k,U)\)</span> is the optimal partition of subset <span class="math notranslate nohighlight">\(x_1,\ldots,x_U\)</span> into <span class="math notranslate nohighlight">\(k\)</span> groups, and <span class="math notranslate nohighlight">\(D(a,b)\)</span> is the diameter of the cluster comprised of points <span class="math notranslate nohighlight">\(x_a,\ldots,x_b\)</span>. Using this recursion relation, build optimal partitions for <span class="math notranslate nohighlight">\(k\)</span> from previous calculated partitions for <span class="math notranslate nohighlight">\(k-1\)</span>, starting with <span class="math notranslate nohighlight">\(k=2\)</span>. An implementation can be found in <span id="id8">[<a class="reference internal" href="#id21"><span>7</span></a>]</span>. I have implemented the algorithm below, in such a ways that wastes a lot of memory, but is easier to understand. Try to optimize it as an exercise.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Test data</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">120</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">106</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span>
               <span class="mi">103</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
@@ -647,7 +665,7 @@ P^{*}(k, U) = \min_L P^{*}(k-1, L-1) + D(L, U),\quad L=k-1 ,\ldots, U
 </div>
 <div class="section" id="kernel-density-estimation">
 <h2>Kernel density estimation<a class="headerlink" href="#kernel-density-estimation" title="Permalink to this headline">¶</a></h2>
-<p>Kernel density estimation <span id="id7">[<a class="reference internal" href="#id13"><span>6</span></a>]</span> is a univariate non-parametric probability density estimation method. It estimates the probability density at point <span class="math notranslate nohighlight">\(x\)</span> through the kernel density function:</p>
+<p>Kernel density estimation <span id="id9">[<a class="reference internal" href="#id15"><span>8</span></a>]</span> is a univariate non-parametric probability density estimation method. It estimates the probability density at point <span class="math notranslate nohighlight">\(x\)</span> through the kernel density function:</p>
 <div class="math notranslate nohighlight">
 \[
 p(x) = \frac{1}{nh}\sum_{i=1}^n K\left( \frac{x- X_i}{h}  \right)
@@ -655,29 +673,55 @@ p(x) = \frac{1}{nh}\sum_{i=1}^n K\left( \frac{x- X_i}{h}  \right)
 <p>where the kernel K is a weighting function, the <span class="math notranslate nohighlight">\(X_i\)</span> are the <span class="math notranslate nohighlight">\(n\)</span> available data points, and <span class="math notranslate nohighlight">\(h\)</span> is the kernel bandwidth, a hyper-parameter. It is essentially a weighted average, where the weights are given by the kernel function. Each point contributes to the density depending on its distance from <span class="math notranslate nohighlight">\(x\)</span>. The kernel must be a positive function that integrates to 1. The choice of the bandwidth is crucial and heavily influences the results. Intuitively one wants to choose <span class="math notranslate nohighlight">\(h\)</span> as small as the data will allow; however, there is always a trade-off between the bias of the estimator and its variance. While methods have been proposed for bandwidth selection, a simple yet good performing one is k-fold cross-validation.</p>
 <p>Here we will employ KDE as a non-parametric unsupervised discretizing method. First, we find the best kernel density estimate for each row of the data using CV. Then, we select the cut-points at the local minima of the KDE. You will implement this in the assignment.</p>
 <p>The following code plots the sample data sets with the found partitions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bin_edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">disc_kde</span><span class="p">(</span><span class="n">X</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">X_list</span><span class="p">]</span>
+
+<span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X_list</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_list</span><span class="p">),</span> <span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bin_edges</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">bin_edges</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(())</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/5bf0b9673ee5d2948b0a34de4fd19da8bc73f61b.png" /></p>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Discretization: An Enabling Technique, Liu et. al.</p></li>
 </ul>
-<p id="id8"><dl class="citation">
-<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id10"><dl class="citation">
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Wikipedia contributors. Discretization of continuous features — Wikipedia, the free encyclopedia. 2019. [Online; accessed 11-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Discretization_of_continuous_features&amp;oldid=898762851">https://en.wikipedia.org/w/index.php?title=Discretization_of_continuous_features&amp;oldid=898762851</a>.</p>
 </dd>
-<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id17"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
 <dd><p>David W Scott. On optimal and data-based histograms. <em>Biometrika</em>, 66(3):605–610, 1979.</p>
 </dd>
-<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>David Freedman and Persi Diaconis. On the histogram as a density estimator: l 2 theory. <em>Zeitschrift für Wahrscheinlichkeitstheorie und verwandte Gebiete</em>, 57(4):453–476, 1981.</p>
+</dd>
+<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
 <dd><p>Daniela Joiţa. Unsupervised static discretization methods in data mining. <em>Titu Maiorescu University, Bucharest, Romania</em>, 2010.</p>
 </dd>
-<dt class="label" id="id18"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
+<dd><p>George F Jenks and Fred C Caspall. Error on choroplethic maps: definition, measurement, reduction. <em>Annals of the Association of American Geographers</em>, 61(2):217–244, 1971.</p>
+</dd>
+<dt class="label" id="id20"><span class="brackets">6</span><span class="fn-backref">(<a href="#id6">1</a>,<a href="#id7">2</a>)</span></dt>
 <dd><p>Walter D Fisher. On grouping for maximum homogeneity. <em>Journal of the American statistical Association</em>, 53(284):789–798, 1958.</p>
 </dd>
-<dt class="label" id="id19"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
+<dt class="label" id="id21"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
 <dd><p>John A Hartigan. <em>Clustering algorithms</em>. John Wiley &amp; Sons, Inc., 1975.</p>
 </dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id7">6</a></span></dt>
+<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
 <dd><p>Wikipedia contributors. Kernel density estimation — Wikipedia, the free encyclopedia. 2021. [Online; accessed 11-March-2021]. URL: <a class="reference external" href="https://en.wikipedia.org/w/index.php?title=Kernel_density_estimation&amp;oldid=1010981873">https://en.wikipedia.org/w/index.php?title=Kernel_density_estimation&amp;oldid=1010981873</a>.</p>
 </dd>
 </dl>
@@ -689,6 +733,8 @@ p(x) = \frac{1}{nh}\sum_{i=1}^n K\left( \frac{x- X_i}{h}  \right)
 <li><p>[ ] Discuss several recent unsupervised methods in the literature (papers available on bibliography folder).</p></li>
 <li><p>[ ] Add methods discussed in <a class="reference external" href="https://geographicdata.science/book/notebooks/05_choropleth.html#quantitative-data-classification">https://geographicdata.science/book/notebooks/05_choropleth.html#quantitative-data-classification</a></p></li>
 </ul>
+<div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 
@@ -720,8 +766,8 @@ p(x) = \frac{1}{nh}\sum_{i=1}^n K\left( \frac{x- X_i}{h}  \right)
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="U1-M1-L1-prep-normalization.html" title="previous page">Data Normalization</a>
-    <a class='right-next' id="next-link" href="U1-M1-L3-unsup-outlier-detection.html" title="next page">Anomaly and Outlier Detection</a>
+    <a class='left-prev' id="prev-link" href="assignments-dummy/U1-M1-L1-prep-normalization.html" title="previous page">Assignment: Normalization</a>
+    <a class='right-next' id="next-link" href="assignments-dummy/U1-M1-L2-prep-discretization.html" title="next page">Assignment: Discretization</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">

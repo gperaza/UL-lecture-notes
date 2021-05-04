@@ -126,9 +126,7 @@ $$
 
 Your assignment is to implement all normalization schemes from scratch.
 
-Assignment link: TODO
-
-You make compare your plots to the ones found here to validate your answers.
+You may compare your plots to the ones found here to validate your answers.
 
 ## References
 

@@ -256,7 +256,7 @@ $$
 h = \frac{2\ IQR}{n^{1/3}}
 $$
 
-The asymptotic (large $n$) optimal bin width was derived by Scott {cite}`scott1979optimal,` yet, its value depends on the derivative of the theoretical distribution, often not known. Freedman and Diaconis claimed @freedman1981histogram the bin width can be robustly estimated by the formula above, which works well most of the time, under the requirements that the true distribution has squared integrable and continuous first and second derivatives.
+The asymptotic (large $n$) optimal bin width was derived by Scott {cite}`scott1979optimal`, yet, its value depends on the derivative of the theoretical distribution, often not known. Freedman and Diaconis claimed {cite}`freedman1981histogram` the bin width can be robustly estimated by the formula above, which works well most of the time, under the requirements that the true distribution has squared integrable and continuous first and second derivatives.
 
 It is worth it to provide a rough derivation of the FD rule, as it is an nice exercise in the art of approximation. You can find such derivation in the [Appendix](freedman-diaconis.md).
 
@@ -280,7 +280,7 @@ Both this methods are implemented in the sklearn preprocessing module, in the KB
 
 Discretizing a data set is similar to the clustering problem in the sense that we are looking for partitions with large within-class similarity and small intra-class similarity.
 
-One way to discretize a feature matrix is to apply a clustering algorithm to each individual feature. In the following we will implement discretization via the K-Means clustering algorithm. Since we have not yet implemented our own version of K-means (wait until unit 3), we\'ll follow a method proposed by Daniela Joita in {cite}`joicta2010unsupervised` to cluster one dimensional features. This particular algorithm has a long history within quantitative geography, where it was first developed by Jenks and Caspall @jenks1971error, and understandably known as the Jenks-Caspall algorithm, or [Jenks natural breaks algorithm](https://en.wikipedia.org/wiki/Jenks_natural_breaks_optimization#cite_note-6).
+One way to discretize a feature matrix is to apply a clustering algorithm to each individual feature. In the following we will implement discretization via the K-Means clustering algorithm. Since we have not yet implemented our own version of K-means (wait until unit 3), we\'ll follow a method proposed by Daniela Joita in {cite}`joicta2010unsupervised` to cluster one dimensional features. This particular algorithm has a long history within quantitative geography, where it was first developed by Jenks and Caspall {cite}`jenks1971error`, and understandably known as the Jenks-Caspall algorithm, or [Jenks natural breaks algorithm](https://en.wikipedia.org/wiki/Jenks_natural_breaks_optimization#cite_note-6).
 
 The idea of the algorithm is to chose initial centers such that they are in increasing order. In this way, the recomputed centers are also in increasing order and therefore to determine the closest cluster for each value of the attribute A, the algorithm does less comparisons than in the general case. The closest cluster either remains the one in which the value belongs to or it is one of the two neighbouring clusters. In this way the number of comparisons done for reallocation of cluster is no longer k (one for each centroid) but 3. Also there is no need to order all the values in dom(A) like in the case of equal- frequency interval discretization.
 
@@ -296,12 +296,12 @@ The following plots show the results of applying 1D K-means to each feature of t
 
 ### Fisher-Jenks
 
-Another modified version of the algorithm that uses dynamic programming to find the optimal partition is the Fisher-Jenks algorithm {cite}`fisher1958grouping,` for which we are missing an implementation. The FJ algorithm tests all possible **continuous** partitions (reducing the search space) and selects the one that minimizes the clusters variance. Extra point awarded for whom can provide a working well documented implementation (possible project).
+Another modified version of the algorithm that uses dynamic programming to find the optimal partition is the Fisher-Jenks algorithm {cite}`fisher1958grouping`, for which we are missing an implementation. The FJ algorithm tests all possible **continuous** partitions (reducing the search space) and selects the one that minimizes the clusters variance. Extra point awarded for whom can provide a working well documented implementation (possible project).
 
 While in general there exist ${N \choose K}$ ways of partition N points into K groups, when restricting to ordered continuous partitions the total number of possible partitions is ${N-1 \choose
 K-1}$. This is easily understood by considering the problem as choosing where to place the braking points in an ordered list. But, even with this reduction the number of possible partition is still impractical for moderate N and K.
 
-To address this, we can formulate the problem in terms of smaller sub-problems, involving finding partitions in subsets of the original data. Then reusing this work by aggregating sub-solutions into the optimal solution. This is possible, since the following lemma holds {cite}`fisher1958grouping:`
+To address this, we can formulate the problem in terms of smaller sub-problems, involving finding partitions in subsets of the original data. Then reusing this work by aggregating sub-solutions into the optimal solution. This is possible, since the following lemma holds {cite}`fisher1958grouping`:
 
 *Suboptimization Lemma*: If $A_1:A_2$ denotes a partition of a set $A$ into two disjoint subsets $A_1$ and $A_2$, if $P_1^{*}$ denotes a least squares partition of $A_1$ into two $G_1$ subsets and $P_2^{*}$ denotes a least squares partition of $A_2$ into $G_2$ subsets; then, of the class of subpartitions of $A_1:A_2$ employing $G_1$ subsets over $A_1$ and $G_2$ subsets over $A_2$ a least squares subpartition is $P_1^{*}:P_2^{*}$.
 
@@ -409,6 +409,28 @@ where the kernel K is a weighting function, the $X_i$ are the $n$ available data
 Here we will employ KDE as a non-parametric unsupervised discretizing method. First, we find the best kernel density estimate for each row of the data using CV. Then, we select the cut-points at the local minima of the KDE. You will implement this in the assignment.
 
 The following code plots the sample data sets with the found partitions:
+
+``` python
+bin_edges = [disc_kde(X)[1] for X in X_list]
+
+figure = plt.figure(figsize=(6.4*3, 4.8))
+for idx, X in enumerate(X_list):
+    ax = plt.subplot(1, len(X_list), idx+1)
+    ax.scatter(X[:, 0], X[:, 1], edgecolors='k')
+
+    ax.set_xlim(np.min(X[:,0]), np.max(X[:,0]))
+    ax.set_ylim(np.min(X[:,1]), np.max(X[:,1]))
+
+    for x in bin_edges[idx][0][1:-1]:
+        ax.axvline(x)
+    for y in bin_edges[idx][1][1:-1]:
+        ax.axhline(y)
+
+    ax.set_xticks(())
+    ax.set_yticks(())
+```
+
+![](./.ob-jupyter/5bf0b9673ee5d2948b0a34de4fd19da8bc73f61b.png)
 
 ## References
 
