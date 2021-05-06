@@ -825,7 +825,7 @@ A generalization of both Jaccard and SD is the Tversky index {cite}`enwiki:tvers
 
 ### Ochiai coefficient
 
-In biology, a categorical equivalent to the cosine similarity is the Ochiai coefficient which can be represented as {cite}`enwiki:cosine:`
+In biology, a categorical equivalent to the cosine similarity is the Ochiai coefficient which can be represented as {cite}`enwiki:cosine`:
 
 $$
 K= \frac {|A \cap B|}{\sqrt {|A|\times |B|}}
@@ -1019,7 +1019,7 @@ A usual constraint used with DTW is that of locality. This constraint imposes a 
 
 We define the LCSS of two sequence vectors as the longest subsequence shared by both vectors. A subsequence is a sub set of possibly discontinuous coordinates in the same order as in the original vector. The LCSS is a similarity function.
 
-For example {cite}`enwiki:lcss,` consider the sequences (ABCD) and (ACBAD). They have 5 length-2 common subsequences: (AB), (AC), (AD), (BD), and (CD); 2 length-3 common subsequences: (ABD) and (ACD); and no longer common subsequences. So (ABD) and (ACD) are their longest common subsequences.
+For example {cite}`enwiki:lcss`, consider the sequences (ABCD) and (ACBAD). They have 5 length-2 common subsequences: (AB), (AC), (AD), (BD), and (CD); 2 length-3 common subsequences: (ABD) and (ACD); and no longer common subsequences. So (ABD) and (ACD) are their longest common subsequences.
 
 Similarly as in the previous section, a the LCSS of two string can be build recursively from the LCSS of their prefixes. With the operator \^ signifying string concatenation,
 
@@ -1334,9 +1334,50 @@ For example, for two sets $X$ and $Y$:
 
 From {cite}`enwiki:kldiv`.
 
+The Kullback-Leiber divergence is a measure of similarity between distributions. For two distributions $P$ and $Q$, the KL divergence from $Q$ to $P$ is defined as
+
+$$
+D_{\text{KL}}(P\parallel Q)=\sum _{x\in {\mathcal {X}}}P(x)\log \left({\frac {P(x)}{Q(x)}}\right).
+$$
+
+In other words, it is the expectation of the logarithmic difference between the probabilities $P$ and $Q$, where the expectation is taken using the probabilities $P$. For continuous distributions, it takes the form
+
+$$
+D_{\text{KL}}(P \parallel Q) = \int_{-\infty}^{\infty } p(x) \log \left( \frac {p(x)}{q(x)} \right)dx
+$$
+
+where $p$ and $q$ denote the probability densities of $P$ and $Q$.
+
+Often, the distribution $P$ is the data, and the distribution $Q$ is the model. Then, the Kullback--Leibler divergence is then interpreted as the average difference of the number of bits required for encoding samples of $P$ using a code optimized for $Q$ rather than one optimized for $P$. In the context of machine learning, $D_{\text{KL}}(P\parallel Q)$ is often called the information gain achieved if $P$ would be used instead of $Q$ which is currently used. In other words, it is the amount of information lost when $Q$ is used to approximate $P$. In order to find a distribution $Q$ that is closest to $P$, we can minimize KL divergence and compute an information projection (see t-SNE later on).
+
+The KL divergence is not symmetric ($D_{\text{KL}}(P\parallel Q) \neq D_{\text{KL}}(Q\parallel P)$), nor satisfies the triangle inequality, and is, thus, not a metric.
+
+The following properties hold, among others {cite}`enwiki:kldiv`:
+
+-   $D_{\text{KL}}(P\parallel Q)\geq 0$ (follows from the Gibb\'s inequality) (Prove this.)
+-   $D_{\text{KL}}(P\parallel P) = 0$
+
+Mutual information is just the KL divergence of the joint distribution to the product of the marginal distributions, and thus, measures independence in some sense.
+
 ### Jensen-Shannon distance
 
 From {cite}`enwiki:jsdiv`.
+
+One can derive a proper metric from the KL divergence, this being the square root of the Jensen-Shannon distance, defined as
+
+$$
+{{\rm {JSD}}}(P\parallel Q)={\frac  {1}{2}}D(P\parallel M)+{\frac  {1}{2}}D(Q\parallel M)
+$$
+
+where
+
+$$
+M={\frac  {1}{2}}(P+Q)
+$$
+
+The Jensen--Shannon divergence is a method of measuring the similarity between two probability distributions. If using base logarithm, it is bounded by $0\leq {{\rm {JSD}}}(P\parallel Q)\leq 1$. For log base e, or ln, the upper bound is ln(2).
+
+The Jensen--Shannon divergence has been applied in bioinformatics and genome comparison, in protein surface comparison, in the social sciences, in the quantitative study of history, fire experiments and in machine learning (GANs). See {cite}`enwiki:jsdiv` for references.
 
 ## Proximity measures on graps
 
@@ -1385,7 +1426,7 @@ This is hard problem (It is NP-hard to match complete graphs.) The following ide
 
 -   Graph kernels: Kernel functions defined to measure similarity between graphs, such as the shortest path kernel and the random-walk kernel.
 
-For more information, see {cite}`aggarwal2015data,` Chapter 17.
+For more information, see {cite}`aggarwal2015data`, Chapter 17.
 
 ## References
 
