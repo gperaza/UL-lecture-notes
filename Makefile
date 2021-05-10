@@ -3,13 +3,17 @@ ORG = $(wildcard *.org)
 
 book: $(MD)
 	jb build ../lecture-notes/
+	cp -r Data/ _build/html/
 
 $(MD): %.md: %.org
-	pandoc --wrap=none -t markdown-fenced_code_attributes $< -o $@
-	sed -i -r 's/@([a-zA-Z0-9_:-]+,{0,1}[a-zA-Z0-9_:-]*)/{cite}`\1`/' $@
+	pandoc --wrap=none -t markdown-fenced_code_attributes+pipe_tables-simple_tables $< -o $@
+	sed -i -r 's/@([a-zA-Z0-9_:-]+,{0,1}[a-zA-Z0-9_:-]*)/{cite}`\1`/g' $@
+	sed -i -r 's/,`/`,/g' $@
+	sed -i -r 's/:`/`:/g' $@
 	sed -i -r 's/\[bibliography:.*\]\(bibliography:.*\)/```{bibliography}\n:style: unsrt\n:filter: docname in docnames\n```/' $@
 	sed -i -r 's/\[bibliographystyle:.*\]\(bibliographystyle:.*\)//' $@
 	sed -i -r 's/\[file:(.*)\]\((.*)\)/<a href="\2">\1<\/a>/g' $@
+	sed -i -r 's/\[(.*)\]\((.*\.csv)\)/<a href="\2">\1<\/a>/g' $@
 	sed -i -r 's/```\{=latex\}/```\{math\}/' $@
 	sed -i -r 's/\[(.*)\]\((.*)\.org\)/[\1\]\(\2.md\)/g' $@
 	sed -i -r 's/!\[(.+)]\((.*)\.(PNG|png)\)/```{figure} \2.\3\n\1\n```/g' $@

@@ -3,3 +3,6 @@ auto/
 ltximg/
 .ipynb_checkpoints/
 .ob-jupyter/
+Data/
+cache/
+*.org
