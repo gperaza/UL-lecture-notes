@@ -315,7 +315,7 @@
                 
   <div class="section" id="data-normalization">
 <h1>Data Normalization<a class="headerlink" href="#data-normalization" title="Permalink to this headline">¶</a></h1>
-<p>In this notebook we’ll explore data preprocessing techniques through the California housing dataset available from sklearn. We’ll reproduce results found on the sklearn documentation <span id="id1">[<a class="reference internal" href="#id7"><span>1</span></a>,<span></span>]</span> though we will be using our own functions to understand how each method works. For production its a good idea to use the sklearn methods as they provide a convenient API for ML pipelines. Links to skleran relevant docs can be found at the end of the notebook.</p>
+<p>In this notebook we’ll explore data preprocessing techniques through the California housing dataset available from sklearn. We’ll reproduce results found on the sklearn documentation <span id="id1">[<a class="reference internal" href="#id7"><span>1</span></a>]</span>, though we will be using our own functions to understand how each method works. For production its a good idea to use the sklearn methods as they provide a convenient API for ML pipelines. Links to skleran relevant docs can be found at the end of the notebook.</p>
 <p>We begin with our standard imports:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
@@ -439,6 +439,8 @@ x' = \frac{x - q_2}{q_3 - q_1}
 <h2>TO-DO<a class="headerlink" href="#to-do" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>[ ] Include examples using sklearn methods for comparison.</p></li>
+<li><p>[ ] Discuss power transforms (box-cox, yeo-johnson)</p></li>
+<li><p>[ ] General distribution matching (quantile transform, equalization)</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>

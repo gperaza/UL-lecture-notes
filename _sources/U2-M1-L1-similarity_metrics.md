@@ -746,8 +746,8 @@ For asymmetric natural binary vectors, for which the 0s do not carry the same am
 def smc(x,y, **kwargs):
     one_hot = kwargs['one_hot']
     if not one_hot:
-        matches = (xi == yi).sum()
-        return matcher/len(x)
+        matches = (x == y).sum()
+        return matches/len(x)
     else:
         return x @ y / (x.sum() + y.sum() - x @ y)
 
@@ -760,6 +760,19 @@ plot_prox(D, mds=True, labels=yc)
 ```
 
 ![](./.ob-jupyter/f1ffc63445d982b896f6ef92ed36ec4184927d70.png)
+
+In a similar manner to how the Mahalanobis distance takes into account properties of the whole data set, we can weight the SMC for categorical data so that matches on unusual values contribute more to the similarity than matches on usual non-informative values. One way to this is to weight the similarity of a single feature by the **inverse occurrence frequency** of the feature in the whole data set:
+
+```{math}
+\begin{align}
+SMC_i =
+\begin{cases}
+\frac{1}{f_i(x_i)^2} & \text{if $x_i=y_i$}\\
+0 & \text{otherwise}
+\end{cases}
+\end{align}
+```
+where $f_i$ is the relative frequency of class $x_i$ in feature $i$.
 
 ### Jaccard or Tanimoto coefficient (JC)
 
@@ -908,49 +921,6 @@ Edit distance finds applications in computational biology and natural language p
 A common algorithm that implements the Levenshtein Distance is the Wagner--Fischer algorithm {cite}`enwiki:wagnerfisher`.
 
 ``` python
-def leveshtein_d(src, dest):
-    n = len(src)
-    m = len(dest)
-
-    if type(src) is str:
-        src = list(src)
-    if type(dest) is str:
-        dest = list(dest)
-
-    # for all i and j, d[i,j] will hold the Levenshtein distance
-    # between the first i characters of src
-    # and the first j characters of dest
-    # note that d has (n+1)*(m+1) values to account for the
-    # empty string
-
-    D = np.zeros((n+1,m+1))
-
-    # source prefixes can be transformed into empty string by
-    # dropping all characters, i deletions
-    D[:, 0] = np.arange(n+1)
-
-    # target prefixes can be reached from empty source prefix
-    # by inserting every character, j intertions
-    D[0, :] = np.arange(m+1)
-
-    # Build strings recursively from prefixes
-    for i, j in product(range(1, n+1), range(1, m+1)):
-        # Deletion distance, the distance between src[:i], dest[:j]
-        # by deleting a the ith character of src
-        del_d = D[i-1, j] + 1
-        # Insertion distance, the distance between src[:i], dest[:j]
-        # by interting the jth character of dest
-        ins_d = D[i, j-1] + 1
-        #Subs distance, the distance between src[:i], dest[:j]
-        # by substituting the ith character of src
-        # by the jth character of dest, no cost if already equal
-        subs_d = D[i-1, j-1] + int(src[i-1] != dest[j-1])
-        D[i,j] = min(del_d, ins_d, subs_d)
-    # print(D)
-    return D[n,m]
-```
-
-``` python
 leveshtein_d('sitting', 'kitten')
 ```
 
@@ -986,29 +956,6 @@ We can fill the $|x|\times |y|$ matrix recursively, to find all possible distanc
 
 An implementation using the Manhattan distance is:
 
-``` python
-def dtw_d(x, y):
-    n = len(x)
-    m = len(y)
-
-    # The matrix will hold initial values D[0,j], D[i,0]
-    # which mean nothing (distance to the empty vector)
-    # so set them to infty
-    D = np.full((n+1,m+1), np.inf)
-
-    # Intialize D[0,0]
-    D[0, 0] = 0
-
-    for i, j in product(range(1, n+1), range(1, m+1)):
-        D[i, j] = np.abs(x[i-1] - y[j-1]) + \
-            min(D[i, j-1], D[i-1, j], D[i-1, j-1])
-
-    # print(D)
-    return D[n, m]
-
-dtw_d([1,2,3], [1,2,3,5])
-```
-
 ``` example
 2.0
 ```
@@ -1028,49 +975,6 @@ $$
 $$
 
 To find the LCS of $X_{i}$ and $Y_j$, compare $x_{i}$ and $y_{j}$. If they are equal, then the sequence ${\mathit {LCS}}(X_{i-1},Y_{j-1})$ is extended by that element, $x_{i}$. If they are not equal, then the longer of the two sequences, ${\mathit {LCS}}(X_{i},Y_{j-1})$, and ${\mathit {LCS}}(X_{i-1},Y_{j})$, is retained. (If they are the same length, but not identical, then both are retained.) Not that even if either $x_{i}$ or $y_{i}$ have matched before, and they match again, it does not hurt to move the match to the new trailing elements. This is akin to either skip the previous match, or skip the current match. A worked out example can be found on {cite}`enwiki:lcss`.
-
-``` python
-def lccs_d(x, y):
-    n = len(x)
-    m = len(y)
-
-    if type(x) is str:
-        x = list(x)
-    if type(y) is str:
-        y = list(y)
-
-    # The matrix will hold initial values D[0,j], D[i,0]
-    # which mean nothing (distance to the empty vector)
-    # so set them to 0
-    D = np.zeros((n+1,m+1))
-
-    for i, j in product(range(1, n+1), range(1, m+1)):
-        if x[i-1] == y[j-1]:
-            D[i, j] = 1 + D[i-1, j-1]
-        else:
-            D[i, j] = max(D[i, j-1], D[i-1, j])
-
-
-    # Apply traceback to find set LCCS
-    def backtrack(i, j):
-        if i == 0 or j == 0:
-            return set({()})
-        if x[i-1] == y[j-1]:
-            return {tuple(list(s) + [x[i-1]])
-                    for s in backtrack(i-1, j-1)}
-        R = set({})
-        if D[i,j-1] >= D[i-1,j]:
-            R = backtrack(i, j-1)
-        if D[i-1,j] >= D[i,j-1]:
-            R = R | backtrack(i-1, j)
-        return R
-
-    lcs_set = backtrack(n, m)
-
-    return D[n, m], lcs_set
-
-lccs_d('GAC','AGCAT')
-```
 
 |     |                     |
 |-----|---------------------|

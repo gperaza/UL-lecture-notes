@@ -1542,8 +1542,8 @@ SMC_{oh}(\vec{x},\vec{y}) = \frac{\vec{x}^T\vec{y}}{D_{orignal}}
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">smc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">one_hot</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;one_hot&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">one_hot</span><span class="p">:</span>
-        <span class="n">matches</span> <span class="o">=</span> <span class="p">(</span><span class="n">xi</span> <span class="o">==</span> <span class="n">yi</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">matcher</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">matches</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">matches</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">@</span> <span class="n">y</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">x</span> <span class="o">@</span> <span class="n">y</span><span class="p">)</span>
 
@@ -1556,6 +1556,16 @@ SMC_{oh}(\vec{x},\vec{y}) = \frac{\vec{x}^T\vec{y}}{D_{orignal}}
 </pre></div>
 </div>
 <p><img alt="" src="_images/f1ffc63445d982b896f6ef92ed36ec4184927d70.png" /></p>
+<p>In a similar manner to how the Mahalanobis distance takes into account properties of the whole data set, we can weight the SMC for categorical data so that matches on unusual values contribute more to the similarity than matches on usual non-informative values. One way to this is to weight the similarity of a single feature by the <strong>inverse occurrence frequency</strong> of the feature in the whole data set:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+SMC_i =
+\begin{cases}
+\frac{1}{f_i(x_i)^2} &amp; \text{if $x_i=y_i$}\\
+0 &amp; \text{otherwise}
+\end{cases}
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(f_i\)</span> is the relative frequency of class <span class="math notranslate nohighlight">\(x_i\)</span> in feature <span class="math notranslate nohighlight">\(i\)</span>.</p>
 </div>
 <div class="section" id="jaccard-or-tanimoto-coefficient-jc">
 <h3>Jaccard or Tanimoto coefficient (JC)<a class="headerlink" href="#jaccard-or-tanimoto-coefficient-jc" title="Permalink to this headline">¶</a></h3>
@@ -1683,48 +1693,6 @@ d_{H,oh} = \vec{x}^T \vec{y} - (|\vec{x}| + |\vec{y}| - \vec{x}^T\vec{y})
 </ol>
 <p>Edit distance finds applications in computational biology and natural language processing.</p>
 <p>A common algorithm that implements the Levenshtein Distance is the Wagner–Fischer algorithm <span id="id11">[<a class="reference internal" href="#id61"><span>10</span></a>]</span>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">leveshtein_d</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">src</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">dest</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
-
-    <span class="c1"># for all i and j, d[i,j] will hold the Levenshtein distance</span>
-    <span class="c1"># between the first i characters of src</span>
-    <span class="c1"># and the first j characters of dest</span>
-    <span class="c1"># note that d has (n+1)*(m+1) values to account for the</span>
-    <span class="c1"># empty string</span>
-
-    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-
-    <span class="c1"># source prefixes can be transformed into empty string by</span>
-    <span class="c1"># dropping all characters, i deletions</span>
-    <span class="n">D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1"># target prefixes can be reached from empty source prefix</span>
-    <span class="c1"># by inserting every character, j intertions</span>
-    <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1"># Build strings recursively from prefixes</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
-        <span class="c1"># Deletion distance, the distance between src[:i], dest[:j]</span>
-        <span class="c1"># by deleting a the ith character of src</span>
-        <span class="n">del_d</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="c1"># Insertion distance, the distance between src[:i], dest[:j]</span>
-        <span class="c1"># by interting the jth character of dest</span>
-        <span class="n">ins_d</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="c1">#Subs distance, the distance between src[:i], dest[:j]</span>
-        <span class="c1"># by substituting the ith character of src</span>
-        <span class="c1"># by the jth character of dest, no cost if already equal</span>
-        <span class="n">subs_d</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">dest</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">del_d</span><span class="p">,</span> <span class="n">ins_d</span><span class="p">,</span> <span class="n">subs_d</span><span class="p">)</span>
-    <span class="c1"># print(D)</span>
-    <span class="k">return</span> <span class="n">D</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">]</span>
-</pre></div>
-</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">leveshtein_d</span><span class="p">(</span><span class="s1">&#39;sitting&#39;</span><span class="p">,</span> <span class="s1">&#39;kitten&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1753,28 +1721,6 @@ DTW(\vec{x}_{D=i-1},\vec{y}_{D=j-1}) &amp; \text{repeat neither}
 \end{align}\end{split}\]</div>
 <p>We can fill the <span class="math notranslate nohighlight">\(|x|\times |y|\)</span> matrix recursively, to find all possible distances, then extract the term corresponding to the full vectors.</p>
 <p>An implementation using the Manhattan distance is:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dtw_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="c1"># The matrix will hold initial values D[0,j], D[i,0]</span>
-    <span class="c1"># which mean nothing (distance to the empty vector)</span>
-    <span class="c1"># so set them to infty</span>
-    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
-
-    <span class="c1"># Intialize D[0,0]</span>
-    <span class="n">D</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
-        <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> \
-            <span class="nb">min</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="c1"># print(D)</span>
-    <span class="k">return</span> <span class="n">D</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">]</span>
-
-<span class="n">dtw_d</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
-</pre></div>
-</div>
 <div class="highlight-example notranslate"><div class="highlight"><pre><span></span>2.0
 </pre></div>
 </div>
@@ -1790,48 +1736,6 @@ DTW(\vec{x}_{D=i-1},\vec{y}_{D=j-1}) &amp; \text{repeat neither}
 {\displaystyle {\mathit {LCS}}(X_{i},Y_{j})={\begin{cases}\emptyset &amp;{\mbox{if }}i=0{\mbox{ or }}j=0\\{\mathit {LCS}}(X_{i-1},Y_{j-1}){\hat {}}x_{i}&amp;{\mbox{if }}i,j&gt;0{\mbox{ and }}x_{i}=y_{j}\\\operatorname {\max } \{{\mathit {LCS}}(X_{i},Y_{j-1}),{\mathit {LCS}}(X_{i-1},Y_{j})\}&amp;{\mbox{if }}i,j&gt;0{\mbox{ and }}x_{i}\neq y_{j}.\end{cases}}}
 \end{split}\]</div>
 <p>To find the LCS of <span class="math notranslate nohighlight">\(X_{i}\)</span> and <span class="math notranslate nohighlight">\(Y_j\)</span>, compare <span class="math notranslate nohighlight">\(x_{i}\)</span> and <span class="math notranslate nohighlight">\(y_{j}\)</span>. If they are equal, then the sequence <span class="math notranslate nohighlight">\({\mathit {LCS}}(X_{i-1},Y_{j-1})\)</span> is extended by that element, <span class="math notranslate nohighlight">\(x_{i}\)</span>. If they are not equal, then the longer of the two sequences, <span class="math notranslate nohighlight">\({\mathit {LCS}}(X_{i},Y_{j-1})\)</span>, and <span class="math notranslate nohighlight">\({\mathit {LCS}}(X_{i-1},Y_{j})\)</span>, is retained. (If they are the same length, but not identical, then both are retained.) Not that even if either <span class="math notranslate nohighlight">\(x_{i}\)</span> or <span class="math notranslate nohighlight">\(y_{i}\)</span> have matched before, and they match again, it does not hurt to move the match to the new trailing elements. This is akin to either skip the previous match, or skip the current match. A worked out example can be found on <span id="id14">[<a class="reference internal" href="#id64"><span>11</span></a>]</span>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lccs_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="c1"># The matrix will hold initial values D[0,j], D[i,0]</span>
-    <span class="c1"># which mean nothing (distance to the empty vector)</span>
-    <span class="c1"># so set them to 0</span>
-    <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
-        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">])</span>
-
-
-    <span class="c1"># Apply traceback to find set LCCS</span>
-    <span class="k">def</span> <span class="nf">backtrack</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">set</span><span class="p">({()})</span>
-        <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
-                    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">backtrack</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">)}</span>
-        <span class="n">R</span> <span class="o">=</span> <span class="nb">set</span><span class="p">({})</span>
-        <span class="k">if</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]:</span>
-            <span class="n">R</span> <span class="o">=</span> <span class="n">backtrack</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">D</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="n">R</span> <span class="o">=</span> <span class="n">R</span> <span class="o">|</span> <span class="n">backtrack</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">R</span>
-
-    <span class="n">lcs_set</span> <span class="o">=</span> <span class="n">backtrack</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">D</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">],</span> <span class="n">lcs_set</span>
-
-<span class="n">lccs_d</span><span class="p">(</span><span class="s1">&#39;GAC&#39;</span><span class="p">,</span><span class="s1">&#39;AGCAT&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
 <table class="colwidths-auto table">
 <thead>
 <tr class="row-odd"><th class="head"><p></p></th>

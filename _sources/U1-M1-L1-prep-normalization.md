@@ -1,6 +1,6 @@
 # Data Normalization
 
-In this notebook we\'ll explore data preprocessing techniques through the California housing dataset available from sklearn. We\'ll reproduce results found on the sklearn documentation {cite}`sklearn_63,` though we will be using our own functions to understand how each method works. For production its a good idea to use the sklearn methods as they provide a convenient API for ML pipelines. Links to skleran relevant docs can be found at the end of the notebook.
+In this notebook we\'ll explore data preprocessing techniques through the California housing dataset available from sklearn. We\'ll reproduce results found on the sklearn documentation {cite}`sklearn_63`, though we will be using our own functions to understand how each method works. For production its a good idea to use the sklearn methods as they provide a convenient API for ML pipelines. Links to skleran relevant docs can be found at the end of the notebook.
 
 We begin with our standard imports:
 
@@ -138,3 +138,5 @@ You may compare your plots to the ones found here to validate your answers.
 ## TO-DO
 
 -   \[ \] Include examples using sklearn methods for comparison.
+-   \[ \] Discuss power transforms (box-cox, yeo-johnson)
+-   \[ \] General distribution matching (quantile transform, equalization)
