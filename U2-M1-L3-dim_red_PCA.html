@@ -52,6 +52,8 @@
         const thebe_selector_output = ".output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Freedman-Diaconis Rule" href="freedman-diaconis.html" />
@@ -301,6 +303,28 @@
   <a class="reference internal nav-link" href="#principal-component-analysis-pca">
    Principal Component Analysis (PCA)
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pca-through-variance-maximization">
+     PCA through variance maximization
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#minimizing-the-least-square-reconstruction-error">
+     Minimizing the least-square reconstruction error
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#maximizing-the-projected-dispersion-variance">
+     Maximizing the projected dispersion (variance)
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#considerations">
+     Considerations
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
@@ -328,11 +352,119 @@
 <div class="section" id="principal-component-analysis-pca">
 <h2>Principal Component Analysis (PCA)<a class="headerlink" href="#principal-component-analysis-pca" title="Permalink to this headline">¶</a></h2>
 <p>The most popular method for feature extraction is Principal Component Analysis (PCA). In simple terms, PCA searches for a rotation (orthogonal linear transformation) of the axes in data space (features) in which the transformed features are uncorrelated, i.e., the rotated covariance matrix is diagonal. The diagonal entries of the covariance matrix are, then, the variance along each of the new axes. Finally, dimensionality reduction is performed by dropping the features with the lowest variance, under the assumption that those are the least informative, or contribute less to the reconstruction error.</p>
-<script src="pca-rot.js" id="65f7bd09-d4f1-469e-b724-4de2189c2e59"></script><p>There are several ways to justify that specific transformation.</p>
+<script src="pca-rot.js" id="65f7bd09-d4f1-469e-b724-4de2189c2e59"></script><div class="section" id="pca-through-variance-maximization">
+<h3>PCA through variance maximization<a class="headerlink" href="#pca-through-variance-maximization" title="Permalink to this headline">¶</a></h3>
+<p>There are several ways to justify that specific transformation. Let’s to approach the problem directly, and find the set of orthogonal directions for which the variance is maximized. We will call this directions the <strong>loading vectors</strong>, the projections onto them the <strong>principal components</strong>, and we order them from larges variance to smallest. The first principal component is, thus, the direction along which the variance is larger.</p>
+<p>To find the variance along an arbitrary direction <span class="math notranslate nohighlight">\(w\)</span>, we first take the projection of each centered observation along <span class="math notranslate nohighlight">\(w\)</span>, then take the variance. During this lecture, we will denote the centered data matrix by <span class="math notranslate nohighlight">\(X\)</span> to simplify notation.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+Var(w^T x) =&amp; \frac{1}{n}\sum_i \left(w^T(x_i - \mu)\right)^{2}\\
+=&amp; \frac{1}{n}\sum_i w^T \tilde{x}_i \tilde{x}_i^T w\\
+=&amp; \frac{1}{n} w^T \sum_i\left(\tilde{x}_i \tilde{x}_i^T\right) w\\
+=&amp; \frac{1}{n} w^T X_c^T X_c w\\
+=&amp;  w^T \Sigma  w
+\end{align}\end{split}\]</div>
+<p>So, to find the first principal component, we need to solve</p>
+<div class="math notranslate nohighlight">
+\[
+w^{*} = \underset{\mid w \mid=1}{\operatorname{argmax}}\ w^T\Sigma w
+\]</div>
+<p>Which is easier than it seems <span id="id1">[<a class="reference internal" href="#id50"><span>1</span></a>]</span>. Let’s assume <span class="math notranslate nohighlight">\(\Sigma\)</span> is already diagonal, with entries <span class="math notranslate nohighlight">\(\lambda_i\)</span> along the diagonal, and <span class="math notranslate nohighlight">\(\lambda_1 \geq \ldots \geq \lambda_d\)</span>. For any unit vector <span class="math notranslate nohighlight">\(w\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+w^T \Sigma w = \sum_{l,i,j} w_i x_{li} x_{lj} w_j
+= \sum_l \lambda_{l} w_i^2 \leq \lambda_1\sum w_i^2 = \lambda_1 = e_1^T\Sigma e_1
+\]</div>
+<p>Then it’s easy to see that <span class="math notranslate nohighlight">\(w^* = e_i\)</span>, the first basis versor. In the general case of a non-diagonal matrix <span class="math notranslate nohighlight">\(\Sigma\)</span>, we can always apply the eigen-decomposition</p>
+<div class="math notranslate nohighlight">
+\[
+\Sigma = W \Lambda W^T
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(W\)</span> is the orthogonal matrix with the eigenvectors of <span class="math notranslate nohighlight">\(\Sigma\)</span> as columns, and <span class="math notranslate nohighlight">\(\Lambda\)</span> is a diagonal matrix with . So, plugin the decomposition into the previous solution</p>
+<div class="math notranslate nohighlight">
+\[
+(e_1^T W^T) \Sigma (W e_1)
+\]</div>
+<p>from which we obtain the general loading <span class="math notranslate nohighlight">\(w^* = W e_1\)</span>, the first column of <span class="math notranslate nohighlight">\(W\)</span>, i.e., the first eigenvector of <span class="math notranslate nohighlight">\(\Sigma\)</span>.</p>
+<p>For the next loading vectors and components, we add the restriction that the new loading must be perpendicular to the previously vectors.</p>
+<div class="math notranslate nohighlight">
+\[
+w_k = \underset{\mid w \mid=1, w \perp w_1,...,w_{k-1}}{\operatorname{argmax}}\ w^T\Sigma w
+\]</div>
+<p>Finding <span class="math notranslate nohighlight">\(w_{k}\)</span> is analogous to finding <span class="math notranslate nohighlight">\(w_1\)</span>, working in the reduced space after removing the previous <span class="math notranslate nohighlight">\(k-1\)</span>, dimensions. So the solution must be also an eigenvector of <span class="math notranslate nohighlight">\(\Sigma\)</span>. In fact, the whole set of eigenvectors of <span class="math notranslate nohighlight">\(\Sigma\)</span> define the directions of the principal components, and the eigenvalues are the variances along that very directions. As required, all the eigenvalues are positive, since the covariance matrix is positive semi-definite.</p>
+<p>The principal components of a centered observation vector <span class="math notranslate nohighlight">\(x_c\)</span> are the coordinates of that vector in the space spanned by the eigenvectors, <span class="math notranslate nohighlight">\(w_i^T x_c\)</span>, with the projected vector given by <span class="math notranslate nohighlight">\(W^T x_{c}\)</span>, and the variance along that direction given by the corresponding eigenvalue <span class="math notranslate nohighlight">\(\lambda\)</span>. The data matrix of the principal components is then the rotated centered data matrix,</p>
+<div class="math notranslate nohighlight">
+\[
+X_{PC} = X_c W
+\]</div>
+<p>To summarize, from an optimization point of view, we seek to maximize <span class="math notranslate nohighlight">\(w^T\Sigma w\)</span> subject to the restriction <span class="math notranslate nohighlight">\(w^T w = 1\)</span>. Using Lagrange multipliers, we need to maximize <span class="math notranslate nohighlight">\(w^T\Sigma w - \lambda (w^T w - 1)\)</span>. Differentiating with respect to <span class="math notranslate nohighlight">\(w\)</span> and equating the derivative to 0, we obtain</p>
+<div class="math notranslate nohighlight">
+\[
+\Sigma w - \lambda w = 0 \iff \Sigma w = \lambda w
+\]</div>
+<p>which is precisely the eigenproblem equation.</p>
+<p>In the previous derivation we focused on PCA as a linear transformation that identifies directions of maximal variance. Next, we explore two derivations focusing on identifying useful sub-spaces to perform dimensionality reduction.</p>
+</div>
+<div class="section" id="minimizing-the-least-square-reconstruction-error">
+<h3>Minimizing the least-square reconstruction error<a class="headerlink" href="#minimizing-the-least-square-reconstruction-error" title="Permalink to this headline">¶</a></h3>
+<p>In the previous section, a natural interpretation of the procedure is that of fitting a multivariate Gaussian, defined by <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\Sigma\)</span> to the data. The idea here is to reinterpret the same process as of fitting a linear model to the data, where the fitted hyperplane is of dimension <span class="math notranslate nohighlight">\(q&lt;d\)</span>. We follow the discussion in <span id="id2">[<a class="reference internal" href="#id51"><span>2</span></a>]</span>, section 14.5.</p>
+<p>The equation of the fitting hyper-plane of dimension <span class="math notranslate nohighlight">\(q&lt;d\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+f(\lambda) = \mu + W_{:q}\lambda,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\lambda\)</span> is the q-dimensional vector with the reduced parametric coordinates of a point in the plane, <span class="math notranslate nohighlight">\(\mu\)</span> is the mean vector, a point in the plane, and <span class="math notranslate nohighlight">\(W_{:q}\)</span> is an orthogonal matrix with <span class="math notranslate nohighlight">\(q\)</span> unit vectors as columns. The <span class="math notranslate nohighlight">\(q\)</span> columns of <span class="math notranslate nohighlight">\(W_{:q}\)</span> are vectors parallel to the plane, so the product <span class="math notranslate nohighlight">\(W_{:q}\lambda\)</span> is a linear combination of those vectors that explore the plane as we change the values of <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
+<p>To fit the model, we seek to minimize the <strong>reconstruction</strong> error, by optimizing for <span class="math notranslate nohighlight">\(\mu\)</span>, the set of coordinate vectors <span class="math notranslate nohighlight">\(\{\lambda_i\}\)</span> and the matrix <span class="math notranslate nohighlight">\(W_{:q}\)</span></p>
+<div class="math notranslate nohighlight">
+\[
+\underset{\mu,\{\lambda_i\},W_{:q}}{\min}
+\sum_{i=1}^n \left | x_i - \mu - W_{:q} \lambda_i \right |^2
+\]</div>
+<p>Derivating with respect to <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\lambda_{i}\)</span> allows us to optimize jointly for (exercise)</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\mu^{*} =&amp; \bar{x}\\
+\lambda_i^{*} =&amp; W_{:q}^T(x_i - \bar{x}).
+\end{align}\end{split}\]</div>
+<p>As you may have already guessed, the optimal matrix <span class="math notranslate nohighlight">\(W_{:q}\)</span> will turn out to be the matrix of eigenvectors of <span class="math notranslate nohighlight">\(\Sigma\)</span>. This makes the <span class="math notranslate nohighlight">\(\lambda_i\)</span> the first <span class="math notranslate nohighlight">\(q\)</span> principal components of <span class="math notranslate nohighlight">\(x\)</span>. Now we find <span class="math notranslate nohighlight">\(W_{:q}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{W_{q:}}{\min} \sum_i^n
+\left |
+\tilde{x}_i - W_{:q}W_{:q}^T\tilde{x}_i
+\right |^2
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\tilde{x}_i = x_i - \bar{x}\)</span>. The <span class="math notranslate nohighlight">\(d\times d\)</span> matrix <span class="math notranslate nohighlight">\(W W^T\)</span> is a projection matrix. It first projects each point <span class="math notranslate nohighlight">\(\tilde{x}_i\)</span> into the hyper-plane by obtaining each component along each column of <span class="math notranslate nohighlight">\(W\)</span>. This a q-dimensional representation in the sub-space. Next, we move back into the original d-dimensional space by multiplying by <span class="math notranslate nohighlight">\(W\)</span>, effectively taking a linear combination of the unit vectors, with each projected component as the weights.</p>
+<p>Exercise: Show the minimizing the reconstruction error is equivalent as maximizing the variance along the first q directions of <span class="math notranslate nohighlight">\(W_{:q}\)</span>. Use matrix algebra to transform into equivalent expressions.</p>
+<p>The above exercise shows that the solution is the same as in the previous section.</p>
+<p>We can connect the solution with another matrix decomposition, namelu the Singular Value Decomposition (SVD) of the data matrix <span class="math notranslate nohighlight">\(X\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+X = UDW^T
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(U\)</span> and <span class="math notranslate nohighlight">\(V\)</span> are orthonormal matrices</p>
+</div>
+<div class="section" id="maximizing-the-projected-dispersion-variance">
+<h3>Maximizing the projected dispersion (variance)<a class="headerlink" href="#maximizing-the-projected-dispersion-variance" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="considerations">
+<h3>Considerations<a class="headerlink" href="#considerations" title="Permalink to this headline">¶</a></h3>
+<p>It is a good idea to standardize the data matrix before applying PCA, since the particular choice of units may artificially inflate one feature variance with respect to others, thus biasing the first principal component along that direction. This is equivalent to diagonalize the correlation matrix.</p>
+<p>Also, components associated with the smallest eigenvalues (variances), especially is the difference with previous eigenvalues is large, indicate possible linear relations in the data set. This small variance components can be regarded as random noise on top of a linear model.</p>
+</div>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="id1"></span></div>
+<p id="id3"><dl class="citation">
+<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Brett Bernstein. Lecture 13: principal component analysis. URL: <a class="reference external" href="https://davidrosenberg.github.io/mlcourse/Archive/2017/Lectures/13-PCA-Notes_sol.pdf">https://davidrosenberg.github.io/mlcourse/Archive/2017/Lectures/13-PCA-Notes_sol.pdf</a> (visited on 2021-04-21).</p>
+</dd>
+<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Trevor Hastie, Robert Tibshirani, and Jerome Friedman. <em>The elements of statistical learning: data mining, inference, and prediction</em>. Springer Science &amp; Business Media, 2009.</p>
+</dd>
+</dl>
+</p>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
