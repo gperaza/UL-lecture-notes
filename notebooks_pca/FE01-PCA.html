@@ -1,0 +1,1242 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Principal Component Analysis &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../index.html">
+  
+  <img src="../_static/UPY-completo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Lecture Notes in Unsupervised and Reinforcement Learning</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../intro.html">
+   Welcome!
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Unit 1 - Unsupervised Preprocessing
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../U1-M1-L1-prep-normalization.html">
+   Data Normalization
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U1-M1-L1-prep-normalization.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../U1-M1-L2-prep-discretization.html">
+   Discretization
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U1-M1-L2-prep-discretization.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../U1-M1-L3-unsup-outlier-detection.html">
+   Anomaly and Outlier Detection
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U1-M1-L3-prep-outlier-detection.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Unit 2 - Dimensionality Reduction
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="../U2-M1-L1-similarity_metrics.html">
+   (Dis)similarity metrics
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U2-M1-L1-similarity_metrics.html">
+     <strong>
+      Warning
+     </strong>
+     :
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-1-2-pt">
+     Exercise 1 (2 pt)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-2-3-pt">
+     Exercise 2 (3 pt)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-3-4-pts">
+     Exercise 3 (4 pts)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-4-1-pt">
+     Exercise 4 (1 pt)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-5-ungraded">
+     Exercise 5 (ungraded)
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../U2-M1-L3-dim_red_PCA.html">
+   Dimensionality Reduction and PCA
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../freedman-diaconis.html">
+   Freedman-Diaconis Rule
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/notebooks_pca/FE01-PCA.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/gperaza/UL-lecture-notes"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/gperaza/UL-lecture-notes/issues/new?title=Issue%20on%20page%20%2Fnotebooks_pca/FE01-PCA.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/gperaza/UL-lecture-notes/master?urlpath=tree/docs/notebooks_pca/FE01-PCA.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   Principal Component Analysis
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-dataset">
+     Example Dataset
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#implementing-pca">
+     Implementing PCA
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dimensionality-reduction-with-pca">
+     Dimensionality Reduction with PCA
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#projecting-the-data-onto-the-principal-components">
+       Projecting the data onto the principal components
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#reconstructing-an-approximation-of-the-data">
+       Reconstructing an approximation of the data
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#face-image-dataset">
+     Face Image Dataset
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#pca-on-faces">
+       PCA on Faces
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#dimensionality-reduction">
+       Dimensionality Reduction
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pca-for-visualization">
+     PCA for visualization
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-biplot">
+     The biplot
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#limitations-of-standard-pca">
+     Limitations of Standard PCA
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="principal-component-analysis">
+<h1>Principal Component Analysis<a class="headerlink" href="#principal-component-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>In this exercise, you will use principal component analysis to find a low-dimensional representation of face images.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Principal Component Analysis<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>In this exercise, you will use principal component analysis (PCA) to perform dimensionality reduction. You will first experiment with an example 2D dataset to get intuition on how PCA works, and then use it on a bigger dataset of 5000 face image dataset.</p>
+<div class="section" id="example-dataset">
+<h3>Example Dataset<a class="headerlink" href="#example-dataset" title="Permalink to this headline">¶</a></h3>
+<p>To help you understand how PCA works, you will first start with a 2D dataset which has one direction of large variation and one of smaller variation. The cell below will plot the training data, also shown in here:</p>
+<p>In this part of the exercise, you will visualize what happens when you use PCA to reduce the data from 2D to 1D. In practice, you might want to reduce data from 256 to 50 dimensions, say; but using lower dimensional data in this example allows us to visualize the algorithms better.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the dataset into the variable X </span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;Data/data1.csv&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="c1">#  Visualize the example dataset</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_3_0.png" src="../_images/FE01-PCA_3_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="implementing-pca">
+<h3>Implementing PCA<a class="headerlink" href="#implementing-pca" title="Permalink to this headline">¶</a></h3>
+<p>In this part of the exercise, you will implement PCA. PCA consists of two computational steps:</p>
+<ol class="simple">
+<li><p>Compute the covariance matrix of the data.</p></li>
+<li><p>Use SVD (in python we use numpy’s implementation <code class="docutils literal notranslate"><span class="pre">np.linalg.svd</span></code>) to compute the eigenvectors <span class="math notranslate nohighlight">\(U_1\)</span>, <span class="math notranslate nohighlight">\(U_2\)</span>, <span class="math notranslate nohighlight">\(\dots\)</span>, <span class="math notranslate nohighlight">\(U_n\)</span>. These will correspond to the principal components of variation in the data.</p></li>
+</ol>
+<p>First, you should compute the covariance matrix of the data, which is given by:</p>
+<div class="math notranslate nohighlight">
+\[ \Sigma = \frac{1}{m} X^T X\]</div>
+<p>where <span class="math notranslate nohighlight">\(X\)</span> is the data matrix with examples in rows, and <span class="math notranslate nohighlight">\(m\)</span> is the number of examples. Note that <span class="math notranslate nohighlight">\(\Sigma\)</span> is a <span class="math notranslate nohighlight">\(n \times n\)</span> matrix and not the summation operator.</p>
+<p>After computing the covariance matrix, you can run SVD on it to compute the principal components. In python and <code class="docutils literal notranslate"><span class="pre">numpy</span></code> (or <code class="docutils literal notranslate"><span class="pre">scipy</span></code>), you can run SVD with the following command: <code class="docutils literal notranslate"><span class="pre">U,</span> <span class="pre">S,</span> <span class="pre">V</span> <span class="pre">=</span> <span class="pre">np.linalg.svd(Sigma)</span></code>, where <code class="docutils literal notranslate"><span class="pre">U</span></code> will contain the principal components and <code class="docutils literal notranslate"><span class="pre">S</span></code> will contain a diagonal matrix. Note that the <code class="docutils literal notranslate"><span class="pre">scipy</span></code> library also has a similar function to compute SVD <code class="docutils literal notranslate"><span class="pre">scipy.linalg.svd</span></code>. The functions in the two libraries use the same C-based library (LAPACK) for the SVD computation, but the <code class="docutils literal notranslate"><span class="pre">scipy</span></code> version provides more options and arguments to control SVD computation. In this exercise, we will stick with the <code class="docutils literal notranslate"><span class="pre">numpy</span></code> implementation of SVD.</p>
+<p>Complete the code in the following cell to implemente PCA.
+<a id="pca"></a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pca</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Run principal component analysis.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array_like</span>
+<span class="sd">        The dataset to be used for computing PCA. It has dimensions (m x n)</span>
+<span class="sd">        where m is the number of examples (observations) and n is </span>
+<span class="sd">        the number of features.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    U : array_like</span>
+<span class="sd">        The eigenvectors, representing the computed principal components</span>
+<span class="sd">        of X. U has dimensions (n x n) where each column is a single </span>
+<span class="sd">        principal component.</span>
+<span class="sd">    </span>
+<span class="sd">    S : array_like</span>
+<span class="sd">        A vector of size n, contaning the singular values for each</span>
+<span class="sd">        principal component. Note this is the diagonal of the matrix we </span>
+<span class="sd">        mentioned in class.</span>
+<span class="sd">    </span>
+<span class="sd">    Instructions</span>
+<span class="sd">    ------------</span>
+<span class="sd">    You should first compute the covariance matrix. Then, you</span>
+<span class="sd">    should use the &quot;svd&quot; function to compute the eigenvectors</span>
+<span class="sd">    and eigenvalues of the covariance matrix.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    When computing the covariance matrix, remember to divide by m (the</span>
+<span class="sd">    number of examples).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Useful values</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="c1"># You need to return the following variables correctly.</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="c1">### BEGIN SOLUTION</span>
+    
+    <span class="n">Sigma</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span> <span class="o">/</span> <span class="n">m</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">Sigma</span><span class="p">)</span>
+    
+    <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">return</span> <span class="n">U</span><span class="p">,</span> <span class="n">S</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Before using PCA, it is important to first normalize the data by subtracting the mean value of each feature from the dataset, and scaling each dimension so that they are in the same range.</p>
+<p>In the next cell,  this normalization will be performed for you using the <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> utility class from scikit-learn.
+After normalizing the data, you can run PCA to compute the principal components. Your task is to complete the code in the function <code class="docutils literal notranslate"><span class="pre">pca</span></code> to compute the principal components of the dataset.</p>
+<p>Once you have completed the function <code class="docutils literal notranslate"><span class="pre">pca</span></code>, the following cell will run PCA on the example dataset and plot the corresponding principal components found similar to the figure below.</p>
+<p><img alt="" src="../_images/pca_components.png" /></p>
+<p>The following cell will also output the top principal component (eigenvector) found, and you should expect to see an output of about <code class="docutils literal notranslate"><span class="pre">[-0.707</span> <span class="pre">-0.707]</span></code>. (It is possible that <code class="docutils literal notranslate"><span class="pre">numpy</span></code> may instead output the negative of this, since <span class="math notranslate nohighlight">\(U_1\)</span> and <span class="math notranslate nohighlight">\(-U_1\)</span> are equally valid choices for the first principal component.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Before running PCA, it is important to first normalize X</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">mean_</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">scale_</span>
+<span class="n">X_norm</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1">#  Run PCA</span>
+<span class="n">U</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">X_norm</span><span class="p">)</span>
+
+<span class="c1">#  Draw the eigenvectors centered at mean of data. These lines show the</span>
+<span class="c1">#  directions of maximum variations in the dataset.</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mu</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span>
+             <span class="n">head_width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">head_length</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Top eigenvector: U[:, 0] = [</span><span class="si">{:.6f}</span><span class="s1"> </span><span class="si">{:.6f}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">U</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39; (you should expect to see [-0.707107 -0.707107])&#39;</span><span class="p">)</span>
+<span class="c1">### BEGIN HIDDEN TESTS</span>
+<span class="k">assert</span> <span class="o">-</span><span class="mf">0.707106</span> <span class="o">&gt;=</span> <span class="n">U</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">0.707107</span>
+<span class="k">assert</span> <span class="o">-</span><span class="mf">0.707106</span> <span class="o">&gt;=</span> <span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">0.707107</span>
+<span class="c1">### END HIDDEN TESTS</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Top eigenvector: U[:, 0] = [-0.707107 -0.707107]
+ (you should expect to see [-0.707107 -0.707107])
+</pre></div>
+</div>
+<img alt="../_images/FE01-PCA_7_1.png" src="../_images/FE01-PCA_7_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="dimensionality-reduction-with-pca">
+<h3>Dimensionality Reduction with PCA<a class="headerlink" href="#dimensionality-reduction-with-pca" title="Permalink to this headline">¶</a></h3>
+<p>After computing the principal components, you can use them to reduce the feature dimension of your dataset by projecting each example onto a lower dimensional space, <span class="math notranslate nohighlight">\(x^{(i)} \rightarrow z^{(i)}\)</span> (e.g., projecting the data from 2D to 1D). In this part of the exercise, you will use the eigenvectors returned by PCA and
+project the example dataset into a 1-dimensional space. In practice, if you were using a learning algorithm such as linear regression or perhaps neural networks, you could now use the projected data instead of the original data. By using the projected data, you can train your model faster as there are less dimensions in the input.</p>
+<div class="section" id="projecting-the-data-onto-the-principal-components">
+<h4>Projecting the data onto the principal components<a class="headerlink" href="#projecting-the-data-onto-the-principal-components" title="Permalink to this headline">¶</a></h4>
+<p>You should now complete the code in the function <code class="docutils literal notranslate"><span class="pre">projectData</span></code>. Specifically, you are given a dataset <code class="docutils literal notranslate"><span class="pre">X</span></code>, the principal components <code class="docutils literal notranslate"><span class="pre">U</span></code>, and the desired number of dimensions to reduce to <code class="docutils literal notranslate"><span class="pre">K</span></code>. You should project each example in <code class="docutils literal notranslate"><span class="pre">X</span></code> onto the top <code class="docutils literal notranslate"><span class="pre">K</span></code> components in <code class="docutils literal notranslate"><span class="pre">U</span></code>. Note that the top <code class="docutils literal notranslate"><span class="pre">K</span></code> components in <code class="docutils literal notranslate"><span class="pre">U</span></code> are given by
+the first <code class="docutils literal notranslate"><span class="pre">K</span></code> columns of <code class="docutils literal notranslate"><span class="pre">U</span></code>, that is <code class="docutils literal notranslate"><span class="pre">Ureduce</span> <span class="pre">=</span> <span class="pre">U[:,</span> <span class="pre">:K]</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">projectData</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the reduced data representation when projecting only </span>
+<span class="sd">    on to the top K eigenvectors.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array_like</span>
+<span class="sd">        The input dataset of shape (m x n). The dataset is assumed to be </span>
+<span class="sd">        normalized.</span>
+<span class="sd">    </span>
+<span class="sd">    U : array_like</span>
+<span class="sd">        The computed eigenvectors using PCA. This is a matrix of </span>
+<span class="sd">        shape (n x n). Each column in the matrix represents a single</span>
+<span class="sd">        eigenvector (or a single principal component).</span>
+<span class="sd">    </span>
+<span class="sd">    K : int</span>
+<span class="sd">        Number of dimensions to project onto. Must be smaller than n.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Z : array_like</span>
+<span class="sd">        The projects of the dataset onto the top K eigenvectors. </span>
+<span class="sd">        This will be a matrix of shape (m x k).</span>
+<span class="sd">    </span>
+<span class="sd">    Instructions</span>
+<span class="sd">    ------------</span>
+<span class="sd">    Compute the projection of the data using only the top K </span>
+<span class="sd">    eigenvectors in U (first K columns). </span>
+<span class="sd">    For the i-th example X[i,:], the projection on to the k-th </span>
+<span class="sd">    eigenvector is given as follows:</span>
+<span class="sd">    </span>
+<span class="sd">        x = X[i, :]</span>
+<span class="sd">        projection_k = np.dot(x,  U[:, k])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># You need to return the following variables correctly.</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">K</span><span class="p">))</span>
+
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">Ureduce</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span> <span class="p">:</span><span class="n">K</span><span class="p">]</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">Ureduce</span>
+    <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">return</span> <span class="n">Z</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once you have completed the code in <code class="docutils literal notranslate"><span class="pre">projectData</span></code>, the following cell will project the first example onto the first dimension and you should see a value of about 1.481 (or possibly -1.481, if you got <span class="math notranslate nohighlight">\(-U_1\)</span> instead of <span class="math notranslate nohighlight">\(U_1\)</span>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Project the data onto K = 1 dimension</span>
+<span class="n">K</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">projectData</span><span class="p">(</span><span class="n">X_norm</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Projection of the first example: </span><span class="si">{:.6f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;(this value should be about    : 1.496313)&#39;</span><span class="p">)</span>
+<span class="c1">### BEGIN HIDDEN TESTS</span>
+<span class="k">assert</span> <span class="mf">1.496312</span> <span class="o">&lt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mf">1.496314</span>
+<span class="c1">### END HIDDEN TESTS</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Projection of the first example: 1.496313
+(this value should be about    : 1.496313)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="reconstructing-an-approximation-of-the-data">
+<h4>Reconstructing an approximation of the data<a class="headerlink" href="#reconstructing-an-approximation-of-the-data" title="Permalink to this headline">¶</a></h4>
+<p>After projecting the data onto the lower dimensional space, you can approximately recover the data by projecting them back onto the original high dimensional space. Your task is to complete the function <code class="docutils literal notranslate"><span class="pre">recoverData</span></code> to project each example in <code class="docutils literal notranslate"><span class="pre">Z</span></code> back onto the original space and return the recovered approximation in <code class="docutils literal notranslate"><span class="pre">Xrec</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">recoverData</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recovers an approximation of the original data when using the </span>
+<span class="sd">    projected data.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Z : array_like</span>
+<span class="sd">        The reduced data after applying PCA. This is a matrix</span>
+<span class="sd">        of shape (m x K).</span>
+<span class="sd">    </span>
+<span class="sd">    U : array_like</span>
+<span class="sd">        The eigenvectors (principal components) computed by PCA.</span>
+<span class="sd">        This is a matrix of shape (n x n) where each column represents</span>
+<span class="sd">        a single eigenvector.</span>
+<span class="sd">    </span>
+<span class="sd">    K : int</span>
+<span class="sd">        The number of principal components retained</span>
+<span class="sd">        (should be less than n).</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X_rec : array_like</span>
+<span class="sd">        The recovered data after transformation back to the original </span>
+<span class="sd">        dataset space. This is a matrix of shape (m x n), where m is </span>
+<span class="sd">        the number of examples and n is the dimensions (number of</span>
+<span class="sd">        features) of original datatset.</span>
+<span class="sd">    </span>
+<span class="sd">    Instructions</span>
+<span class="sd">    ------------</span>
+<span class="sd">    Compute the approximation of the data by projecting back</span>
+<span class="sd">    onto the original space using the top K eigenvectors in U.</span>
+<span class="sd">    For the i-th example Z[i,:], the (approximate)</span>
+<span class="sd">    recovered data for dimension j is given as follows:</span>
+
+<span class="sd">        v = Z[i, :]</span>
+<span class="sd">        recovered_j = np.dot(v, U[j, :K])</span>
+
+<span class="sd">    Notice that U[j, :K] is a vector of size K.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># You need to return the following variables correctly.</span>
+    <span class="n">X_rec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">U</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="c1">### BEGIN SOLUTION</span>
+
+    <span class="n">X_rec</span> <span class="o">=</span> <span class="n">Z</span> <span class="o">@</span> <span class="n">U</span><span class="p">[:,:</span><span class="n">K</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="c1">### END SOLUTION</span>
+    
+    <span class="k">return</span> <span class="n">X_rec</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once you have completed the code in <code class="docutils literal notranslate"><span class="pre">recoverData</span></code>, the following cell will recover an approximation of the first example and you should see a value of about <code class="docutils literal notranslate"><span class="pre">[-1.058</span> <span class="pre">-1.058]</span></code>. The code will then plot the data in this reduced dimension space. This will show you what the data looks like when using only the corresponding eigenvectors to reconstruct it. An example of what you should get for PCA projection is shown in this figure:</p>
+<p><img alt="" src="../_images/pca_reconstruction.png" /></p>
+<p>In the figure above, the original data points are indicated with the blue circles, while the projected data points are indicated with the red circles. The projection effectively only retains the information in the direction given by <span class="math notranslate nohighlight">\(U_1\)</span>. The dotted lines show the distance from the data points in original space to the projected space. Those dotted lines represent the error measure due to PCA projection.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_rec</span>  <span class="o">=</span> <span class="n">recoverData</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Approximation of the first example: [</span><span class="si">{:.6f}</span><span class="s1"> </span><span class="si">{:.6f}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">X_rec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_rec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;       (this value should be about  [-1.058053 -1.058053])&#39;</span><span class="p">)</span>
+
+<span class="c1">#  Plot the normalized dataset (returned from featureNormalize)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_norm</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_norm</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2.75</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mf">2.75</span><span class="p">])</span>
+
+<span class="c1"># Draw lines connecting the projected points to the original points</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_rec</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_rec</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">xnorm</span><span class="p">,</span> <span class="n">xrec</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X_norm</span><span class="p">,</span> <span class="n">X_rec</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">xnorm</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xrec</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">xnorm</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xrec</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="s1">&#39;--k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">### BEGIN HIDDEN TESTS</span>
+<span class="k">assert</span> <span class="n">X_rec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mf">1.058052</span>
+<span class="k">assert</span> <span class="n">X_rec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mf">1.058052</span>
+<span class="k">assert</span> <span class="n">X_rec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">1.058053</span>
+<span class="k">assert</span> <span class="n">X_rec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">1.058053</span>
+<span class="c1">### END HIDDEN TESTS</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Approximation of the first example: [-1.058053 -1.058053]
+       (this value should be about  [-1.058053 -1.058053])
+</pre></div>
+</div>
+<img alt="../_images/FE01-PCA_15_1.png" src="../_images/FE01-PCA_15_1.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="face-image-dataset">
+<h3>Face Image Dataset<a class="headerlink" href="#face-image-dataset" title="Permalink to this headline">¶</a></h3>
+<p>In this part of the exercise, you will run PCA on face images to see how it can be used in practice for dimension reduction. The dataset <code class="docutils literal notranslate"><span class="pre">ex7faces.mat</span></code> contains a dataset <code class="docutils literal notranslate"><span class="pre">X</span></code> of face images, each <span class="math notranslate nohighlight">\(32 \times 32\)</span> in grayscale. This dataset was based on a <a class="reference external" href="http://conradsanderson.id.au/lfwcrop/">cropped version</a> of the <a class="reference external" href="http://vis-www.cs.umass.edu/lfw/">labeled faces in the wild</a> dataset. Each row of <code class="docutils literal notranslate"><span class="pre">X</span></code> corresponds to one face image (a row vector of length 1024).</p>
+<p>In order to visualize the faces, we define a helper function in the next cell.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">displayData</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">example_width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Displays 2D data in a nice grid.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : array_like</span>
+<span class="sd">        The input data of size (m x n) where m is the number of examples and n is the number of</span>
+<span class="sd">        features.</span>
+
+<span class="sd">    example_width : int, optional</span>
+<span class="sd">        THe width of each 2-D image in pixels. If not provided, the image is assumed to be square,</span>
+<span class="sd">        and the width is the floor of the square root of total number of pixels.</span>
+
+<span class="sd">    figsize : tuple, optional</span>
+<span class="sd">        A 2-element tuple indicating the width and height of figure in inches.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    
+    <span class="n">example_width</span> <span class="o">=</span> <span class="n">example_width</span> <span class="ow">or</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+    <span class="n">example_height</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="n">example_width</span><span class="p">)</span>
+
+    <span class="c1"># Compute number of items to display</span>
+    <span class="n">display_rows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">m</span><span class="p">)))</span>
+    <span class="n">display_cols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">m</span> <span class="o">/</span> <span class="n">display_rows</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax_array</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">display_rows</span><span class="p">,</span> <span class="n">display_cols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.025</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.025</span><span class="p">)</span>
+
+    <span class="n">ax_array</span> <span class="o">=</span> <span class="n">ax_array</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ax_array</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">example_height</span><span class="p">,</span> <span class="n">example_width</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The next cell will load and visualize the first 100 of these face images similar to what is shown in this figure:</p>
+<p><img alt="Faces" src="../_images/faces.png" /></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Load Face dataset</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;Data/faces.csv&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+<span class="c1">#  Display the first 100 faces in the dataset</span>
+<span class="n">displayData</span><span class="p">(</span><span class="n">X</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:],</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_19_0.png" src="../_images/FE01-PCA_19_0.png" />
+</div>
+</div>
+<div class="section" id="pca-on-faces">
+<h4>PCA on Faces<a class="headerlink" href="#pca-on-faces" title="Permalink to this headline">¶</a></h4>
+<p>To run PCA on the face dataset, we first normalize the dataset by subtracting the mean of each feature from the data matrix <code class="docutils literal notranslate"><span class="pre">X</span></code>.  After running PCA, you will obtain the principal components of the dataset. Notice that each principal component in <code class="docutils literal notranslate"><span class="pre">U</span></code> (each column) is a vector of length <span class="math notranslate nohighlight">\(n\)</span> (where for the face dataset, <span class="math notranslate nohighlight">\(n = 1024\)</span>). It turns out that we can visualize these principal components by reshaping each of them into a <span class="math notranslate nohighlight">\(32 \times 32\)</span> matrix that corresponds to the pixels in the original dataset.</p>
+<p>The following cell will first normalize the dataset for you and then run your PCA code. Then, the first 36 principal components (conveniently called eigenfaces) that describe the largest variations are displayed. If you want, you can also change the code to display more principal components to see how they capture more and more details.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  normalize X by subtracting the mean value from each feature</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">mean_</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">scale_</span>
+<span class="n">X_norm</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1">#  Run PCA</span>
+<span class="n">U</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">X_norm</span><span class="p">)</span>
+
+<span class="c1">#  Visualize the top 36 eigenvectors found</span>
+<span class="n">displayData</span><span class="p">(</span><span class="n">U</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">36</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_21_0.png" src="../_images/FE01-PCA_21_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="dimensionality-reduction">
+<h4>Dimensionality Reduction<a class="headerlink" href="#dimensionality-reduction" title="Permalink to this headline">¶</a></h4>
+<p>Now that you have computed the principal components for the face dataset, you can use it to reduce the dimension of the face dataset. This allows you to use your learning algorithm with a smaller input size (e.g., 100 dimensions) instead of the original 1024 dimensions. This can help speed up your learning algorithm.</p>
+<p>The next cell will project the face dataset onto only the first 100 principal components. Concretely, each face image is now described by a vector <span class="math notranslate nohighlight">\(z^{(i)} \in \mathbb{R}^{100}\)</span>. To understand what is lost in the dimension reduction, you can recover the data using only the projected dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Project images to the eigen space using the top k eigenvectors </span>
+<span class="c1">#  If you are applying a machine learning algorithm </span>
+<span class="n">K</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">projectData</span><span class="p">(</span><span class="n">X_norm</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The projected data Z has a shape of: &#39;</span><span class="p">,</span> <span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The projected data Z has a shape of:  (5000, 100)
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the next cell, an approximate recovery of the data is performed and the original and projected face images
+are displayed similar to what is shown here:</p>
+<table>
+    <tr>
+        <td><img src="Figures/faces_original.png" width="300"></td>
+        <td><img src="Figures/faces_reconstructed.png" width="300"></td>
+    </tr>
+</table>
+<p>From the reconstruction, you can observe that the general structure and appearance of the face are kept while the fine details are lost. This is a remarkable reduction (more than 10x) in the dataset size that can help speed up your learning algorithm significantly. For example, if you were training a neural network to perform person recognition (given a face image, predict the identity of the person), you can use the dimension reduced input of only a 100 dimensions instead of the original pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Project images to the eigen space using the top K eigen vectors and </span>
+<span class="c1">#  visualize only using those K dimensions</span>
+<span class="c1">#  Compare to the original input, which is also displayed</span>
+<span class="n">K</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X_rec</span>  <span class="o">=</span> <span class="n">recoverData</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span>
+
+<span class="c1"># Display normalized data</span>
+<span class="n">displayData</span><span class="p">(</span><span class="n">X_norm</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:],</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Original faces&#39;</span><span class="p">)</span>
+
+<span class="c1"># Display reconstructed data from only k eigenfaces</span>
+<span class="n">displayData</span><span class="p">(</span><span class="n">X_rec</span><span class="p">[:</span><span class="mi">100</span><span class="p">,</span> <span class="p">:],</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Recovered faces&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_25_0.png" src="../_images/FE01-PCA_25_0.png" />
+<img alt="../_images/FE01-PCA_25_1.png" src="../_images/FE01-PCA_25_1.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="pca-for-visualization">
+<h3>PCA for visualization<a class="headerlink" href="#pca-for-visualization" title="Permalink to this headline">¶</a></h3>
+<p>To understand how PCA can allow visualization of high dimensional datasets we will employ the Iris dataset again. In the next cell, we load the Iris Data and perform some 3D plots of the original features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># If the following code does not run install ipympl</span>
+<span class="c1"># pip install ipympl</span>
+<span class="c1"># If using the Notebook</span>
+<span class="c1">#conda install -c conda-forge widgetsnbextension</span>
+<span class="c1"># If using JupyterLab</span>
+<span class="c1">#conda install nodejs</span>
+<span class="c1">#jupyter labextension install @jupyter-widgets/jupyterlab-manager</span>
+<span class="c1">#jupyter labextension install jupyter-matplotlib</span>
+<span class="o">%</span><span class="k">matplotlib</span> widget
+
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+
+<span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">()</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span>
+
+<span class="c1"># Plot orginal features</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;rainbow&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sepal length&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Sepal width&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Petal length&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot the first two principal components</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;rainbow&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sepal width&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Petal length&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Petal width&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "f0b5e69b9a224eb28254e369de3f4448", "version_major": 2, "version_minor": 0}
+</script></div>
+</div>
+<p>It turns out that visualizing datasets in 3 dimensions or greater can be cumbersome. Therefore, it is often desirable to only display the data in 2D even at the cost of losing some information. In practice, PCA is often used to reduce the dimensionality of data for visualization purposes.</p>
+<p>In the next cell,we will apply your implementation of PCA to the iris data to reduce it to 2 dimensions and visualize the result in a 2D scatter plot. The PCA projection can be thought of as a rotation that selects the view that maximizes the spread of the data, which often corresponds to the “best” view.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Normalize previous to perform PCA.</span>
+<span class="c1"># This way we perform PCA on the correlation matrix instead of the covariance matrix.</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">scaler</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">X_norm</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># PCA and project the data to 2D</span>
+<span class="n">U</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">X_norm</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">projectData</span><span class="p">(</span><span class="n">X_norm</span><span class="p">,</span> <span class="n">U</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Reset matplotlib to non-interactive</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Z</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">Z</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;rainbow&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;1st principal component&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;2nd principal component&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Iris dataset plotted in 2D, using PCA for dimensionality reduction&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_29_0.png" src="../_images/FE01-PCA_29_0.png" />
+</div>
+</div>
+<p>We can see that in the PCA space, the variance is maximized along PC1 (explains 0.73% of the variance) and PC2 (explains 22% of the variance). Together, they explain 95%.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Explained variance per principal component: </span><span class="si">{</span><span class="n">S</span><span class="o">/</span><span class="n">S</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Explained variance per principal component: [0.72962445 0.22850762 0.03668922 0.00517871]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The importance of each feature is reflected by the magnitude of the corresponding values in the eigenvectors (higher magnitude — higher importance). Let’s find the most important features:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">U</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0.52106591 0.37741762 0.71956635 0.26128628]
+ [0.26934744 0.92329566 0.24438178 0.12350962]
+ [0.5804131  0.02449161 0.14212637 0.80144925]
+ [0.56485654 0.06694199 0.63427274 0.52359713]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Remember the columns of U are the eigenvectors along the directions that maximize the variance. So, looking at the first principal component:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">U</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.52106591 0.26934744 0.5804131  0.56485654]
+</pre></div>
+</div>
+</div>
+</div>
+<p>we can conclude that feature 1, 3 and 4 are the most important for PC1. Similarly, we can state that feature 2 and then 1 are the most important for PC2.</p>
+</div>
+<div class="section" id="the-biplot">
+<h3>The biplot<a class="headerlink" href="#the-biplot" title="Permalink to this headline">¶</a></h3>
+<p>One of the most informative graphical representations of a multivariate dataset is via a biplot, which is fundamentally connected to the SVD of a relevant data matrix, and therefore to PCA.</p>
+<p>Remember that an alternative way to approach PCA is through the decomposition:
+$<span class="math notranslate nohighlight">\(
+X_c = U \Sigma V^T
+\)</span><span class="math notranslate nohighlight">\(,
+where the matrix \)</span>V$ contains the eigenvectors along the principal components as columns.</p>
+<p>Under this decomposition, the matrix <span class="math notranslate nohighlight">\(U\)</span> and the matrix product <span class="math notranslate nohighlight">\(V\Sigma^T\)</span> contain information about the statistical correlation among features and observations. In a biplot, the first two columns of each <span class="math notranslate nohighlight">\(U\)</span> and <span class="math notranslate nohighlight">\(V\Sigma^T\)</span> are used to depict an approximated visual representation of such correlations. In particular, the rows of <span class="math notranslate nohighlight">\(U\)</span> are plotted as points representing observations, while the rows of <span class="math notranslate nohighlight">\(V\Sigma^T\)</span> are plotted as vectors representing features.</p>
+<p>The cosine of the angle between any two vectors representing features is the coefficient of correlation between those features. This comes from the fact that the product <span class="math notranslate nohighlight">\(V\Sigma^T\Sigma^T V^T = NS\)</span> is proportional to the covariance matrix. Similarly, the cosine of the angle between any vector representing a variable and the axis
+representing a given PC is the coefficient of correlation between those two variables.</p>
+<p>The inner product between the markers for observation <span class="math notranslate nohighlight">\(i\)</span> and feature <span class="math notranslate nohighlight">\(j\)</span> gives the (centred) value of observation <span class="math notranslate nohighlight">\(i\)</span> on feature <span class="math notranslate nohighlight">\(j\)</span>. This is a direct result of the fact that
+<span class="math notranslate nohighlight">\(X_c = U \Sigma V^T\)</span>. The practical implication of this result is that orthogonally projecting the point representing observation <span class="math notranslate nohighlight">\(i\)</span> onto the vector representing feature <span class="math notranslate nohighlight">\(j\)</span> recovers the (centred) value <span class="math notranslate nohighlight">\(x_{ij} - \bar{x}_j\)</span>.</p>
+<p>The Euclidean distance between the markers for observations <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span> is proportional to the Mahalanobis distance between them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">biplot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">U</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">VT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="n">VT</span><span class="o">.</span><span class="n">T</span>
+    
+    <span class="n">xs</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">U</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="n">H</span> <span class="o">=</span> <span class="n">V</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">scalex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">U</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">H</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">scaley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">U</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]))</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">H</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">scalex</span><span class="p">,</span> <span class="n">scaley</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">H</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="s2">&quot;Var&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">scale</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">ha</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span> <span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">)</span>
+
+<span class="n">biplot</span><span class="p">(</span><span class="n">X_norm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_38_0.png" src="../_images/FE01-PCA_38_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="limitations-of-standard-pca">
+<h3>Limitations of Standard PCA<a class="headerlink" href="#limitations-of-standard-pca" title="Permalink to this headline">¶</a></h3>
+<p>Although PCA “works” on a multitude of real world problems, any diligent scientist or engineer must ask when does
+PCA fail? Before we answer this question, let us note a remarkable feature of this algorithm. PCA is completely non-parametric: any data set can be plugged in and an answer
+comes out, requiring no parameters to tweak and no regard for
+how the data was recorded. From one perspective, the fact that
+PCA is non-parametric (or plug-and-play) can be considered
+a positive feature because the answer is unique and independent of the user. From another perspective the fact that PCA
+is agnostic to the source of the data is also a weakness. For
+instance, consider tracking a person on a ferris wheel below. The data points can be cleanly described by a single
+variable, the precession angle of the wheel <span class="math notranslate nohighlight">\(\theta\)</span>, however PCA
+would fail to recover this variable.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate ferris wheel artifical data</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_40_0.png" src="../_images/FE01-PCA_40_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply PCA</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">mean_</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">scale_</span>
+<span class="n">X_norm</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1">#  Run PCA</span>
+<span class="n">U</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">X_norm</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mu</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span>
+             <span class="n">head_width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">head_length</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1">#ax.axis([0.5, 6.5, 2, 8])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_41_0.png" src="../_images/FE01-PCA_41_0.png" />
+</div>
+</div>
+<p>A deeper appreciation of the limits of PCA requires some consideration about the underlying assumptions and in tandem,
+a more rigorous description of the source of data. Generally speaking, the primary motivation behind this method is
+to decorrelate the data set, i.e. remove second-order dependencies. The manner of approaching this goal is loosely akin
+to how one might explore a town in the Western United States:
+drive down the longest road running through the town. When
+one sees another big road, turn left or right and drive down
+this road, and so forth. In this analogy, PCA requires that each
+new road explored must be perpendicular to the previous, but
+clearly this requirement is overly stringent and the data (or
+town) might be arranged along non-orthogonal axes, such as
+example below for which PCA provides unsatisfying results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate artificial data</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">x1</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y1</span> <span class="o">=</span>  <span class="o">-</span><span class="mf">.3</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span>  <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="n">X1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X1</span><span class="p">,</span><span class="n">X2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_43_0.png" src="../_images/FE01-PCA_43_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply PCA</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">mean_</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">scale_</span>
+<span class="n">X_norm</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1">#  Run PCA</span>
+<span class="n">U</span><span class="p">,</span> <span class="n">S</span> <span class="o">=</span> <span class="n">pca</span><span class="p">(</span><span class="n">X_norm</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="n">mu</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mu</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span>
+             <span class="n">head_width</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">head_length</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/FE01-PCA_44_0.png" src="../_images/FE01-PCA_44_0.png" />
+</div>
+</div>
+<p>To address these problems, we must define what we consider
+optimal results. In the context of dimensional reduction, one
+measure of success is the degree to which a reduced representation can predict the original data. In statistical terms,
+we must define an error function (or loss function). It can
+be proved that under a common loss function, mean squared
+error (i.e. L2 norm), PCA provides the optimal reduced representation of the data. This means that selecting orthogonal
+directions for principal components is the best solution to predicting the original data. Our intuitions from the previous example
+suggest that this result is somehow misleading.</p>
+<p>The solution to this paradox lies in the goal we selected for the
+analysis. The goal of the analysis is to decorrelate the data, or
+said in other terms, the goal is to remove second-order dependencies in the data. In the data sets of the example, higher order
+dependencies exist between the variables. Therefore, removing second-order dependencies is insufficient at revealing all
+structure in the data.</p>
+<p>When are second order dependencies sufficient for revealing all dependencies in a data set? This statistical condition is met when the first and second
+order statistics are sufficient statistics of the data. This occurs, for instance,
+when a data set is Gaussian distributed.</p>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Principal component analysis: a review and recent developments, Jollife and Cadima</p></li>
+<li><p>A Tutorial on Principal Component Analysis, Jonathon Shlens</p></li>
+<li><p><a class="reference external" href="https://towardsdatascience.com/pca-clearly-explained-how-when-why-to-use-it-and-feature-importance-a-guide-in-python-7c274582c37e">https://towardsdatascience.com/pca-clearly-explained-how-when-why-to-use-it-and-feature-importance-a-guide-in-python-7c274582c37e</a></p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./notebooks_pca"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Gonzalo G. Peraza Mues<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
