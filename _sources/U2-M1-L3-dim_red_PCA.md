@@ -385,6 +385,336 @@ anim.save('Figures/digit3_pca.gif', dpi=80, writer='imagemagick');
 
 ![](Figures/digit3_pca.gif)
 
+### Example: Whitening
+
+Previously, we have seen that we can individually scale features to zero mean and unit variance to remove the scaling effects from the dataset. Now we introduce a new transformation called ****whitening**** or ****sphering****. After whitening, additionally to unit variance, the covariance among features is set to zero. To whiten an observation we define, for each data point $x_n$ , a transformed value given by
+
+$$
+y_n = L^{-1/2}W^T(x_n - \bar{x})
+$$
+
+where $W$ is the matrix with column eigenvectors from the PCA transform, and $\Lambda$ is the diagonalized covariance matrix.
+
+It is easy to verify that this is just a PCA transform ($W^T \tilde{x}_n$) followed by normal standardization, since multiplying by $\Lambda^{-1/2}$ amounts to divide each columns by its standard deviation. Transforming all observations at once can be done by
+
+$$
+Y = X_c W\Lambda^{-1/2} = \sqrt(n) UD D^{-1} = \sqrt(n) U
+$$
+
+where $D=\Lambda^{1/2}$ is the singular value matrix from the SVD, and $U$ is the matrix of left singular vectors. It is easy to verify that the covariance matrix of the $y_{i}$ is the identity matrix, $\frac{1}{n}Y^T Y = U^T U = I$.
+
+To understand the difference, we\'ll use the classic Old Faithful dataset. The data set comprises 272 observations, each of which represents a single eruption and contains two variables corresponding to the duration in minutes of the eruption, and the time until the next eruption, also in minutes.
+
+``` python
+from sklearn.preprocessing import StandardScaler
+old_f = np.loadtxt('Data/old-faithful.csv', delimiter=',')
+
+fig, ax = plt.subplots(1, 3, figsize=(16,4))
+
+# Original Data
+ax[0].scatter(old_f[:,0], old_f[:,1])
+ax[0].set_xlabel('Eruption duration')
+ax[0].set_ylabel('Waiting time')
+ax[0].set_title('Original')
+
+# Standardizing
+scaler = StandardScaler()
+scaler.fit(old_f)
+old_f_n = scaler.transform(old_f)
+ax[1].scatter(old_f_n[:,0], old_f_n[:,1])
+ax[1].set_xlabel('Eruption duration')
+ax[1].set_ylabel('Waiting time')
+ax[1].set_title('Standardized')
+of_pca = PCA(n_components=2)
+of_pca.fit(old_f_n)
+pc1 = of_pca.components_[0]
+pc2 = of_pca.components_[1]
+l1, l2 = of_pca.explained_variance_
+#ax[1].plot([],[],'-r')
+
+# Whitened
+# (Alternatively the compact SVD can be used, without computing PCA)
+of_pca = PCA(n_components=2)
+old_f_w = of_pca.fit_transform(old_f)
+L = np.diag(of_pca.explained_variance_)
+old_f_w = old_f_w @ np.sqrt(np.linalg.inv(L))
+# Choose sign of PC so that plots resemble more
+# Sign is an arbitrary choice in PCA
+ax[2].scatter(-old_f_w[:,0], -old_f_w[:,1])
+ax[2].set_xlabel('PC1 normed')
+ax[2].set_ylabel('PC2 normed')
+ax[2].set_title('Whitened');
+```
+
+![](./.ob-jupyter/3b41afab51a4d1af85540cfabe9cec002b001650.png)
+
+### Example: Visualization
+
+On application of PCA, and dimensionality reduction in general, is that of visualization. We can project the data to its first two PC, which retain most of the variance, and plot them to obtain a visual 2D representation of the data set. We now plot the first two principal components of the MNIST data set for all digits. Visualization without dimensionality reduction in data sets with many dimensions is very hard. With PCA we hope to keep most of the structure of the data set in the first 2 or 3 dimensions, which allows us to visually inspect such structure in search for, for example, clusters.
+
+``` python
+X = np.concatenate([train_set[0], validation_set[0], test_set[0]])
+y = np.concatenate([train_set[1], validation_set[1], test_set[1]])
+
+pca = PCA(n_components=3)
+X_PCA = pca.fit_transform(X)
+plt.figure(figsize=(12,12))
+for i in range(10):
+    Xd = X_PCA[y==i]
+    plt.scatter(Xd[:,0], Xd[:,1], label=i, alpha=0.3)
+plt.legend()
+plt.xlabel('PC1')
+plt.ylabel('PC2');
+```
+
+![](./.ob-jupyter/c359337b45149c8f47fc11a2fe5003247233aff3.png)
+
+We can also visualize the Iris Data set.
+
+``` python
+from sklearn import datasets
+
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# Plot orginal features
+fig = plt.figure(figsize=(12, 6))
+ax = fig.add_subplot(121, projection='3d')
+ax.scatter(X[:, 0], X[:, 1], X[:, 2], cmap='rainbow', c=y, s=8**2)
+ax.set_xlabel('Sepal length')
+ax.set_ylabel('Sepal width')
+ax.set_zlabel('Petal length')
+
+ax = fig.add_subplot(122, projection='3d')
+ax.scatter(X[:, 1], X[:, 2], X[:, 3], cmap='rainbow', c=y, s=8**2)
+ax.set_xlabel('Sepal width')
+ax.set_ylabel('Petal length')
+ax.set_zlabel('Petal width');
+```
+
+![](./.ob-jupyter/2ca2575b94fc080aac18adf2233c7377d80b0fbc.png)
+
+In the next cell,we will apply your implementation of PCA to the iris data to reduce it to 2 dimensions and visualize the result in a 2D scatter plot. The PCA projection can be thought of as a rotation that selects the view that maximizes the spread of the data, which often corresponds to the \"best\" view.
+
+``` python
+# Normalize previous to perform PCA.
+# This way we perform PCA on the correlation matrix instead of the covariance matrix.
+scaler = StandardScaler()
+scaler.fit(X)
+X_norm = scaler.transform(X)
+
+# PCA and project the data to 2D
+pca = PCA()
+pca.fit(X_norm)
+U = np.stack(pca.components_, axis=-1)
+S = pca.explained_variance_
+
+Z = pca.transform(X_norm)
+
+fig = plt.figure(figsize=(6, 6))
+ax = fig.add_subplot(111)
+
+ax.scatter(Z[:, 0], Z[:, 1], cmap='rainbow', c=y, s=64)
+ax.set_xlabel('1st principal component')
+ax.set_ylabel('2nd principal component')
+ax.set_title('Iris dataset plotted in 2D, using PCA for dimensionality reduction');
+```
+
+![](./.ob-jupyter/fae92d1e73f6f34b98efef07492527b8af68a785.png)
+
+We can see that in the PCA space, the variance is maximized along PC1 (explains 0.73% of the variance) and PC2 (explains 22% of the variance). Together, they explain 95%.
+
+``` python
+print(f'Explained variance per principal component: {S/S.sum()}')
+```
+
+``` example
+Explained variance per principal component: [0.72962445 0.22850762 0.03668922 0.00517871]
+```
+
+The importance of each feature is reflected by the magnitude of the corresponding values in the eigenvectors (higher magnitude --- higher importance). Let\'s find the most important features:
+
+``` python
+print(abs(U))
+```
+
+``` example
+[[0.52106591 0.37741762 0.71956635 0.26128628]
+ [0.26934744 0.92329566 0.24438178 0.12350962]
+ [0.5804131  0.02449161 0.14212637 0.80144925]
+ [0.56485654 0.06694199 0.63427274 0.52359713]]
+```
+
+Remember the columns of U are the eigenvectors along the directions that maximize the variance. So, looking at the first principal component:
+
+``` python
+print(abs(U[:,0]))
+print(abs(U[:,1]))
+```
+
+``` example
+[0.52106591 0.26934744 0.5804131  0.56485654]
+[0.37741762 0.92329566 0.02449161 0.06694199]
+```
+
+we can conclude that feature 1, 3 and 4 are the most important for PC1. Similarly, we can state that feature 2 and then 1 are the most important for PC2.
+
+#### The Biplot
+
+From {cite}`jolliffe2016principal`:
+
+> One of the most informative graphical representations of a multivariate dataset is via a biplot, which is fundamentally connected to the SVD of a relevant data matrix, and therefore to PCA.
+
+Remember that an alternative way to approach PCA is through the decomposition:
+
+$$
+X_c = U D W^T,
+$$
+
+where the matrix $W$ contains the eigenvectors along the principal components as columns.
+
+Under this decomposition, the matrix $U$ and the matrix product $V D^T$ contain information about the statistical correlation among features and observations. In a biplot, the first two columns of each $U$ and $W D^T$ are used to depict an approximated visual representation of such correlations. In particular, the rows of $U$ are plotted as points representing observations, while the rows of $W D^T$ are plotted as vectors representing features.
+
+If the full set of eigenvectors is retained, the following points are true, in the biplot case, they remain approximately true, specially if the variance explained by the two first PC is large.
+
+Points taken from {cite}`jolliffe2016principal`:
+
+-   The cosine of the angle between any two vectors representing features is the coefficient of correlation between those features. This comes from the fact that the product $W D^T D W^T = n\Sigma$ is proportional to the covariance matrix.
+-   Similarly, the cosine of the angle between any vector representing a variable and the axis representing a given PC is the coefficient of correlation between those two variables.
+-   The inner product between the markers for observation $i$ and feature $j$ gives the (centred) value of observation $i$ on feature $j$. This is a direct result of the fact that $X_c = U D V^T$. The practical implication of this result is that orthogonally projecting the point representing observation $i$ onto the vector representing feature $j$ recovers the (centred) value $x_{ij} - \bar{x}_j$.
+-   The Euclidean distance between the markers for observations $i$ and $j$ is proportional to the Mahalanobis distance between them, since $U$ is proportional to the whitened data set.
+
+``` python
+def biplot(X, labels=None):
+    U, S, VT = np.linalg.svd(X)
+    V = VT.T
+
+    xs = U[:,0]
+    ys = U[:,1]
+
+    H = V @ np.diag(S).T
+    scalex = np.max(abs(U[:,0]))/np.max(abs(H[:,0]))
+    scaley = np.max(abs(U[:,1]))/np.max(abs(H[:,1]))
+    scale = min(scalex, scaley)
+
+    plt.figure(figsize=(8,8))
+    plt.scatter(xs, ys, c = y)
+    plt.gca().set_aspect('equal')
+
+    for i, h in enumerate(H):
+        plt.arrow(0, 0, H[i,0]*scale, H[i,1]*scale, color = 'r', alpha = 0.5)
+        if labels is None:
+            plt.text(H[i,0]*scale, H[i,1]*scale, "Var" + str(i+1), color = 'g', ha = 'center', va = 'center')
+        else:
+            plt.text(H[i,0]*scale, H[i,1]*scale, labels[i], color = 'g', ha = 'center', va = 'center')
+
+biplot(X_norm)
+```
+
+![](./.ob-jupyter/a62aa47280732be68818c79fbd8ce97d66f9da18.png)
+
+### Limitations of standard PCA
+
+Examples adapted from {cite}`shlens2014tutorial`:
+
+Suppose we have a data set that tracks positions along a circumference, with some noise added. The variable of interest is the angle, but PCA, being linear, cannot recover that for us, though it will provide PC.
+
+``` python
+# Generate ferris wheel artifical data
+theta = np.linspace(0, 2*np.pi, 100)
+x = np.cos(theta) + np.random.normal(loc=0, scale=0.1, size=100)
+y = np.sin(theta) + np.random.normal(loc=0, scale=0.1, size=100)
+X = np.stack([x,y], axis=-1)
+
+plt.scatter(X[:,0], X[:,1]);
+```
+
+![](./.ob-jupyter/ba1a6ede5154125ac8e642362f8db4ecf951164b.png)
+
+``` python
+# Apply PCA
+scaler = StandardScaler().fit(X)
+mu = scaler.mean_
+sigma = scaler.scale_
+X_norm = scaler.transform(X)
+
+#  Run PCA
+pca = PCA()
+pca.fit(X_norm)
+pc1 = pca.components_[0]
+pc2 = pca.components_[1]
+U = np.stack([pc1,pc2], axis=-1)
+S = np.sqrt(pca.explained_variance_)
+
+fig, ax = plt.subplots()
+ax.plot(X[:, 0], X[:, 1], 'bo', ms=10, mec='k', mew=0.25)
+
+for i in range(2):
+    ax.arrow(mu[0], mu[1], 1.5 * S[i]*U[0,i], 1.5 * S[i]*U[1, i],
+             head_width=0.25, head_length=0.2, fc='k', ec='k', lw=2, zorder=1000)
+
+ax.set_aspect('equal')
+```
+
+![](./.ob-jupyter/27456ea16a4ac98296e869e954be7ec77da5680d.png)
+
+Some times, the directions of interest are not orthogonal. In this cases, ICA is a better choice (more on ICA later).
+
+``` python
+# Generate artificial data
+x = np.linspace(-10, 10, 100)
+
+x1 = x + np.random.normal(loc=0, scale=0.2, size=100)
+y1 =  -.3*x + np.random.normal(loc=0, scale=0.2, size=100)
+
+x2 = x + np.random.normal(loc=0, scale=0.2, size=100)
+y2 =  -1*x + np.random.normal(loc=0, scale=0.2, size=100)
+
+X1 = np.stack([x1,y1], axis=-1)
+X2 = np.stack([x2,y2], axis=-1)
+X = np.concatenate([X1,X2], axis=0)
+
+plt.scatter(X[:,0], X[:,1])
+plt.gca().set_aspect('equal')
+```
+
+![](./.ob-jupyter/808a0698db3e5c723a98f9adc6452458485334ea.png)
+
+``` python
+# Apply PCA
+scaler = StandardScaler().fit(X)
+mu = scaler.mean_
+sigma = scaler.scale_
+X_norm = scaler.transform(X)
+
+#  Run PCA
+pca = PCA()
+pca.fit(X_norm)
+pc1 = pca.components_[0]
+pc2 = pca.components_[1]
+U = np.stack([pc1,pc2], axis=-1)
+S = np.sqrt(pca.explained_variance_)
+
+fig, ax = plt.subplots()
+ax.plot(X[:, 0], X[:, 1], 'bo')
+
+for i in range(2):
+    ax.arrow(mu[0], mu[1], 5 * S[i]*U[0, i], 5 * S[i]*U[1, i],
+             head_width=0.25, head_length=0.2, fc='k', ec='k', lw=2, zorder=1000)
+
+
+ax.set_aspect('equal')
+```
+
+![](./.ob-jupyter/4b900f80f116762955c6185bed0a9023d64ff716.png)
+
+From {cite}`shlens2014tutorial`:
+
+> The solution to this paradox lies in the goal we selected for the analysis. The goal of the analysis is to decorrelate the data, or said in other terms, the goal is to remove second-order dependencies in the data. In the data sets of the example, higher order dependencies exist between the variables. Therefore, removing second-order dependencies is insufficient at revealing all structure in the data.
+>
+> When are second order dependencies sufficient for revealing all dependencies in a data set? This statistical condition is met when the first and second order statistics are sufficient statistics of the data. This occurs, for instance, when a data set is Gaussian distributed.
+
 ## References
 
 ```{bibliography}
