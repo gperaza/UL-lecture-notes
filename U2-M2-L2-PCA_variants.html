@@ -57,7 +57,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Other Linear Methods for DR" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" />
-    <link rel="prev" title="Dimensionality Reduction and PCA" href="U2-M2-L1-dim_red_PCA.html" />
+    <link rel="prev" title="Principal Component Analysis" href="assignments-dummy/U2-M2-L1-dim_red_PCA.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -191,10 +191,19 @@
   <i class="fas fa-chevron-down">
   </i>
  </li>
- <li class="toctree-l1">
+ <li class="toctree-l1 collapsible-parent">
   <a class="reference internal" href="U2-M2-L1-dim_red_PCA.html">
    Dimensionality Reduction and PCA
   </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U2-M2-L1-dim_red_PCA.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
@@ -308,6 +317,13 @@
   <a class="reference internal nav-link" href="#sparse-pca">
    Sparse PCA
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-sparse-eigen-faces">
+     Example: Sparse eigen-faces
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#robust-pca">
@@ -471,9 +487,56 @@ D_{:k} = S_{\frac{\lambda}{|Y_{:,k}|_2^2}}
 {|Y_{:,k}|_2^2}\right)
 \]</div>
 <p>where the soft-thresholding function is applied element-wise to the vector. To optimize with respect to <span class="math notranslate nohighlight">\(D\)</span>, we need to iteratively update the columns of <span class="math notranslate nohighlight">\(D\)</span> until convergence. Notice that pre-computing matrices <span class="math notranslate nohighlight">\(X^T Y\)</span> and <span class="math notranslate nohighlight">\(Y^T Y\)</span> allows to save a lot of repeated calculations. We leave the implementation for the assignments.</p>
-<p>Now, we move forward to the optimization step with respect to <span class="math notranslate nohighlight">\(Y\)</span>. To optimize <span class="math notranslate nohighlight">\(Y\)</span>, we will employ a block coordinate descent algorithm, and enforce the restriction that the <span class="math notranslate nohighlight">\(l_2\)</span> norm of each row of <span class="math notranslate nohighlight">\(Y\)</span> is equal or less than 1. The solution is very similar to the solution for <span class="math notranslate nohighlight">\(D\)</span>, now splitting the objective function into rows of <span class="math notranslate nohighlight">\(Y\)</span>.</p>
-<p>This is a ridge regression optimization problem, and can be solved with a variety of algorithms. It also allows for a analytic solution, from which we obtain the normal equations. Since we are already using coordinate descent, well keep using it.</p>
-<p>As general comments: Sklearn implements sparse PCA as discussed in <span id="id7">[<a class="reference internal" href="#id62"><span>6</span></a>]</span>. Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id8">[<a class="reference internal" href="#id61"><span>7</span></a>]</span>.</p>
+<p>Now, we move forward to the optimization step with respect to <span class="math notranslate nohighlight">\(Y\)</span>. To optimize <span class="math notranslate nohighlight">\(Y\)</span>, we will employ a block coordinate descent algorithm, and enforce the restriction that the <span class="math notranslate nohighlight">\(l_2\)</span> norm of each column of <span class="math notranslate nohighlight">\(Y\)</span> is equal or less than 1. The solution is very similar to the solution for <span class="math notranslate nohighlight">\(D\)</span>, now splitting the objective function into rows of <span class="math notranslate nohighlight">\(Y\)</span>.</p>
+<p>Take the objective function</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\frac{1}{2}\left| X - Y D^{T}  \right |_2^2
+- \lambda \left| D \right|_1
+= \sum_{i=1}^q\left[\frac{1}{2} \left| X_{i:} - D Y_i  \right |_2^2  \right]
+- \lambda \left| D \right|_1
+\end{align}\]</div>
+<p>Realizing that the problems decomposes row-wise on <span class="math notranslate nohighlight">\(Y\)</span>, we can derive the whole objective by the column, akin to taking each row and deriving with respect a single coordinate. Since derivating with respect to <span class="math notranslate nohighlight">\(Y\)</span> will zero out the regularization term, we ignore it from now on. We can expand the Frobenius norm,</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+L = \frac{1}{2}\left| X - Y D^{T}  \right |_2^2
+ =&amp; \frac{1}{2}\sum_{ij}\left(X_{ij} - \sum_m Y_{im}D_{jm}\right)^{2}
+\end{align}\]</div>
+<p>Taking the derivative</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+0 = \frac{\partial L}{\partial Y_{lk}}
+=&amp; \sum_{ij}\left(X_{ij} - \sum_m Y_{im}D_{jm}\right)D_{jk}\delta_{il}\\
+=&amp; \sum_{j}\left(X_{lj} - \sum_m Y_{lm}D_{jm}\right)D_{jk}\\
+=&amp; \sum_{j}\left(X_{lj} - \sum_{m \neq k} Y_{lm}D_{jm} - Y_{lk}D_{jk} \right)D_{jk}\\
+=&amp; \sum_{j}\left(X_{lj} - \sum_{m \neq k} Y_{lm}D_{jm}\right)D_{jk} - \left(\sum_{j}D_{jk}^2 \right)Y_{lk}
+\end{align}\end{split}\]</div>
+<p>Solving</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+Y_{lk} =&amp; \frac{\sum_{j}\left(X_{lj} - \sum_{m \neq k} Y_{lm}D_{jm}\right)D_{jk}}{\sum_{j}D_{jk}^2}\\
+=&amp; \frac{\sum_{j}\left(X_{lj} - \sum_{m} Y_{lm}D_{jm}\right)D_{jk}}{\sum_{j}D_{jk}^2}
++ \frac{Y_{lk} \sum_{j}D_{jk}^2}{\sum_{j}D_{jk}^2}\\
+=&amp; Y_{lk} + \frac{\sum_{j}\left(X_{lj} -  Y_{l}^TD_{j} \right) D_{jk}} {|D_{:k}|^2}\\
+=&amp; Y_{lk} + \frac{\left(X_{l} -  D Y_l\right)^T D_{:k}} {|D_{:k}|^2}
+\end{align}\end{split}\]</div>
+<p>Finally, for the whole column</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+Y_{:k} = Y_{:k} + \frac{\left(X -  YD^{T}\right) D_{:k}} {|D_{:k}|^2}
+\end{align}\]</div>
+<p>Again note that pre-computing <span class="math notranslate nohighlight">\(XD\)</span> and <span class="math notranslate nohighlight">\(D^TD\)</span> allows to avoid repeated calculations.</p>
+<p>We still need to enforce the normalization on columns of <span class="math notranslate nohighlight">\(Y\)</span>. It can be shown that re-projecting back to the unit ball is enough to ensure convergence.</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+Y_{:k} = \frac{Y_{:k}}{|Y_{:k}|_2}
+\end{align}\]</div>
+<p>The algorithm then repeats optimizing each column iteratively until convergence. Again, we leave the implementation for the assignments.</p>
+<p>We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm (<span id="id7">[<a class="reference internal" href="#id62"><span>6</span></a>]</span>), more efficient, but also harder to implement and less general.</p>
+<div class="section" id="example-sparse-eigen-faces">
+<h3>Example: Sparse eigen-faces<a class="headerlink" href="#example-sparse-eigen-faces" title="Permalink to this headline">¶</a></h3>
+<p>Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id8">[<a class="reference internal" href="#id61"><span>7</span></a>]</span>. Other applications for SPCA include image de-noising by compressed sensing.</p>
+</div>
 </div>
 <div class="section" id="robust-pca">
 <h2>Robust PCA<a class="headerlink" href="#robust-pca" title="Permalink to this headline">¶</a></h2>
@@ -538,7 +601,7 @@ D_{:k} = S_{\frac{\lambda}{|Y_{:,k}|_2^2}}
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="U2-M2-L1-dim_red_PCA.html" title="previous page">Dimensionality Reduction and PCA</a>
+    <a class='left-prev' id="prev-link" href="assignments-dummy/U2-M2-L1-dim_red_PCA.html" title="previous page">Principal Component Analysis</a>
     <a class='right-next' id="next-link" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" title="next page">Other Linear Methods for DR</a>
 
     </div>

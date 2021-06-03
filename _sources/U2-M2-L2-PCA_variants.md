@@ -166,11 +166,71 @@ $$
 
 where the soft-thresholding function is applied element-wise to the vector. To optimize with respect to $D$, we need to iteratively update the columns of $D$ until convergence. Notice that pre-computing matrices $X^T Y$ and $Y^T Y$ allows to save a lot of repeated calculations. We leave the implementation for the assignments.
 
-Now, we move forward to the optimization step with respect to $Y$. To optimize $Y$, we will employ a block coordinate descent algorithm, and enforce the restriction that the $l_2$ norm of each row of $Y$ is equal or less than 1. The solution is very similar to the solution for $D$, now splitting the objective function into rows of $Y$.
+Now, we move forward to the optimization step with respect to $Y$. To optimize $Y$, we will employ a block coordinate descent algorithm, and enforce the restriction that the $l_2$ norm of each column of $Y$ is equal or less than 1. The solution is very similar to the solution for $D$, now splitting the objective function into rows of $Y$.
 
-This is a ridge regression optimization problem, and can be solved with a variety of algorithms. It also allows for a analytic solution, from which we obtain the normal equations. Since we are already using coordinate descent, well keep using it.
+Take the objective function
 
-As general comments: Sklearn implements sparse PCA as discussed in {cite}`mairal2009online`. Further restrictions can be imposed, for example, to enforce structure on the sparse loadings {cite}`jenatton2010structured`.
+```{math}
+\begin{align}
+\frac{1}{2}\left| X - Y D^{T}  \right |_2^2
+- \lambda \left| D \right|_1
+= \sum_{i=1}^q\left[\frac{1}{2} \left| X_{i:} - D Y_i  \right |_2^2  \right]
+- \lambda \left| D \right|_1
+\end{align}
+```
+Realizing that the problems decomposes row-wise on $Y$, we can derive the whole objective by the column, akin to taking each row and deriving with respect a single coordinate. Since derivating with respect to $Y$ will zero out the regularization term, we ignore it from now on. We can expand the Frobenius norm,
+
+```{math}
+\begin{align}
+L = \frac{1}{2}\left| X - Y D^{T}  \right |_2^2
+ =& \frac{1}{2}\sum_{ij}\left(X_{ij} - \sum_m Y_{im}D_{jm}\right)^{2}
+\end{align}
+```
+Taking the derivative
+
+```{math}
+\begin{align}
+0 = \frac{\partial L}{\partial Y_{lk}}
+=& \sum_{ij}\left(X_{ij} - \sum_m Y_{im}D_{jm}\right)D_{jk}\delta_{il}\\
+=& \sum_{j}\left(X_{lj} - \sum_m Y_{lm}D_{jm}\right)D_{jk}\\
+=& \sum_{j}\left(X_{lj} - \sum_{m \neq k} Y_{lm}D_{jm} - Y_{lk}D_{jk} \right)D_{jk}\\
+=& \sum_{j}\left(X_{lj} - \sum_{m \neq k} Y_{lm}D_{jm}\right)D_{jk} - \left(\sum_{j}D_{jk}^2 \right)Y_{lk}
+\end{align}
+```
+Solving
+
+```{math}
+\begin{align}
+Y_{lk} =& \frac{\sum_{j}\left(X_{lj} - \sum_{m \neq k} Y_{lm}D_{jm}\right)D_{jk}}{\sum_{j}D_{jk}^2}\\
+=& \frac{\sum_{j}\left(X_{lj} - \sum_{m} Y_{lm}D_{jm}\right)D_{jk}}{\sum_{j}D_{jk}^2}
++ \frac{Y_{lk} \sum_{j}D_{jk}^2}{\sum_{j}D_{jk}^2}\\
+=& Y_{lk} + \frac{\sum_{j}\left(X_{lj} -  Y_{l}^TD_{j} \right) D_{jk}} {|D_{:k}|^2}\\
+=& Y_{lk} + \frac{\left(X_{l} -  D Y_l\right)^T D_{:k}} {|D_{:k}|^2}
+\end{align}
+```
+Finally, for the whole column
+
+```{math}
+\begin{align}
+Y_{:k} = Y_{:k} + \frac{\left(X -  YD^{T}\right) D_{:k}} {|D_{:k}|^2}
+\end{align}
+```
+Again note that pre-computing $XD$ and $D^TD$ allows to avoid repeated calculations.
+
+We still need to enforce the normalization on columns of $Y$. It can be shown that re-projecting back to the unit ball is enough to ensure convergence.
+
+```{math}
+\begin{align}
+Y_{:k} = \frac{Y_{:k}}{|Y_{:k}|_2}
+\end{align}
+```
+The algorithm then repeats optimizing each column iteratively until convergence. Again, we leave the implementation for the assignments.
+
+We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm ({cite}`mairal2009online`), more efficient, but also harder to implement and less general.
+
+### Example: Sparse eigen-faces
+
+Further restrictions can be imposed, for example, to enforce structure on the sparse loadings {cite}`jenatton2010structured`. Other applications for SPCA include image de-noising by compressed sensing.
 
 ## Robust PCA
 
