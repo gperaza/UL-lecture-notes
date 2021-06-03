@@ -1,0 +1,567 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Some linear and non-linear variants of PCA &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
+    
+  <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Other Linear Methods for DR" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" />
+    <link rel="prev" title="Dimensionality Reduction and PCA" href="U2-M2-L1-dim_red_PCA.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  <img src="_static/UPY-completo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Lecture Notes in Unsupervised and Reinforcement Learning</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome!
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Unit 1 - Unsupervised Preprocessing
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="U1-M1-L1-prep-normalization.html">
+   Data Normalization
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U1-M1-L1-prep-normalization.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="U1-M1-L2-prep-discretization.html">
+   Discretization
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U1-M1-L2-prep-discretization.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="U1-M1-L3-unsup-outlier-detection.html">
+   Anomaly and Outlier Detection
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U1-M1-L3-prep-outlier-detection.html">
+     Assignment
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Unit 2 - Dimensionality Reduction
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="U2-M1-L1-similarity_metrics.html">
+   (Dis)similarity metrics
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U2-M1-L1-similarity_metrics.html">
+     <strong>
+      Warning
+     </strong>
+     :
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-1-2-pt">
+     Exercise 1 (2 pt)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-2-3-pt">
+     Exercise 2 (3 pt)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-3-4-pts">
+     Exercise 3 (4 pts)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-4-1-pt">
+     Exercise 4 (1 pt)
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="assignments-dummy/U2-M1-L1-similarity_metrics.html#exercise-5-ungraded">
+     Exercise 5 (ungraded)
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="U2-M2-L1-dim_red_PCA.html">
+   Dimensionality Reduction and PCA
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Some linear and non-linear variants of PCA
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="U2-M2-L3-Other_Linear_Methods_for_DR.html">
+   Other Linear Methods for DR
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="freedman-diaconis.html">
+   Freedman-Diaconis Rule
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/U2-M2-L2-PCA_variants.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/gperaza/UL-lecture-notes"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/gperaza/UL-lecture-notes/issues/new?title=Issue%20on%20page%20%2FU2-M2-L2-PCA_variants.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sparse-pca">
+   Sparse PCA
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#robust-pca">
+   Robust PCA
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kernel-pca">
+   Kernel PCA
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="some-linear-and-non-linear-variants-of-pca">
+<h1>Some linear and non-linear variants of PCA<a class="headerlink" href="#some-linear-and-non-linear-variants-of-pca" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="sparse-pca">
+<h2>Sparse PCA<a class="headerlink" href="#sparse-pca" title="Permalink to this headline">¶</a></h2>
+<p>One disadvantage of PCA is that the PC are linear combinations of all original variables. This hurts interpretability. An variant that aims to recover new features as limited linear combinations of original features, and aid interpretability of the new components and loadings, is sparse PCA. There are many variants of sparse PCA, but all share the property that the new basis vectors are sparse, i.e., contain many zero entries. A recent overview of Sparse PCA variants can be found in <span id="id1">[<a class="reference internal" href="#id60"><span>1</span></a>]</span>, where the optimization algorithms the different variants are also discussed, including the early methods of SCoTLASS <span id="id2">[<a class="reference internal" href="#id65"><span>2</span></a>]</span> and SPCA <span id="id3">[<a class="reference internal" href="#id64"><span>3</span></a>]</span>. In particular, note that approaches of variance maximization and reconstruction error minimization, although equivalent for PCA, are not equivalent for sparse PCA.</p>
+<p>A particular approach that shares many characteristics with other methods in this course is called dictionary learning. We will now introduce sparse dictionary learning, but keep in mind that other approaches exist, see <span id="id4">[<a class="reference internal" href="#id60"><span>1</span></a>]</span> and references therein.</p>
+<p>Within the dictionary learning framework, the PCA loadings (base vectors) are called a dictionary, and each base vector is called and atom. The principal components are called scores. The PCA algorithm learns a dictionary and scores the solve a particular optimization problem, minimizing the reconstruction error of a low rank representation of the data set. We can code the PCA objective within the dictionary learning framework as follows</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{Y\in \mathbf{R}^{n \times q}, D \in \mathbf{R}^{d \times q}}{\operatorname{argmin}}
+\left| X - Y D^{T}  \right |_2^2
+,\quad DD^T = 1,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(D\)</span> is the dictionary, consisting of <span class="math notranslate nohighlight">\(q\)</span> column unit vectors, <span class="math notranslate nohighlight">\(Y\)</span> is the score matrix, containing the coefficients of the dictionary columns. The matrix <span class="math notranslate nohighlight">\(YD^T\)</span> is a low rank reconstruction of the matrix <span class="math notranslate nohighlight">\(X\)</span>. The condition on <span class="math notranslate nohighlight">\(D\)</span> is required to avoid trivial solutions with arbitrarily large entries in <span class="math notranslate nohighlight">\(D\)</span>, and consequently small entries in <span class="math notranslate nohighlight">\(Y\)</span>.</p>
+<p>It can be shown that, for <span class="math notranslate nohighlight">\(q\leq d\)</span>, the solution that minimizes the Frobenius norm of the difference between the original matrix and its low rank reconstruction is obtained from the SVD of X, by keeping only the first <span class="math notranslate nohighlight">\(q\)</span> singular vectors, i.e., leads to the PCA solution. This is not surprising, as the Forbenius norm condition is another way to write the least square reconstruction error. Still, the dictionary learning framework is more general, since we can choose any value for dimension <span class="math notranslate nohighlight">\(q\)</span>, allowing for overcomplete dictionaries (<span class="math notranslate nohighlight">\(q &gt; d\)</span>), useful in some computer vision applications.</p>
+<p>To enforce sparse entries in the solution, we just a LASSO penalty to the objective function</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\underset{Y\in \mathbf{R}^{n \times q}, D \in \mathbf{R}^{d \times q}}{\operatorname{argmin}}
+\frac{1}{2}\left| X - Y D^{T}  \right |_2^2
+- \lambda_D \left| D \right|_1
+- \lambda_Y \left | Y \right |_1
+\end{align}\]</div>
+<p>where the <span class="math notranslate nohighlight">\(l_{1}\)</span> norm is taken for the sum of all entries of each matrix. We distinguish two important cases of the penalized problem:</p>
+<ol class="simple">
+<li><p>Sparse PCA, <span class="math notranslate nohighlight">\(\lambda_{Y} = 0\)</span>, and sparsity is only enforced in the dictionary. A normalization must be enforced in <span class="math notranslate nohighlight">\(Y\)</span>, <span class="math notranslate nohighlight">\(|Y|_2 &lt; Const\)</span> for example.</p></li>
+<li><p>Sparse dictionary learning, <span class="math notranslate nohighlight">\(\lambda_{D} = 0\)</span>, and sparsity is only enforced in the coefficients. A normalization must be enforced in <span class="math notranslate nohighlight">\(D\)</span>, <span class="math notranslate nohighlight">\(|D|_2 &lt; Const\)</span> for example.</p></li>
+</ol>
+<p>Let’s focus on sparse PCA, sparse dictionary learning being similar. The question is now how to optimize</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\underset{Y\in \mathbf{R}^{n \times q}, D \in \mathbf{R}^{d \times q}}{\operatorname{argmin}}
+\frac{1}{2}\left| X - Y D^{T}  \right |_2^2
+- \lambda_D \left| D \right|_1
+\end{align}\]</div>
+<p>Many methods have been proposed, reviews can be found in <span id="id5">[<a class="reference internal" href="#id63"><span>4</span></a>]</span> and <span id="id6">[<a class="reference internal" href="#id66"><span>5</span></a>]</span>. We will discuss an alternating coordinate descent approach, which, although not the fastest, has proven to be effective in practice and relative easy to implement.</p>
+<p>The objective function is not convex jointly in both <span class="math notranslate nohighlight">\(D\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>, making it hard to optimize jointly. An popular option, that does not guarantees a global minimum, is to alternate optimization with respect to <span class="math notranslate nohighlight">\(D\)</span>, keeping <span class="math notranslate nohighlight">\(Y\)</span> fixed, and optimizing with respect to <span class="math notranslate nohighlight">\(Y\)</span>, keeping <span class="math notranslate nohighlight">\(D\)</span> fixed, repeating both steps until convergence. Both sub-problems are convex, thus solvable by coordinate descent.</p>
+<p>Let’s focus first on finding the optimal solution for <span class="math notranslate nohighlight">\(D\)</span>, keeping <span class="math notranslate nohighlight">\(Y\)</span> fixed. The optimization problem can be split into independent sub-problems for the rows of <span class="math notranslate nohighlight">\(D\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\frac{1}{2}\left| X - Y D^{T}  \right |_2^2
+- \lambda \left| D \right|_1
+= \sum_{i=1}^q\left[\frac{1}{2} \left| X_{:,i} - Y D_{i}  \right |_2^2
+- \lambda \left| D_i \right|_1 \right]
+\end{align}\]</div>
+<p>and each individual objective inside the summation is in the form of a standard LASSO regression (<span class="math notranslate nohighlight">\(|y-X\beta|_2^2 - \lambda|\beta|_1\)</span>), which can be optimized using sub-derivatives. Differentiating with respect to <span class="math notranslate nohighlight">\(D_{ij}\)</span> we obtain the Karush-Kuhn-Tucker (KKT) conditions,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+0 \in [-(X_{:,i} - Y D_i)^T Y_{:,j} - \lambda, -(X_{:,i} - Y D_i)^T Y_{:,j} + \lambda] \quad D_{ij} = 0\\
+-(X_{:,i} - Y D_i)^T Y_{:,j} + \lambda\operatorname{sgn}(D_{ij}) = 0 \quad D_{ij} \neq 0
+\end{align}\end{split}\]</div>
+<p>or,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\left| (X_{:,i} - Y D_i)^T Y_{:,j}\right| \leq \lambda \quad D_{ij} = 0\\
+(X_{:,i} - Y D_i)^T Y_{:,j} = \lambda\operatorname{sgn}(D_{ij}) \quad D_{ij} \neq 0
+\end{align}\end{split}\]</div>
+<p>Now, coordinate descent acts by optimizing along one coordinate at a time in an iterative manner until convergence. We will minimize for a single <span class="math notranslate nohighlight">\(D_{ij}\)</span>, while keeping all other variables. To simplify notation for the sub-problem, well use the definitions <span class="math notranslate nohighlight">\(X_{:,i} = x\)</span> and <span class="math notranslate nohighlight">\(D_i = d\)</span>, do the objective, row wise, becomes</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\frac{1}{2}\left| x - Yd  \right|_2^2 - \lambda|d|_1
+=&amp;\frac{1}{2}\sum_{i=1}^n\left(x_i - \sum_{j=1}^d Y_{ij} d_j   \right)^2 - \lambda\sum_{j=1}^d |d_j|\\
+=&amp;\frac{1}{2}\sum_{i=1}^n\left(x_i - \sum_{j \neq k} Y_{ij} d_j - Y_{ik}d_k   \right)^2 - \lambda|d_k| - \lambda\sum_{j\neq k} |d_j|\\
+=&amp;\frac{1}{2}\sum_{i=1}^n\left(r_{ik}  - Y_{ik} d_k   \right)^2 - \lambda|d_k| - \lambda\sum_{j\neq k} |d_j|\\
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(r_{ik}=x_i - \sum_{j\neq k} Y_{ij}d_j\)</span> is the partial residual with respect <span class="math notranslate nohighlight">\(d_k\)</span>. Differentiating with respect to <span class="math notranslate nohighlight">\(D_{ik} = d_k\)</span>, we obtain the KTT conditions for the single variable problem</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\left|\sum_{i=1}^n\left(r_{ik}  - Y_{ik} d_k   \right)Y_{ik}\right| \leq \lambda \quad d_{k} = 0\\
+\sum_{i=1}^n\left(r_{ik}  - Y_{ik} d_k   \right)Y_{ik} = \lambda\operatorname{sgn}(d_k) \quad d_{k} \neq 0
+\end{align}\end{split}\]</div>
+<p>which, after some algebra, lead to the solutions</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+d_k =
+\begin{cases}
+\frac{z_{k} - \lambda}{|Y_{:,k}|_2^2} &amp; z_{k} &gt; \lambda\\
+0 &amp; |z_{k}| \leq \lambda\\
+\frac{z_{k} + \lambda}{|Y_{:,k}|_2^2} &amp; z_{k} &lt; -\lambda
+\end{cases}
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(z_{k}= \sum_{i} r_{ik}Y{ik}\)</span>. The solution can be written in terms of soft-thresholding function,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+S_{\lambda}(x) =
+\begin{cases}
+x - \lambda &amp; x &gt; \lambda\\
+0 &amp; |x| \leq \lambda\\
+x + \lambda &amp; x &lt; -\lambda
+\end{cases}
+\end{align}\end{split}\]</div>
+<p>as</p>
+<div class="math notranslate nohighlight">
+\[
+d_k = S_{\frac{\lambda}{|Y_{:,k}|_2^2}}\left(\frac{z_{ik}}{|Y_{:,k}|_2^2}\right)
+\]</div>
+<p>Going back to the original representation, we obtain for row <span class="math notranslate nohighlight">\(l\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+D_{lk} = S_{\frac{\lambda}{|Y_{:,k}|_2^2}}\left(\frac{z^{(l)}_{ik}}{|Y_{:,k}|_2^2}\right)
+\]</div>
+<p>with</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+z^{(l)}_{ik} =&amp; \sum_i r^{(l)}_{ik} Y_{ik} \\
+=&amp; \sum_i
+       \left(
+         X_{il} - \sum_j Y_{ij}D_{lj} + Y_{ik}D_{lk}
+       \right) Y_{ik} \\
+=&amp; \sum_i \left(
+            X_{il} - \sum_j Y_{ij}D_{lj}
+          \right) Y_{ik}
+     + \sum_i Y_{ik}^2 D_{lk}\\
+=&amp; \sum_i \left(
+            X_{il} - Y_{i:}^T D_{l:}
+          \right) Y_{ik}
+     + \sum_i Y_{ik}^2 D_{lk}\\
+=&amp; \left( X_{:l} - Y D_{l:}
+          \right)^T Y_{:k}
+     + \sum_i Y_{ik}^2 D_{lk}
+\end{align}\end{split}\]</div>
+<p>so that</p>
+<div class="math notranslate nohighlight">
+\[
+D_{lk} = S_{\frac{\lambda}{|Y_{:,k}|_2^2}}
+\left( D_{lk} +  \frac{\left( X_{:l} - Y D_{l:} \right)^T Y_{:k}}
+{|Y_{:,k}|_2^2}\right)
+\]</div>
+<p>where the <span class="math notranslate nohighlight">\(D_{lk}\)</span> on the right hand side is the value before the update. The reason for the rearrangement is that we want to define a block coordinate descent algorithm over the columns of <span class="math notranslate nohighlight">\(D\)</span>. Notice that the update only depends on values on each row <span class="math notranslate nohighlight">\(l\)</span>, for <span class="math notranslate nohighlight">\(D\)</span>. This means we can <span class="math notranslate nohighlight">\(D_{kl}\)</span> for all rows <span class="math notranslate nohighlight">\(l\)</span> simultaneously, this is called block coordinate descent, with columns as blocks.</p>
+<div class="math notranslate nohighlight">
+\[
+D_{:k} = S_{\frac{\lambda}{|Y_{:,k}|_2^2}}
+\left( D_{:k} +  \frac{\left( X^T - DY^T \right) Y_{:k}}
+{|Y_{:,k}|_2^2}\right)
+\]</div>
+<p>where the soft-thresholding function is applied element-wise to the vector. To optimize with respect to <span class="math notranslate nohighlight">\(D\)</span>, we need to iteratively update the columns of <span class="math notranslate nohighlight">\(D\)</span> until convergence. Notice that pre-computing matrices <span class="math notranslate nohighlight">\(X^T Y\)</span> and <span class="math notranslate nohighlight">\(Y^T Y\)</span> allows to save a lot of repeated calculations. We leave the implementation for the assignments.</p>
+<p>Now, we move forward to the optimization step with respect to <span class="math notranslate nohighlight">\(Y\)</span>. To optimize <span class="math notranslate nohighlight">\(Y\)</span>, we will employ a block coordinate descent algorithm, and enforce the restriction that the <span class="math notranslate nohighlight">\(l_2\)</span> norm of each row of <span class="math notranslate nohighlight">\(Y\)</span> is equal or less than 1. The solution is very similar to the solution for <span class="math notranslate nohighlight">\(D\)</span>, now splitting the objective function into rows of <span class="math notranslate nohighlight">\(Y\)</span>.</p>
+<p>This is a ridge regression optimization problem, and can be solved with a variety of algorithms. It also allows for a analytic solution, from which we obtain the normal equations. Since we are already using coordinate descent, well keep using it.</p>
+<p>As general comments: Sklearn implements sparse PCA as discussed in <span id="id7">[<a class="reference internal" href="#id62"><span>6</span></a>]</span>. Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id8">[<a class="reference internal" href="#id61"><span>7</span></a>]</span>.</p>
+</div>
+<div class="section" id="robust-pca">
+<h2>Robust PCA<a class="headerlink" href="#robust-pca" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="kernel-pca">
+<h2>Kernel PCA<a class="headerlink" href="#kernel-pca" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="id9"><dl class="citation">
+<dt class="label" id="id60"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
+<dd><p>Hui Zou and Lingzhou Xue. A selective overview of sparse principal component analysis. <em>Proceedings of the IEEE</em>, 106(8):1311–1320, 2018.</p>
+</dd>
+<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Ian T Jolliffe, Nickolay T Trendafilov, and Mudassir Uddin. A modified principal component technique based on the lasso. <em>Journal of computational and Graphical Statistics</em>, 12(3):531–547, 2003.</p>
+</dd>
+<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>Hui Zou, Trevor Hastie, and Robert Tibshirani. Sparse principal component analysis. <em>Journal of computational and graphical statistics</em>, 15(2):265–286, 2006.</p>
+</dd>
+<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
+<dd><p>Francis Bach, Rodolphe Jenatton, Julien Mairal, and Guillaume Obozinski. Optimization with sparsity-inducing penalties. <em>arXiv preprint arXiv:1108.0775</em>, 2011.</p>
+</dd>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
+<dd><p>Julien Mairal, Francis Bach, and Jean Ponce. Sparse modeling for image and vision processing. <em>arXiv preprint arXiv:1411.3230</em>, 2014.</p>
+</dd>
+<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id7">6</a></span></dt>
+<dd><p>Julien Mairal, Francis Bach, Jean Ponce, and Guillermo Sapiro. Online dictionary learning for sparse coding. In <em>Proceedings of the 26th annual international conference on machine learning</em>, 689–696. 2009.</p>
+</dd>
+<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
+<dd><p>Rodolphe Jenatton, Guillaume Obozinski, and Francis Bach. Structured sparse principal component analysis. In <em>Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics</em>, 366–373. JMLR Workshop and Conference Proceedings, 2010.</p>
+</dd>
+</dl>
+</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="U2-M2-L1-dim_red_PCA.html" title="previous page">Dimensionality Reduction and PCA</a>
+    <a class='right-next' id="next-link" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" title="next page">Other Linear Methods for DR</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Gonzalo G. Peraza Mues<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    
+  </body>
+</html>
