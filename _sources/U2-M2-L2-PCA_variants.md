@@ -221,16 +221,196 @@ We still need to enforce the normalization on columns of $Y$. It can be shown th
 
 ```{math}
 \begin{align}
-Y_{:k} = \frac{Y_{:k}}{|Y_{:k}|_2}
+Y_{:k} = \frac{Y_{:k}}{\max(1,|Y_{:k}|_2)}
 \end{align}
 ```
 The algorithm then repeats optimizing each column iteratively until convergence. Again, we leave the implementation for the assignments.
 
+Further restrictions can be imposed, for example, to enforce structure on the sparse loadings {cite}`jenatton2010structured`. Other applications for SPCA include image de-noising by compressed sensing.
+
 We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm ({cite}`mairal2009online`), more efficient, but also harder to implement and less general.
 
-### Example: Sparse eigen-faces
+### Example: Faces
 
-Further restrictions can be imposed, for example, to enforce structure on the sparse loadings {cite}`jenatton2010structured`. Other applications for SPCA include image de-noising by compressed sensing.
+We take the faces example from the scikit-learn documentation. You have already explored faces principal components using standard PCA. Now, let\'s take a look at the components using sparse PCA.
+
+``` python
+# Code from
+#https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html
+
+from sklearn.datasets import fetch_olivetti_faces
+from sklearn.decomposition import MiniBatchSparsePCA
+
+n_row, n_col = 2, 3
+n_components = n_row * n_col
+image_shape = (64, 64)
+
+faces, _ = fetch_olivetti_faces(return_X_y=True, shuffle=True,
+                                random_state=0)
+
+n_samples, n_features = faces.shape
+
+faces_centered = faces - faces.mean(axis=0)
+faces_centered -= faces_centered.mean(axis=1).reshape(n_samples, -1)
+
+print("Dataset consists of %d faces" % n_samples)
+
+def plot_gallery(title, images, n_col=n_col, n_row=n_row, cmap=plt.cm.gray):
+    plt.figure(figsize=(2. * n_col, 2.26 * n_row))
+    plt.suptitle(title, size=16)
+    for i, comp in enumerate(images):
+        plt.subplot(n_row, n_col, i + 1)
+        vmax = max(comp.max(), -comp.min())
+        plt.imshow(comp.reshape(image_shape), cmap=cmap,
+                   interpolation='nearest',
+                   vmin=-vmax, vmax=vmax)
+        plt.xticks(())
+        plt.yticks(())
+    plt.subplots_adjust(0.01, 0.05, 0.99, 0.93, 0.04, 0.)
+
+estimator = MiniBatchSparsePCA(n_components=n_components, alpha=0.8,
+                               n_iter=100, batch_size=3,
+                               random_state=0)
+
+plot_gallery("First centered Olivetti faces", faces_centered[:n_components])
+
+estimator.fit(faces_centered)
+components_ = estimator.components_
+
+plot_gallery("First Sparse Components", components_[:n_components])
+```
+
+
+``` example
+Dataset consists of 400 faces
+```
+
+```{figure} ./.ob-jupyter/c692b93d0ef9ad043cfff0b03d4aac1a5d724494.png
+](./.ob-jupyter/78f1763fc24a5923870969e7214bfcbf1ef7c28d.png) ![
+```
+
+
+### Example: Sparse news data
+
+We take an example from {cite}`zhang2012sparse`, dealing with news data. The data set, obtained from <http://cs.nyu.edu/~roweis/data.html>, records word appearances in 16242 news postings. Each feature represents one of a hundred words, and takes the value 1 is the word is present in the post, and 0 otherwise.
+
+``` python
+import numpy as np
+import pandas as pd
+
+news = pd.read_csv('Data/20news_w100.csv')
+news.head()
+```
+
+|     | aids | baseball | bible | bmw | cancer | car | card | case | children | christian | computer | course | data | dealer | disease | disk | display | doctor | dos | drive | driver | earth | email | engine | evidence | fact | fans | files | food | format | ftp | games | god | government | graphics | gun | health | help | hit | hockey | honda | human | image | insurance | israel | jesus | jews | launch | law | league | lunar | mac | mars | medicine | memory | mission | moon | msg | nasa | nhl | number | oil | orbit | patients | pc  | phone | players | power | president | problem | program | puck | question | religion | research | rights | satellite | science | scsi | season | server | shuttle | software | solar | space | state | studies | system | team | technology | university | version | video | vitamin | war | water | win | windows | won | world |
+|-----|------|----------|-------|-----|--------|-----|------|------|----------|-----------|----------|--------|------|--------|---------|------|---------|--------|-----|-------|--------|-------|-------|--------|----------|------|------|-------|------|--------|-----|-------|-----|------------|----------|-----|--------|------|-----|--------|-------|-------|-------|-----------|--------|-------|------|--------|-----|--------|-------|-----|------|----------|--------|---------|------|-----|------|-----|--------|-----|-------|----------|-----|-------|---------|-------|-----------|---------|---------|------|----------|----------|----------|--------|-----------|---------|------|--------|--------|---------|----------|-------|-------|-------|---------|--------|------|------------|------------|---------|-------|---------|-----|-------|-----|---------|-----|-------|
+| 0   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 1     | 0      | 0        | 0    | 0    | 0     | 0    | 0      | 0   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 0     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 0   | 0     | 0       | 0     | 0         | 0       | 0       | 0    | 0        | 0        | 1        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 1        | 0     | 0     | 0     | 0       | 1      | 0    | 0          | 0          | 0       | 1     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+| 1   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 0     | 0      | 0        | 0    | 0    | 0     | 0    | 0      | 0   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 0     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 0   | 0     | 0       | 0     | 0         | 0       | 0       | 0    | 0        | 0        | 0        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 0        | 0     | 0     | 1     | 0       | 0      | 0    | 0          | 0          | 0       | 0     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+| 2   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 0     | 0      | 0        | 0    | 0    | 1     | 0    | 0      | 1   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 0     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 0   | 0     | 0       | 0     | 0         | 0       | 0       | 0    | 0        | 0        | 0        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 0        | 0     | 0     | 0     | 0       | 0      | 0    | 0          | 0          | 1       | 0     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+| 3   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 1     | 0      | 0        | 0    | 0    | 0     | 0    | 0      | 0   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 0     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 1   | 0     | 0       | 0     | 0         | 0       | 0       | 0    | 0        | 0        | 0        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 0        | 0     | 0     | 0     | 0       | 0      | 0    | 0          | 1          | 0       | 0     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+| 4   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 0     | 0      | 0        | 0    | 0    | 0     | 0    | 0      | 1   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 1     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 0   | 0     | 0       | 0     | 0         | 0       | 1       | 0    | 0        | 0        | 0        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 0        | 0     | 0     | 0     | 0       | 0      | 0    | 0          | 0          | 1       | 0     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+
+Note the data is already sparse, so we will not standardize it to preserve sparseness. We try regular PCA first.
+
+``` python
+from sklearn.decomposition import PCA
+
+pca = PCA()
+X_pca = pca.fit_transform(news)
+
+pca_comp = pca.components_
+plt.figure(figsize=(10,10))
+plt.imshow(pca_comp);
+```
+
+![](./.ob-jupyter/8f55435b690de5072d90c469e578c6e446eb6a94.png)
+
+As you can appreciate, the first principal components are dense, hurting interpretability. We now apply sparse PCA.
+
+``` python
+from sklearn.decomposition import SparsePCA
+
+spca = SparsePCA(alpha=2, n_components=20)
+X_spca = spca.fit_transform(news)
+
+spca_comp = spca.components_
+plt.figure(figsize=(10,10))
+plt.imshow(spca_comp);
+```
+
+![](./.ob-jupyter/a7aed399cdba281bfc8a5b0685c0b45fa76f6184.png)
+
+We can play with the number of components and the degree of sparseness of the components. The idea is that now each component represents sets of words, that may be associated with specific topics.
+
+``` python
+words = news.columns
+for i, c in enumerate(spca_comp):
+    print(f"Set of words positively associated with {i+1} component:")
+    print(list(words[c > 0]))
+    print()
+```
+
+``` example
+Set of words positively associated with 1 component:
+[]
+
+Set of words positively associated with 2 component:
+['card', 'data', 'disk', 'display', 'dos', 'driver', 'files', 'format', 'ftp', 'graphics', 'image', 'mac', 'memory', 'pc', 'program', 'server', 'software', 'version', 'video', 'win', 'windows']
+
+Set of words positively associated with 3 component:
+['phone', 'research', 'science', 'university']
+
+Set of words positively associated with 4 component:
+['question']
+
+Set of words positively associated with 5 component:
+['help']
+
+Set of words positively associated with 6 component:
+['bible', 'children', 'christian', 'earth', 'evidence', 'god', 'human', 'jesus', 'jews', 'religion', 'science']
+
+Set of words positively associated with 7 component:
+['problem']
+
+Set of words positively associated with 8 component:
+[]
+
+Set of words positively associated with 9 component:
+[]
+
+Set of words positively associated with 10 component:
+['memory', 'system']
+
+Set of words positively associated with 11 component:
+[]
+
+Set of words positively associated with 12 component:
+['data', 'earth', 'format', 'ftp', 'image', 'launch', 'mars', 'mission', 'moon', 'nasa', 'orbit', 'program', 'research', 'satellite', 'science', 'shuttle', 'solar', 'space', 'technology']
+
+Set of words positively associated with 13 component:
+[]
+
+Set of words positively associated with 14 component:
+['case']
+
+Set of words positively associated with 15 component:
+[]
+
+Set of words positively associated with 16 component:
+['car', 'disk', 'drive', 'mac', 'pc', 'scsi', 'software']
+
+Set of words positively associated with 17 component:
+[]
+
+Set of words positively associated with 18 component:
+['power']
+
+Set of words positively associated with 19 component:
+[]
+
+Set of words positively associated with 20 component:
+[]
+```
 
 ## Robust PCA
 

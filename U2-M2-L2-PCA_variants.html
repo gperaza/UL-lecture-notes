@@ -319,8 +319,13 @@
   </a>
   <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#example-sparse-eigen-faces">
-     Example: Sparse eigen-faces
+    <a class="reference internal nav-link" href="#example-faces">
+     Example: Faces
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-sparse-news-data">
+     Example: Sparse news data
     </a>
    </li>
   </ul>
@@ -355,8 +360,8 @@
 <h1>Some linear and non-linear variants of PCA<a class="headerlink" href="#some-linear-and-non-linear-variants-of-pca" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="sparse-pca">
 <h2>Sparse PCA<a class="headerlink" href="#sparse-pca" title="Permalink to this headline">¶</a></h2>
-<p>One disadvantage of PCA is that the PC are linear combinations of all original variables. This hurts interpretability. An variant that aims to recover new features as limited linear combinations of original features, and aid interpretability of the new components and loadings, is sparse PCA. There are many variants of sparse PCA, but all share the property that the new basis vectors are sparse, i.e., contain many zero entries. A recent overview of Sparse PCA variants can be found in <span id="id1">[<a class="reference internal" href="#id60"><span>1</span></a>]</span>, where the optimization algorithms the different variants are also discussed, including the early methods of SCoTLASS <span id="id2">[<a class="reference internal" href="#id65"><span>2</span></a>]</span> and SPCA <span id="id3">[<a class="reference internal" href="#id64"><span>3</span></a>]</span>. In particular, note that approaches of variance maximization and reconstruction error minimization, although equivalent for PCA, are not equivalent for sparse PCA.</p>
-<p>A particular approach that shares many characteristics with other methods in this course is called dictionary learning. We will now introduce sparse dictionary learning, but keep in mind that other approaches exist, see <span id="id4">[<a class="reference internal" href="#id60"><span>1</span></a>]</span> and references therein.</p>
+<p>One disadvantage of PCA is that the PC are linear combinations of all original variables. This hurts interpretability. An variant that aims to recover new features as limited linear combinations of original features, and aid interpretability of the new components and loadings, is sparse PCA. There are many variants of sparse PCA, but all share the property that the new basis vectors are sparse, i.e., contain many zero entries. A recent overview of Sparse PCA variants can be found in <span id="id1">[<a class="reference internal" href="#id61"><span>1</span></a>]</span>, where the optimization algorithms the different variants are also discussed, including the early methods of SCoTLASS <span id="id2">[<a class="reference internal" href="#id66"><span>2</span></a>]</span> and SPCA <span id="id3">[<a class="reference internal" href="#id65"><span>3</span></a>]</span>. In particular, note that approaches of variance maximization and reconstruction error minimization, although equivalent for PCA, are not equivalent for sparse PCA.</p>
+<p>A particular approach that shares many characteristics with other methods in this course is called dictionary learning. We will now introduce sparse dictionary learning, but keep in mind that other approaches exist, see <span id="id4">[<a class="reference internal" href="#id61"><span>1</span></a>]</span> and references therein.</p>
 <p>Within the dictionary learning framework, the PCA loadings (base vectors) are called a dictionary, and each base vector is called and atom. The principal components are called scores. The PCA algorithm learns a dictionary and scores the solve a particular optimization problem, minimizing the reconstruction error of a low rank representation of the data set. We can code the PCA objective within the dictionary learning framework as follows</p>
 <div class="math notranslate nohighlight">
 \[
@@ -386,7 +391,7 @@
 \frac{1}{2}\left| X - Y D^{T}  \right |_2^2
 - \lambda_D \left| D \right|_1
 \end{align}\]</div>
-<p>Many methods have been proposed, reviews can be found in <span id="id5">[<a class="reference internal" href="#id63"><span>4</span></a>]</span> and <span id="id6">[<a class="reference internal" href="#id66"><span>5</span></a>]</span>. We will discuss an alternating coordinate descent approach, which, although not the fastest, has proven to be effective in practice and relative easy to implement.</p>
+<p>Many methods have been proposed, reviews can be found in <span id="id5">[<a class="reference internal" href="#id64"><span>4</span></a>]</span> and <span id="id6">[<a class="reference internal" href="#id67"><span>5</span></a>]</span>. We will discuss an alternating coordinate descent approach, which, although not the fastest, has proven to be effective in practice and relative easy to implement.</p>
 <p>The objective function is not convex jointly in both <span class="math notranslate nohighlight">\(D\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>, making it hard to optimize jointly. An popular option, that does not guarantees a global minimum, is to alternate optimization with respect to <span class="math notranslate nohighlight">\(D\)</span>, keeping <span class="math notranslate nohighlight">\(Y\)</span> fixed, and optimizing with respect to <span class="math notranslate nohighlight">\(Y\)</span>, keeping <span class="math notranslate nohighlight">\(D\)</span> fixed, repeating both steps until convergence. Both sub-problems are convex, thus solvable by coordinate descent.</p>
 <p>Let’s focus first on finding the optimal solution for <span class="math notranslate nohighlight">\(D\)</span>, keeping <span class="math notranslate nohighlight">\(Y\)</span> fixed. The optimization problem can be split into independent sub-problems for the rows of <span class="math notranslate nohighlight">\(D\)</span></p>
 <div class="math notranslate nohighlight">
@@ -529,13 +534,788 @@ Y_{:k} = Y_{:k} + \frac{\left(X -  YD^{T}\right) D_{:k}} {|D_{:k}|^2}
 <p>We still need to enforce the normalization on columns of <span class="math notranslate nohighlight">\(Y\)</span>. It can be shown that re-projecting back to the unit ball is enough to ensure convergence.</p>
 <div class="math notranslate nohighlight">
 \[\begin{align}
-Y_{:k} = \frac{Y_{:k}}{|Y_{:k}|_2}
+Y_{:k} = \frac{Y_{:k}}{\max(1,|Y_{:k}|_2)}
 \end{align}\]</div>
 <p>The algorithm then repeats optimizing each column iteratively until convergence. Again, we leave the implementation for the assignments.</p>
-<p>We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm (<span id="id7">[<a class="reference internal" href="#id62"><span>6</span></a>]</span>), more efficient, but also harder to implement and less general.</p>
-<div class="section" id="example-sparse-eigen-faces">
-<h3>Example: Sparse eigen-faces<a class="headerlink" href="#example-sparse-eigen-faces" title="Permalink to this headline">¶</a></h3>
-<p>Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id8">[<a class="reference internal" href="#id61"><span>7</span></a>]</span>. Other applications for SPCA include image de-noising by compressed sensing.</p>
+<p>Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id7">[<a class="reference internal" href="#id62"><span>6</span></a>]</span>. Other applications for SPCA include image de-noising by compressed sensing.</p>
+<p>We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm (<span id="id8">[<a class="reference internal" href="#id63"><span>7</span></a>]</span>), more efficient, but also harder to implement and less general.</p>
+<div class="section" id="example-faces">
+<h3>Example: Faces<a class="headerlink" href="#example-faces" title="Permalink to this headline">¶</a></h3>
+<p>We take the faces example from the scikit-learn documentation. You have already explored faces principal components using standard PCA. Now, let’s take a look at the components using sparse PCA.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Code from</span>
+<span class="c1">#https://scikit-learn.org/stable/auto_examples/decomposition/plot_faces_decomposition.html</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_olivetti_faces</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">MiniBatchSparsePCA</span>
+
+<span class="n">n_row</span><span class="p">,</span> <span class="n">n_col</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">n_components</span> <span class="o">=</span> <span class="n">n_row</span> <span class="o">*</span> <span class="n">n_col</span>
+<span class="n">image_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+
+<span class="n">faces</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fetch_olivetti_faces</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">faces</span><span class="o">.</span><span class="n">shape</span>
+
+<span class="n">faces_centered</span> <span class="o">=</span> <span class="n">faces</span> <span class="o">-</span> <span class="n">faces</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">faces_centered</span> <span class="o">-=</span> <span class="n">faces_centered</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataset consists of </span><span class="si">%d</span><span class="s2"> faces&quot;</span> <span class="o">%</span> <span class="n">n_samples</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_gallery</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">n_col</span><span class="o">=</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_row</span><span class="o">=</span><span class="n">n_row</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">n_col</span><span class="p">,</span> <span class="mf">2.26</span> <span class="o">*</span> <span class="n">n_row</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n_row</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="o">-</span><span class="n">comp</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_shape</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                   <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                   <span class="n">vmin</span><span class="o">=-</span><span class="n">vmax</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(())</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.93</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">MiniBatchSparsePCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                               <span class="n">n_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                               <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;First centered Olivetti faces&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+
+<span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
+<span class="n">components_</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">components_</span>
+
+<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;First Sparse Components&quot;</span><span class="p">,</span> <span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Dataset consists of 400 faces
+</pre></div>
+</div>
+<div class="figure align-default" id="id69">
+<img alt="_images/c692b93d0ef9ad043cfff0b03d4aac1a5d724494.png" src="_images/c692b93d0ef9ad043cfff0b03d4aac1a5d724494.png" />
+<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">](./.ob-jupyter/78f1763fc24a5923870969e7214bfcbf1ef7c28d.png) ![</span><a class="headerlink" href="#id69" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="example-sparse-news-data">
+<h3>Example: Sparse news data<a class="headerlink" href="#example-sparse-news-data" title="Permalink to this headline">¶</a></h3>
+<p>We take an example from <span id="id9">[<a class="reference internal" href="#id68"><span>8</span></a>]</span>, dealing with news data. The data set, obtained from <a class="reference external" href="http://cs.nyu.edu/~roweis/data.html">http://cs.nyu.edu/~roweis/data.html</a>, records word appearances in 16242 news postings. Each feature represents one of a hundred words, and takes the value 1 is the word is present in the post, and 0 otherwise.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">news</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data/20news_w100.csv&#39;</span><span class="p">)</span>
+<span class="n">news</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>aids</p></th>
+<th class="head"><p>baseball</p></th>
+<th class="head"><p>bible</p></th>
+<th class="head"><p>bmw</p></th>
+<th class="head"><p>cancer</p></th>
+<th class="head"><p>car</p></th>
+<th class="head"><p>card</p></th>
+<th class="head"><p>case</p></th>
+<th class="head"><p>children</p></th>
+<th class="head"><p>christian</p></th>
+<th class="head"><p>computer</p></th>
+<th class="head"><p>course</p></th>
+<th class="head"><p>data</p></th>
+<th class="head"><p>dealer</p></th>
+<th class="head"><p>disease</p></th>
+<th class="head"><p>disk</p></th>
+<th class="head"><p>display</p></th>
+<th class="head"><p>doctor</p></th>
+<th class="head"><p>dos</p></th>
+<th class="head"><p>drive</p></th>
+<th class="head"><p>driver</p></th>
+<th class="head"><p>earth</p></th>
+<th class="head"><p>email</p></th>
+<th class="head"><p>engine</p></th>
+<th class="head"><p>evidence</p></th>
+<th class="head"><p>fact</p></th>
+<th class="head"><p>fans</p></th>
+<th class="head"><p>files</p></th>
+<th class="head"><p>food</p></th>
+<th class="head"><p>format</p></th>
+<th class="head"><p>ftp</p></th>
+<th class="head"><p>games</p></th>
+<th class="head"><p>god</p></th>
+<th class="head"><p>government</p></th>
+<th class="head"><p>graphics</p></th>
+<th class="head"><p>gun</p></th>
+<th class="head"><p>health</p></th>
+<th class="head"><p>help</p></th>
+<th class="head"><p>hit</p></th>
+<th class="head"><p>hockey</p></th>
+<th class="head"><p>honda</p></th>
+<th class="head"><p>human</p></th>
+<th class="head"><p>image</p></th>
+<th class="head"><p>insurance</p></th>
+<th class="head"><p>israel</p></th>
+<th class="head"><p>jesus</p></th>
+<th class="head"><p>jews</p></th>
+<th class="head"><p>launch</p></th>
+<th class="head"><p>law</p></th>
+<th class="head"><p>league</p></th>
+<th class="head"><p>lunar</p></th>
+<th class="head"><p>mac</p></th>
+<th class="head"><p>mars</p></th>
+<th class="head"><p>medicine</p></th>
+<th class="head"><p>memory</p></th>
+<th class="head"><p>mission</p></th>
+<th class="head"><p>moon</p></th>
+<th class="head"><p>msg</p></th>
+<th class="head"><p>nasa</p></th>
+<th class="head"><p>nhl</p></th>
+<th class="head"><p>number</p></th>
+<th class="head"><p>oil</p></th>
+<th class="head"><p>orbit</p></th>
+<th class="head"><p>patients</p></th>
+<th class="head"><p>pc</p></th>
+<th class="head"><p>phone</p></th>
+<th class="head"><p>players</p></th>
+<th class="head"><p>power</p></th>
+<th class="head"><p>president</p></th>
+<th class="head"><p>problem</p></th>
+<th class="head"><p>program</p></th>
+<th class="head"><p>puck</p></th>
+<th class="head"><p>question</p></th>
+<th class="head"><p>religion</p></th>
+<th class="head"><p>research</p></th>
+<th class="head"><p>rights</p></th>
+<th class="head"><p>satellite</p></th>
+<th class="head"><p>science</p></th>
+<th class="head"><p>scsi</p></th>
+<th class="head"><p>season</p></th>
+<th class="head"><p>server</p></th>
+<th class="head"><p>shuttle</p></th>
+<th class="head"><p>software</p></th>
+<th class="head"><p>solar</p></th>
+<th class="head"><p>space</p></th>
+<th class="head"><p>state</p></th>
+<th class="head"><p>studies</p></th>
+<th class="head"><p>system</p></th>
+<th class="head"><p>team</p></th>
+<th class="head"><p>technology</p></th>
+<th class="head"><p>university</p></th>
+<th class="head"><p>version</p></th>
+<th class="head"><p>video</p></th>
+<th class="head"><p>vitamin</p></th>
+<th class="head"><p>war</p></th>
+<th class="head"><p>water</p></th>
+<th class="head"><p>win</p></th>
+<th class="head"><p>windows</p></th>
+<th class="head"><p>won</p></th>
+<th class="head"><p>world</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<p>Note the data is already sparse, so we will not standardize it to preserve sparseness. We try regular PCA first.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">()</span>
+<span class="n">X_pca</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">news</span><span class="p">)</span>
+
+<span class="n">pca_comp</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">components_</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pca_comp</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/8f55435b690de5072d90c469e578c6e446eb6a94.png" /></p>
+<p>As you can appreciate, the first principal components are dense, hurting interpretability. We now apply sparse PCA.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">SparsePCA</span>
+
+<span class="n">spca</span> <span class="o">=</span> <span class="n">SparsePCA</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">X_spca</span> <span class="o">=</span> <span class="n">spca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">news</span><span class="p">)</span>
+
+<span class="n">spca_comp</span> <span class="o">=</span> <span class="n">spca</span><span class="o">.</span><span class="n">components_</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">spca_comp</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/a7aed399cdba281bfc8a5b0685c0b45fa76f6184.png" /></p>
+<p>We can play with the number of components and the degree of sparseness of the components. The idea is that now each component represents sets of words, that may be associated with specific topics.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">words</span> <span class="o">=</span> <span class="n">news</span><span class="o">.</span><span class="n">columns</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">spca_comp</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Set of words positively associated with </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> component:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">c</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Set of words positively associated with 1 component:
+[]
+
+Set of words positively associated with 2 component:
+[&#39;card&#39;, &#39;data&#39;, &#39;disk&#39;, &#39;display&#39;, &#39;dos&#39;, &#39;driver&#39;, &#39;files&#39;, &#39;format&#39;, &#39;ftp&#39;, &#39;graphics&#39;, &#39;image&#39;, &#39;mac&#39;, &#39;memory&#39;, &#39;pc&#39;, &#39;program&#39;, &#39;server&#39;, &#39;software&#39;, &#39;version&#39;, &#39;video&#39;, &#39;win&#39;, &#39;windows&#39;]
+
+Set of words positively associated with 3 component:
+[&#39;phone&#39;, &#39;research&#39;, &#39;science&#39;, &#39;university&#39;]
+
+Set of words positively associated with 4 component:
+[&#39;question&#39;]
+
+Set of words positively associated with 5 component:
+[&#39;help&#39;]
+
+Set of words positively associated with 6 component:
+[&#39;bible&#39;, &#39;children&#39;, &#39;christian&#39;, &#39;earth&#39;, &#39;evidence&#39;, &#39;god&#39;, &#39;human&#39;, &#39;jesus&#39;, &#39;jews&#39;, &#39;religion&#39;, &#39;science&#39;]
+
+Set of words positively associated with 7 component:
+[&#39;problem&#39;]
+
+Set of words positively associated with 8 component:
+[]
+
+Set of words positively associated with 9 component:
+[]
+
+Set of words positively associated with 10 component:
+[&#39;memory&#39;, &#39;system&#39;]
+
+Set of words positively associated with 11 component:
+[]
+
+Set of words positively associated with 12 component:
+[&#39;data&#39;, &#39;earth&#39;, &#39;format&#39;, &#39;ftp&#39;, &#39;image&#39;, &#39;launch&#39;, &#39;mars&#39;, &#39;mission&#39;, &#39;moon&#39;, &#39;nasa&#39;, &#39;orbit&#39;, &#39;program&#39;, &#39;research&#39;, &#39;satellite&#39;, &#39;science&#39;, &#39;shuttle&#39;, &#39;solar&#39;, &#39;space&#39;, &#39;technology&#39;]
+
+Set of words positively associated with 13 component:
+[]
+
+Set of words positively associated with 14 component:
+[&#39;case&#39;]
+
+Set of words positively associated with 15 component:
+[]
+
+Set of words positively associated with 16 component:
+[&#39;car&#39;, &#39;disk&#39;, &#39;drive&#39;, &#39;mac&#39;, &#39;pc&#39;, &#39;scsi&#39;, &#39;software&#39;]
+
+Set of words positively associated with 17 component:
+[]
+
+Set of words positively associated with 18 component:
+[&#39;power&#39;]
+
+Set of words positively associated with 19 component:
+[]
+
+Set of words positively associated with 20 component:
+[]
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="robust-pca">
@@ -546,27 +1326,30 @@ Y_{:k} = \frac{Y_{:k}}{|Y_{:k}|_2}
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id9"><dl class="citation">
-<dt class="label" id="id60"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
+<p id="id10"><dl class="citation">
+<dt class="label" id="id61"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
 <dd><p>Hui Zou and Lingzhou Xue. A selective overview of sparse principal component analysis. <em>Proceedings of the IEEE</em>, 106(8):1311–1320, 2018.</p>
 </dd>
-<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
 <dd><p>Ian T Jolliffe, Nickolay T Trendafilov, and Mudassir Uddin. A modified principal component technique based on the lasso. <em>Journal of computational and Graphical Statistics</em>, 12(3):531–547, 2003.</p>
 </dd>
-<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
 <dd><p>Hui Zou, Trevor Hastie, and Robert Tibshirani. Sparse principal component analysis. <em>Journal of computational and graphical statistics</em>, 15(2):265–286, 2006.</p>
 </dd>
-<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
+<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
 <dd><p>Francis Bach, Rodolphe Jenatton, Julien Mairal, and Guillaume Obozinski. Optimization with sparsity-inducing penalties. <em>arXiv preprint arXiv:1108.0775</em>, 2011.</p>
 </dd>
-<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
+<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
 <dd><p>Julien Mairal, Francis Bach, and Jean Ponce. Sparse modeling for image and vision processing. <em>arXiv preprint arXiv:1411.3230</em>, 2014.</p>
 </dd>
 <dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id7">6</a></span></dt>
+<dd><p>Rodolphe Jenatton, Guillaume Obozinski, and Francis Bach. Structured sparse principal component analysis. In <em>Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics</em>, 366–373. JMLR Workshop and Conference Proceedings, 2010.</p>
+</dd>
+<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
 <dd><p>Julien Mairal, Francis Bach, Jean Ponce, and Guillermo Sapiro. Online dictionary learning for sparse coding. In <em>Proceedings of the 26th annual international conference on machine learning</em>, 689–696. 2009.</p>
 </dd>
-<dt class="label" id="id61"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
-<dd><p>Rodolphe Jenatton, Guillaume Obozinski, and Francis Bach. Structured sparse principal component analysis. In <em>Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics</em>, 366–373. JMLR Workshop and Conference Proceedings, 2010.</p>
+<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
+<dd><p>Youwei Zhang, Alexandre d'Aspremont, and Laurent El Ghaoui. Sparse pca: convex relaxations, algorithms and applications. In <em>Handbook on Semidefinite, Conic and Polynomial Optimization</em>, pages 915–940. Springer, 2012.</p>
 </dd>
 </dl>
 </p>
