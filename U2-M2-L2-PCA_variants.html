@@ -360,8 +360,8 @@
 <h1>Some linear and non-linear variants of PCA<a class="headerlink" href="#some-linear-and-non-linear-variants-of-pca" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="sparse-pca">
 <h2>Sparse PCA<a class="headerlink" href="#sparse-pca" title="Permalink to this headline">¶</a></h2>
-<p>One disadvantage of PCA is that the PC are linear combinations of all original variables. This hurts interpretability. An variant that aims to recover new features as limited linear combinations of original features, and aid interpretability of the new components and loadings, is sparse PCA. There are many variants of sparse PCA, but all share the property that the new basis vectors are sparse, i.e., contain many zero entries. A recent overview of Sparse PCA variants can be found in <span id="id1">[<a class="reference internal" href="#id61"><span>1</span></a>]</span>, where the optimization algorithms the different variants are also discussed, including the early methods of SCoTLASS <span id="id2">[<a class="reference internal" href="#id66"><span>2</span></a>]</span> and SPCA <span id="id3">[<a class="reference internal" href="#id65"><span>3</span></a>]</span>. In particular, note that approaches of variance maximization and reconstruction error minimization, although equivalent for PCA, are not equivalent for sparse PCA.</p>
-<p>A particular approach that shares many characteristics with other methods in this course is called dictionary learning. We will now introduce sparse dictionary learning, but keep in mind that other approaches exist, see <span id="id4">[<a class="reference internal" href="#id61"><span>1</span></a>]</span> and references therein.</p>
+<p>One disadvantage of PCA is that the PC are linear combinations of all original variables. This hurts interpretability. An variant that aims to recover new features as limited linear combinations of original features, and aid interpretability of the new components and loadings, is sparse PCA. There are many variants of sparse PCA, but all share the property that the new basis vectors are sparse, i.e., contain many zero entries. A recent overview of Sparse PCA variants can be found in <span id="id1">[<a class="reference internal" href="#id65"><span>1</span></a>]</span>, where the optimization algorithms the different variants are also discussed, including the early methods of SCoTLASS <span id="id2">[<a class="reference internal" href="#id70"><span>2</span></a>]</span> and SPCA <span id="id3">[<a class="reference internal" href="#id69"><span>3</span></a>]</span>. In particular, note that approaches of variance maximization and reconstruction error minimization, although equivalent for PCA, are not equivalent for sparse PCA.</p>
+<p>A particular approach that shares many characteristics with other methods in this course is called dictionary learning. We will now introduce sparse dictionary learning, but keep in mind that other approaches exist, see <span id="id4">[<a class="reference internal" href="#id65"><span>1</span></a>]</span> and references therein.</p>
 <p>Within the dictionary learning framework, the PCA loadings (base vectors) are called a dictionary, and each base vector is called and atom. The principal components are called scores. The PCA algorithm learns a dictionary and scores the solve a particular optimization problem, minimizing the reconstruction error of a low rank representation of the data set. We can code the PCA objective within the dictionary learning framework as follows</p>
 <div class="math notranslate nohighlight">
 \[
@@ -391,7 +391,7 @@
 \frac{1}{2}\left| X - Y D^{T}  \right |_2^2
 - \lambda_D \left| D \right|_1
 \end{align}\]</div>
-<p>Many methods have been proposed, reviews can be found in <span id="id5">[<a class="reference internal" href="#id64"><span>4</span></a>]</span> and <span id="id6">[<a class="reference internal" href="#id67"><span>5</span></a>]</span>. We will discuss an alternating coordinate descent approach, which, although not the fastest, has proven to be effective in practice and relative easy to implement.</p>
+<p>Many methods have been proposed, reviews can be found in <span id="id5">[<a class="reference internal" href="#id68"><span>4</span></a>]</span> and <span id="id6">[<a class="reference internal" href="#id71"><span>5</span></a>]</span>. We will discuss an alternating coordinate descent approach, which, although not the fastest, has proven to be effective in practice and relative easy to implement.</p>
 <p>The objective function is not convex jointly in both <span class="math notranslate nohighlight">\(D\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>, making it hard to optimize jointly. An popular option, that does not guarantees a global minimum, is to alternate optimization with respect to <span class="math notranslate nohighlight">\(D\)</span>, keeping <span class="math notranslate nohighlight">\(Y\)</span> fixed, and optimizing with respect to <span class="math notranslate nohighlight">\(Y\)</span>, keeping <span class="math notranslate nohighlight">\(D\)</span> fixed, repeating both steps until convergence. Both sub-problems are convex, thus solvable by coordinate descent.</p>
 <p>Let’s focus first on finding the optimal solution for <span class="math notranslate nohighlight">\(D\)</span>, keeping <span class="math notranslate nohighlight">\(Y\)</span> fixed. The optimization problem can be split into independent sub-problems for the rows of <span class="math notranslate nohighlight">\(D\)</span></p>
 <div class="math notranslate nohighlight">
@@ -537,8 +537,8 @@ Y_{:k} = Y_{:k} + \frac{\left(X -  YD^{T}\right) D_{:k}} {|D_{:k}|^2}
 Y_{:k} = \frac{Y_{:k}}{\max(1,|Y_{:k}|_2)}
 \end{align}\]</div>
 <p>The algorithm then repeats optimizing each column iteratively until convergence. Again, we leave the implementation for the assignments.</p>
-<p>Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id7">[<a class="reference internal" href="#id62"><span>6</span></a>]</span>. Other applications for SPCA include image de-noising by compressed sensing.</p>
-<p>We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm (<span id="id8">[<a class="reference internal" href="#id63"><span>7</span></a>]</span>), more efficient, but also harder to implement and less general.</p>
+<p>Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id7">[<a class="reference internal" href="#id66"><span>6</span></a>]</span>. Other applications for SPCA include image de-noising by compressed sensing.</p>
+<p>We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm (<span id="id8">[<a class="reference internal" href="#id67"><span>7</span></a>]</span>), more efficient, but also harder to implement and less general.</p>
 <div class="section" id="example-faces">
 <h3>Example: Faces<a class="headerlink" href="#example-faces" title="Permalink to this headline">¶</a></h3>
 <p>We take the faces example from the scikit-learn documentation. You have already explored faces principal components using standard PCA. Now, let’s take a look at the components using sparse PCA.</p>
@@ -561,8 +561,12 @@ Y_{:k} = \frac{Y_{:k}}{\max(1,|Y_{:k}|_2)}
 <span class="n">faces_centered</span> <span class="o">-=</span> <span class="n">faces_centered</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataset consists of </span><span class="si">%d</span><span class="s2"> faces&quot;</span> <span class="o">%</span> <span class="n">n_samples</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">plot_gallery</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">n_col</span><span class="o">=</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_row</span><span class="o">=</span><span class="n">n_row</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">):</span>
+</pre></div>
+</div>
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Dataset consists of 400 faces
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_gallery</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">n_col</span><span class="o">=</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_row</span><span class="o">=</span><span class="n">n_row</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">):</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">n_col</span><span class="p">,</span> <span class="mf">2.26</span> <span class="o">*</span> <span class="n">n_row</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
@@ -575,11 +579,14 @@ Y_{:k} = \frac{Y_{:k}}{\max(1,|Y_{:k}|_2)}
         <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(())</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.93</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
 
-<span class="n">estimator</span> <span class="o">=</span> <span class="n">MiniBatchSparsePCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-                               <span class="n">n_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-                               <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;First centered Olivetti faces&quot;</span><span class="p">,</span> <span class="n">faces_centered</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/78f1763fc24a5923870969e7214bfcbf1ef7c28d.png" /></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">estimator</span> <span class="o">=</span> <span class="n">MiniBatchSparsePCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                               <span class="n">n_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                               <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces_centered</span><span class="p">)</span>
 <span class="n">components_</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">components_</span>
@@ -587,17 +594,11 @@ Y_{:k} = \frac{Y_{:k}}{\max(1,|Y_{:k}|_2)}
 <span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;First Sparse Components&quot;</span><span class="p">,</span> <span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
 </pre></div>
 </div>
-<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Dataset consists of 400 faces
-</pre></div>
-</div>
-<div class="figure align-default" id="id69">
-<img alt="_images/c692b93d0ef9ad043cfff0b03d4aac1a5d724494.png" src="_images/c692b93d0ef9ad043cfff0b03d4aac1a5d724494.png" />
-<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">](./.ob-jupyter/78f1763fc24a5923870969e7214bfcbf1ef7c28d.png) ![</span><a class="headerlink" href="#id69" title="Permalink to this image">¶</a></p>
-</div>
+<p><img alt="" src="_images/c692b93d0ef9ad043cfff0b03d4aac1a5d724494.png" /></p>
 </div>
 <div class="section" id="example-sparse-news-data">
 <h3>Example: Sparse news data<a class="headerlink" href="#example-sparse-news-data" title="Permalink to this headline">¶</a></h3>
-<p>We take an example from <span id="id9">[<a class="reference internal" href="#id68"><span>8</span></a>]</span>, dealing with news data. The data set, obtained from <a class="reference external" href="http://cs.nyu.edu/~roweis/data.html">http://cs.nyu.edu/~roweis/data.html</a>, records word appearances in 16242 news postings. Each feature represents one of a hundred words, and takes the value 1 is the word is present in the post, and 0 otherwise.</p>
+<p>We take an example from <span id="id9">[<a class="reference internal" href="#id72"><span>8</span></a>]</span>, dealing with news data. The data set, obtained from <a class="reference external" href="http://cs.nyu.edu/~roweis/data.html">http://cs.nyu.edu/~roweis/data.html</a>, records word appearances in 16242 news postings. Each feature represents one of a hundred words, and takes the value 1 is the word is present in the post, and 0 otherwise.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -1320,36 +1321,141 @@ Set of words positively associated with 20 component:
 </div>
 <div class="section" id="robust-pca">
 <h2>Robust PCA<a class="headerlink" href="#robust-pca" title="Permalink to this headline">¶</a></h2>
+<p>Robust PCA is a recent method for matrix separation that has received increasing attention, with applications in Machine Learning and Computer Vision among others. From a matrix separation perspective, classical PCA aims to solve</p>
+<div class="math notranslate nohighlight">
+\[
+M = L_0 + N_0
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(M\)</span> is the observed data matrix, <span class="math notranslate nohighlight">\(L_0\)</span> is a low rank matrix and <span class="math notranslate nohighlight">\(N_0\)</span> is dense perturbation matrix whose entries are assumed small. One way to solve this problem is to find the solution to the optimization problem</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{S.T.\ rank(L) \leq k}{\operatorname{minimize}} |M - L|_F
+\]</div>
+<p>for which an analytic solution is obtained by truncating the SVD of <span class="math notranslate nohighlight">\(M=U\Sigma V^T\)</span>, such that <span class="math notranslate nohighlight">\(L = U_{q}\Sigma_{q} V^T_{q}\)</span>.</p>
+<p>A problem with classical PCA is that the solution is extremely sensible to outliers. The presence of a single highly corrupted observation takes the solution far away from the true solution. Since real data sets are likely to be contaminated (e.g., sensor errors, adversarial attacks), this is a real issue for PCA.</p>
+<div class="figure align-default" id="id74">
+<img alt="_images/rpca-004.png" src="_images/rpca-004.png" />
+<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id74" title="Permalink to this image">¶</a></p>
+</div>
+<p>Robust PCA is a modification of the objective of classical PCA that aims to address the presence of outliers and large perturbations. Robust PCA assumes the data matrix <span class="math notranslate nohighlight">\(M\)</span> is composed as a sum of a <strong>low rank</strong> component <span class="math notranslate nohighlight">\(L_{0}\)</span> and a sparse component of arbitrarily large perturbations or corruptions <span class="math notranslate nohighlight">\(S_{0}\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+M = L_0 + S_0
+\]</div>
+<div class="figure align-default" id="id75">
+<img alt="_images/rpca_sum.png" src="_images/rpca_sum.png" />
+<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id75" title="Permalink to this image">¶</a></p>
+</div>
+<p>In a seminal paper by Candes et. al. <span id="id10">[<a class="reference internal" href="#id73"><span>9</span></a>]</span>, it was proven that, under broad conditions, the recovery of <span class="math notranslate nohighlight">\(L_0\)</span> and <span class="math notranslate nohighlight">\(S_0\)</span> is possible, and the solution is <strong>exact</strong>. This a rather surprising result, since the problem seems intractable at first sight. Twice the number of unknowns than entries in <span class="math notranslate nohighlight">\(M\)</span>, we <strong>do not know the rank</strong> of <span class="math notranslate nohighlight">\(L_0\)</span> <strong>nor the locations (or number)</strong> of the non-zero entries of <span class="math notranslate nohighlight">\(S_{0}\)</span>. The recovery is, of course, not always possible, since one think of examples where it would not make sense.</p>
+<p>The objective of an idealized RPCA can be expressed as</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{S.T. L + S = M}{\min} rank(L) + \lambda |S|_{0}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(|S|_0\)</span> is the zero-norm, which counts the number of non-zero elements of <span class="math notranslate nohighlight">\(S\)</span>. Unfortunately this is a very hard problem to optimize, since it is not convex, and both the rank and the 0 norm are discontinuous. In <span id="id11">[<a class="reference internal" href="#id73"><span>9</span></a>]</span>, an relaxed approach through Principal Projection Pursuit is proposed,</p>
+<div class="math notranslate nohighlight">
+\[
+\underset{S.T. L + S = M}{\min} |L|_{*} + \lambda |S|_{1}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(|L|_{*}| = \sum_i \sigma_i(L)\)</span> is the nuclear norm of <span class="math notranslate nohighlight">\(L\)</span>, i.e., the sum of its singular values, and we use the 1-norm instead of the 0-norm, i.e., a LASSO penalization, to encourage sparsity. The reason the nuclear norm works instead of the rank, is that number of non-zero singular values is exactly the rank of the matrix. The new objective is a convex relaxation of the original one, and can be solved by a number of optimizations algorithms, and is able to recover the exact solution <span class="math notranslate nohighlight">\(L = L_0\)</span> and <span class="math notranslate nohighlight">\(S = S_0\)</span>, given a few conditions discussed below.</p>
+<p>First, <span class="math notranslate nohighlight">\(L_0\)</span> must not be sparse, otherwise the identification of the sparse component is undetermined. Also, a low rank sparse model is largely orthogonal, meaning most observations are independent, which makes it impossible to use correlation information to impute the missing values. This is, reconstruction is possible, because a low rank dense matrix necessarily is redundant, meaning information from the un-corrupted entries can be used to reconstruct corrupted entries.</p>
+<p>Second, the non-zero components of <span class="math notranslate nohighlight">\(S_0\)</span> must be spread out, as not to be low rank, again, to avoid identifiability issues. An spread out <span class="math notranslate nohighlight">\(S_0\)</span> means the corruptions are not targeted, and cannot delete single rows, for example, so the corrupted values can be recovered from the correlations in the data matrix. A good model for <span class="math notranslate nohighlight">\(S_{0}\)</span> is to required that the locations of its non-zero entries are sampled from a uniform distribution, or that each entry has a constant probability of being zeroed, independently of others (Bernoulli trials.)</p>
+<p>A way to measure spareness of <span class="math notranslate nohighlight">\(L_0\)</span> is through the concept of incoherence. Incoherence is based on the correlation between the principal components and the basis vectors. With the SVD given by <span class="math notranslate nohighlight">\(L_0 = U \Sigma V^{*}\)</span>, the incoherence condition demands that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\underset{i}{\max} |U^T e_i|_2^2 \leq \frac{\mu_1 r}{n}\\
+\underset{i}{\max} |V^T e_i|_2^2 \leq \frac{\mu_1 r}{n}\\
+|UV^T|_\infty \leq \sqrt{\frac{\mu_2 r}{n^2}}
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> are the coherence parameters, i.e., the minimum values that satisfies the requirements. Requiring that the projections are small means that the principal components are spread out among all basis vectors. If this was not the case, and the PC lie along a few basic vectors, then <span class="math notranslate nohighlight">\(L_0\)</span> is sparse.</p>
+<p>Besides dimensionality reduction, RPCA have found applications in:</p>
+<ul class="simple">
+<li><p>Video surveillance, separation of background (low rank) and foreground (sparse).</p></li>
+</ul>
+<div class="figure align-default" id="id76">
+<img alt="_images/rpca-video.png" src="_images/rpca-video.png" />
+<p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">Images from <span id="id12">[<a class="reference internal" href="#id73"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id76" title="Permalink to this image">¶</a></p>
+</div>
+<ul class="simple">
+<li><p>Face recognition, where shadows and occlusions are interpreted as the sparse component. This works because the column space for images of a face is very low rank.</p></li>
+</ul>
+<div class="figure align-default" id="id77">
+<img alt="_images/rpca-faces.png" src="_images/rpca-faces.png" />
+<p class="caption"><span class="caption-number">Fig. 12 </span><span class="caption-text">Images from <span id="id13">[<a class="reference internal" href="#id73"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id77" title="Permalink to this image">¶</a></p>
+</div>
+<ul class="simple">
+<li><p>Latent Semantic Indexing, where <span class="math notranslate nohighlight">\(L_0\)</span> could capture the common words across documents, while <span class="math notranslate nohighlight">\(S_0\)</span> would capture the words that best represent each individual document.</p></li>
+<li><p>Graph clustering, where the low rank component corresponds to edges between elements in a cluster, and the sparse component to elements across clusters.</p></li>
+</ul>
+<div class="figure align-default" id="id78">
+<img alt="_images/rpca-graph.png" src="_images/rpca-graph.png" />
+<p class="caption"><span class="caption-number">Fig. 13 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id78" title="Permalink to this image">¶</a></p>
+</div>
+<ul class="simple">
+<li><p>Gaussian graphical models with sparse covariance matrix and latent variables.</p></li>
+</ul>
+<div class="figure align-default" id="id79">
+<img alt="_images/rpca-gaussian.png" src="_images/rpca-gaussian.png" />
+<p class="caption"><span class="caption-number">Fig. 14 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id79" title="Permalink to this image">¶</a></p>
+</div>
+<p>The covariance and precision (<span class="math notranslate nohighlight">\(\Lambda = \Sigma^{-1}\)</span>) matrices can be blocked partitioned as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\Sigma =
+\begin{pmatrix}
+\Sigma_{o} &amp; \Sigma_{o,h} \\
+\Sigma_{o,h}^T &amp; \Sigma_{h}
+\end{pmatrix}
+=
+\begin{pmatrix}
+\Lambda_{o} &amp; \Lambda_{o,h} \\
+\Lambda_{o,h}^T &amp; \Lambda_{h}
+\end{pmatrix}^{-1}
+\end{align}\end{split}\]</div>
+<p>It is known from linear algebra (short complement formula) that</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\underbrace{\Sigma_{o}^{-1}}_{observed}
+= \underbrace{\Lambda_{o}}_{sparse}
+- \underbrace{\Lambda_{o,h}\Lambda_{h}^{-1}\Lambda_{h,o}}_{\text{low rank if # hv is small}}
+\end{align}\]</div>
+<p>Thus, we can recover the hidden component of the graph given that number of hidden variables is small.</p>
+<ul class="simple">
+<li><p>Recommendation models where user data is deliberately corrupt, and the recommendation matrix is sparse, the Netflix problem.</p></li>
+</ul>
 </div>
 <div class="section" id="kernel-pca">
 <h2>Kernel PCA<a class="headerlink" href="#kernel-pca" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id10"><dl class="citation">
-<dt class="label" id="id61"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
+<p id="id14"><dl class="citation">
+<dt class="label" id="id65"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
 <dd><p>Hui Zou and Lingzhou Xue. A selective overview of sparse principal component analysis. <em>Proceedings of the IEEE</em>, 106(8):1311–1320, 2018.</p>
 </dd>
-<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id70"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
 <dd><p>Ian T Jolliffe, Nickolay T Trendafilov, and Mudassir Uddin. A modified principal component technique based on the lasso. <em>Journal of computational and Graphical Statistics</em>, 12(3):531–547, 2003.</p>
 </dd>
-<dt class="label" id="id65"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dt class="label" id="id69"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
 <dd><p>Hui Zou, Trevor Hastie, and Robert Tibshirani. Sparse principal component analysis. <em>Journal of computational and graphical statistics</em>, 15(2):265–286, 2006.</p>
 </dd>
-<dt class="label" id="id64"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
+<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
 <dd><p>Francis Bach, Rodolphe Jenatton, Julien Mairal, and Guillaume Obozinski. Optimization with sparsity-inducing penalties. <em>arXiv preprint arXiv:1108.0775</em>, 2011.</p>
 </dd>
-<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
+<dt class="label" id="id71"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
 <dd><p>Julien Mairal, Francis Bach, and Jean Ponce. Sparse modeling for image and vision processing. <em>arXiv preprint arXiv:1411.3230</em>, 2014.</p>
 </dd>
-<dt class="label" id="id62"><span class="brackets"><a class="fn-backref" href="#id7">6</a></span></dt>
+<dt class="label" id="id66"><span class="brackets"><a class="fn-backref" href="#id7">6</a></span></dt>
 <dd><p>Rodolphe Jenatton, Guillaume Obozinski, and Francis Bach. Structured sparse principal component analysis. In <em>Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics</em>, 366–373. JMLR Workshop and Conference Proceedings, 2010.</p>
 </dd>
-<dt class="label" id="id63"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
+<dt class="label" id="id67"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
 <dd><p>Julien Mairal, Francis Bach, Jean Ponce, and Guillermo Sapiro. Online dictionary learning for sparse coding. In <em>Proceedings of the 26th annual international conference on machine learning</em>, 689–696. 2009.</p>
 </dd>
-<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
+<dt class="label" id="id72"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
 <dd><p>Youwei Zhang, Alexandre d'Aspremont, and Laurent El Ghaoui. Sparse pca: convex relaxations, algorithms and applications. In <em>Handbook on Semidefinite, Conic and Polynomial Optimization</em>, pages 915–940. Springer, 2012.</p>
+</dd>
+<dt class="label" id="id73"><span class="brackets">9</span><span class="fn-backref">(<a href="#id10">1</a>,<a href="#id11">2</a>,<a href="#id12">3</a>,<a href="#id13">4</a>)</span></dt>
+<dd><p>Emmanuel J Candès, Xiaodong Li, Yi Ma, and John Wright. Robust principal component analysis? <em>Journal of the ACM (JACM)</em>, 58(3):1–37, 2011.</p>
 </dd>
 </dl>
 </p>

@@ -254,7 +254,13 @@ faces_centered = faces - faces.mean(axis=0)
 faces_centered -= faces_centered.mean(axis=1).reshape(n_samples, -1)
 
 print("Dataset consists of %d faces" % n_samples)
+```
 
+``` example
+Dataset consists of 400 faces
+```
+
+``` python
 def plot_gallery(title, images, n_col=n_col, n_row=n_row, cmap=plt.cm.gray):
     plt.figure(figsize=(2. * n_col, 2.26 * n_row))
     plt.suptitle(title, size=16)
@@ -268,11 +274,16 @@ def plot_gallery(title, images, n_col=n_col, n_row=n_row, cmap=plt.cm.gray):
         plt.yticks(())
     plt.subplots_adjust(0.01, 0.05, 0.99, 0.93, 0.04, 0.)
 
+
+plot_gallery("First centered Olivetti faces", faces_centered[:n_components])
+```
+
+![](./.ob-jupyter/78f1763fc24a5923870969e7214bfcbf1ef7c28d.png)
+
+``` python
 estimator = MiniBatchSparsePCA(n_components=n_components, alpha=0.8,
                                n_iter=100, batch_size=3,
                                random_state=0)
-
-plot_gallery("First centered Olivetti faces", faces_centered[:n_components])
 
 estimator.fit(faces_centered)
 components_ = estimator.components_
@@ -280,15 +291,7 @@ components_ = estimator.components_
 plot_gallery("First Sparse Components", components_[:n_components])
 ```
 
-
-``` example
-Dataset consists of 400 faces
-```
-
-```{figure} ./.ob-jupyter/c692b93d0ef9ad043cfff0b03d4aac1a5d724494.png
-](./.ob-jupyter/78f1763fc24a5923870969e7214bfcbf1ef7c28d.png) ![
-```
-
+![](./.ob-jupyter/c692b93d0ef9ad043cfff0b03d4aac1a5d724494.png)
 
 ### Example: Sparse news data
 
@@ -413,6 +416,124 @@ Set of words positively associated with 20 component:
 ```
 
 ## Robust PCA
+
+Robust PCA is a recent method for matrix separation that has received increasing attention, with applications in Machine Learning and Computer Vision among others. From a matrix separation perspective, classical PCA aims to solve
+
+$$
+M = L_0 + N_0
+$$
+
+where $M$ is the observed data matrix, $L_0$ is a low rank matrix and $N_0$ is dense perturbation matrix whose entries are assumed small. One way to solve this problem is to find the solution to the optimization problem
+
+$$
+\underset{S.T.\ rank(L) \leq k}{\operatorname{minimize}} |M - L|_F
+$$
+
+for which an analytic solution is obtained by truncating the SVD of $M=U\Sigma V^T$, such that $L = U_{q}\Sigma_{q} V^T_{q}$.
+
+A problem with classical PCA is that the solution is extremely sensible to outliers. The presence of a single highly corrupted observation takes the solution far away from the true solution. Since real data sets are likely to be contaminated (e.g., sensor errors, adversarial attacks), this is a real issue for PCA.
+
+```{figure} Figures/rpca-004.png
+Image taken from a presentation by Yuxin Chen (<http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf>)
+```
+
+Robust PCA is a modification of the objective of classical PCA that aims to address the presence of outliers and large perturbations. Robust PCA assumes the data matrix $M$ is composed as a sum of a **low rank** component $L_{0}$ and a sparse component of arbitrarily large perturbations or corruptions $S_{0}$,
+
+$$
+M = L_0 + S_0
+$$
+
+```{figure} Figures/rpca_sum.png
+Image taken from a presentation by Yuxin Chen (<http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf>)
+```
+
+In a seminal paper by Candes et. al. {cite}`candes2011robust`, it was proven that, under broad conditions, the recovery of $L_0$ and $S_0$ is possible, and the solution is **exact**. This a rather surprising result, since the problem seems intractable at first sight. Twice the number of unknowns than entries in $M$, we **do not know the rank** of $L_0$ **nor the locations (or number)** of the non-zero entries of $S_{0}$. The recovery is, of course, not always possible, since one think of examples where it would not make sense.
+
+The objective of an idealized RPCA can be expressed as
+
+$$
+\underset{S.T. L + S = M}{\min} rank(L) + \lambda |S|_{0}
+$$
+
+where $|S|_0$ is the zero-norm, which counts the number of non-zero elements of $S$. Unfortunately this is a very hard problem to optimize, since it is not convex, and both the rank and the 0 norm are discontinuous. In {cite}`candes2011robust`, an relaxed approach through Principal Projection Pursuit is proposed,
+
+$$
+\underset{S.T. L + S = M}{\min} |L|_{*} + \lambda |S|_{1}
+$$
+
+where $|L|_{*}| = \sum_i \sigma_i(L)$ is the nuclear norm of $L$, i.e., the sum of its singular values, and we use the 1-norm instead of the 0-norm, i.e., a LASSO penalization, to encourage sparsity. The reason the nuclear norm works instead of the rank, is that number of non-zero singular values is exactly the rank of the matrix. The new objective is a convex relaxation of the original one, and can be solved by a number of optimizations algorithms, and is able to recover the exact solution $L = L_0$ and $S = S_0$, given a few conditions discussed below.
+
+First, $L_0$ must not be sparse, otherwise the identification of the sparse component is undetermined. Also, a low rank sparse model is largely orthogonal, meaning most observations are independent, which makes it impossible to use correlation information to impute the missing values. This is, reconstruction is possible, because a low rank dense matrix necessarily is redundant, meaning information from the un-corrupted entries can be used to reconstruct corrupted entries.
+
+Second, the non-zero components of $S_0$ must be spread out, as not to be low rank, again, to avoid identifiability issues. An spread out $S_0$ means the corruptions are not targeted, and cannot delete single rows, for example, so the corrupted values can be recovered from the correlations in the data matrix. A good model for $S_{0}$ is to required that the locations of its non-zero entries are sampled from a uniform distribution, or that each entry has a constant probability of being zeroed, independently of others (Bernoulli trials.)
+
+A way to measure spareness of $L_0$ is through the concept of incoherence. Incoherence is based on the correlation between the principal components and the basis vectors. With the SVD given by $L_0 = U \Sigma V^{*}$, the incoherence condition demands that
+
+```{math}
+\begin{align}
+\underset{i}{\max} |U^T e_i|_2^2 \leq \frac{\mu_1 r}{n}\\
+\underset{i}{\max} |V^T e_i|_2^2 \leq \frac{\mu_1 r}{n}\\
+|UV^T|_\infty \leq \sqrt{\frac{\mu_2 r}{n^2}}
+\end{align}
+```
+where $\mu$ are the coherence parameters, i.e., the minimum values that satisfies the requirements. Requiring that the projections are small means that the principal components are spread out among all basis vectors. If this was not the case, and the PC lie along a few basic vectors, then $L_0$ is sparse.
+
+Besides dimensionality reduction, RPCA have found applications in:
+
+-   Video surveillance, separation of background (low rank) and foreground (sparse).
+
+```{figure} Figures/rpca-video.png
+Images from {cite}`candes2011robust`.
+```
+
+-   Face recognition, where shadows and occlusions are interpreted as the sparse component. This works because the column space for images of a face is very low rank.
+
+```{figure} Figures/rpca-faces.png
+Images from {cite}`candes2011robust`.
+```
+
+-   Latent Semantic Indexing, where $L_0$ could capture the common words across documents, while $S_0$ would capture the words that best represent each individual document.
+
+-   Graph clustering, where the low rank component corresponds to edges between elements in a cluster, and the sparse component to elements across clusters.
+
+```{figure} Figures/rpca-graph.png
+Image taken from a presentation by Yuxin Chen (<http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf>)
+```
+
+-   Gaussian graphical models with sparse covariance matrix and latent variables.
+
+```{figure} Figures/rpca-gaussian.png
+Image taken from a presentation by Yuxin Chen (<http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf>)
+```
+
+The covariance and precision ($\Lambda = \Sigma^{-1}$) matrices can be blocked partitioned as
+
+```{math}
+\begin{align}
+\Sigma =
+\begin{pmatrix}
+\Sigma_{o} & \Sigma_{o,h} \\
+\Sigma_{o,h}^T & \Sigma_{h}
+\end{pmatrix}
+=
+\begin{pmatrix}
+\Lambda_{o} & \Lambda_{o,h} \\
+\Lambda_{o,h}^T & \Lambda_{h}
+\end{pmatrix}^{-1}
+\end{align}
+```
+It is known from linear algebra (short complement formula) that
+
+```{math}
+\begin{align}
+\underbrace{\Sigma_{o}^{-1}}_{observed}
+= \underbrace{\Lambda_{o}}_{sparse}
+- \underbrace{\Lambda_{o,h}\Lambda_{h}^{-1}\Lambda_{h,o}}_{\text{low rank if # hv is small}}
+\end{align}
+```
+Thus, we can recover the hidden component of the graph given that number of hidden variables is small.
+
+-   Recommendation models where user data is deliberately corrupt, and the recommendation matrix is sparse, the Netflix problem.
 
 ## Kernel PCA
 
