@@ -478,6 +478,27 @@ A way to measure spareness of $L_0$ is through the concept of incoherence. Incoh
 ```
 where $\mu$ are the coherence parameters, i.e., the minimum values that satisfies the requirements. Requiring that the projections are small means that the principal components are spread out among all basis vectors. If this was not the case, and the PC lie along a few basic vectors, then $L_0$ is sparse.
 
+The main result from {cite}`candes2011robust` proves that Principal Component Pursuit recovers the exact solutions $L = L_0$, $S = S_0$, with high probability ($1 - O(n^{-10})$), given that the following conditions are satisfied:
+
+-   $rank(L_0) \lesssim \frac{n}{\max{\mu_1,\mu_2}\log^2 n}$
+-   The non-zero entries of $S_0$ are randomly located, and the number of entries $|S_0|_0 \leq \rho_s n^2$, where $\rho_s$ is some constant, the non-vanishing fraction of allowed zeros.
+
+More even, the value of the regularization parameter is universal, given by $\lambda=n^{-1/2}$. This conditions turn out to be quite broad, the rank of $L$ can be quite high, up to $n/polylog(n)$, the magnitude of the corruptions can be arbitrarily large and be of any signs, and the proportion of corrupted entries is finite. Numerical simulations show that successful recovery displays a phase transition in the combination of paramters $rank(L)$ and $\rho_S$, i.e., there is a region where the recovery is always successful, and a region where it always fails, see figure below.
+
+```{figure} Figures/rpca-phase.png
+Images from {cite}`candes2011robust`.
+```
+
+More recent work have extended the results above, allowing recovery from a larger fraction of errors {cite}`chen2013low,ganesh2010dense`.
+
+Finally, Principal Components Pursuit can also extended to matrix completion with corrupted data. Additionally to sparse corruptions, consider also that only a subset $\Omega$ of the data is observed, the objective is now
+
+$$
+\underset{S.T.\quad \mathcal{P}_{\Omega}(L + S) = \mathcal{P}_{\Omega}(M)}{\min} |L|_{*} + \lambda |S|_{1}
+$$
+
+where $\mathcal{P}_{\Omega}$ is the projection operator onto the set of observed entries, meaning that only the correspondence between observed entries is enforced.
+
 Besides dimensionality reduction, RPCA have found applications in:
 
 -   Video surveillance, separation of background (low rank) and foreground (sparse).
@@ -534,6 +555,8 @@ It is known from linear algebra (short complement formula) that
 Thus, we can recover the hidden component of the graph given that number of hidden variables is small.
 
 -   Recommendation models where user data is deliberately corrupt, and the recommendation matrix is sparse, the Netflix problem.
+
+For further reading, refer to {cite}`chandrasekaran2011rank`, {cite}`chandrasekaran2010latent`, and {cite}`chen2015incoherence`.
 
 ## Kernel PCA
 
