@@ -1441,6 +1441,23 @@ M = L_0 + S_0
 <li><p>Recommendation models where user data is deliberately corrupt, and the recommendation matrix is sparse, the Netflix problem.</p></li>
 </ul>
 <p>For further reading, refer to <span id="id17">[<a class="reference internal" href="#id82"><span>12</span></a>]</span>, <span id="id18">[<a class="reference internal" href="#id83"><span>13</span></a>]</span>, and <span id="id19">[<a class="reference internal" href="#id84"><span>14</span></a>]</span>.</p>
+<p>We still haven’t discuss any algorithm to solve Principal Projection Pursuit. Several options have been explored in the literature, a nice algorithm due to its applicability to a wide range of problems is Alternating Direction Method of Multipliers (ADMM). There is a nice video on ADMM <a class="reference external" href="https://www.youtube.com/watch?v=ixBjVgGITHc">here</a>. Basically, you use a Lagrange multiplier plus a quadratic term that is proved to increase convergence properties (augmented Lagrangian), then optimize iteratively for block of variables and the multiplier.</p>
+<p>The augmented Lagrangian for PPC objective is</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\mathcal{L}(L,S,Y) = |L|_{*} + \lambda|S|_1
++ \left&lt;Y, M - L - S\right&gt;
++ \frac{\rho}{2}|X - L - S|_F^2
+\end{align}\]</div>
+<p>where <span class="math notranslate nohighlight">\(Y\)</span> is a matrix Lagrangian multipliers, each <span class="math notranslate nohighlight">\(y_{ij}\)</span> enforcing the constraint on each entry of <span class="math notranslate nohighlight">\(M - L - S = 0\)</span>, and <span class="math notranslate nohighlight">\(\rho\)</span> is the penalty term of the augmented quadratic term, also the step-size of the gradient update of <span class="math notranslate nohighlight">\(Y\)</span> (see below) as to ensure duality (watch video).</p>
+<p>The steps of the ADMM algorithm for RPCA are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\mathbf{L}_{k+1} &amp;= \mathop{\mathrm{arg\,min}}_{L} \,\,\mathcal{L}(\mathbf{L}, \mathbf{S}_k, \mathbf{Y}_k)\\
+\mathbf{S}_{k+1} &amp;= \mathop{\mathrm{arg\,min}}_{S} \,\, \mathcal{L}(\mathbf{L}_{k+1}, \mathbf{S}, \mathbf{Y}_k)\\
+\mathbf{Y}_{k+1} &amp;= \mathbf{Y}_k + \rho(\mathbf{M} - \mathbf{L}_{k+1} - \mathbf{S}_{k+1}),
+\end{align*}\end{split}\]</div>
+<p>where the update for <span class="math notranslate nohighlight">\(Y\)</span> is just a gradient ascent step with step-size <span class="math notranslate nohighlight">\(\rho\)</span>. By completing the square, we can take the</p>
 </div>
 <div class="section" id="kernel-pca">
 <h2>Kernel PCA<a class="headerlink" href="#kernel-pca" title="Permalink to this headline">¶</a></h2>

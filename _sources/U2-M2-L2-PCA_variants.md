@@ -558,6 +558,30 @@ Thus, we can recover the hidden component of the graph given that number of hidd
 
 For further reading, refer to {cite}`chandrasekaran2011rank`, {cite}`chandrasekaran2010latent`, and {cite}`chen2015incoherence`.
 
+We still haven\'t discuss any algorithm to solve Principal Projection Pursuit. Several options have been explored in the literature, a nice algorithm due to its applicability to a wide range of problems is Alternating Direction Method of Multipliers (ADMM). There is a nice video on ADMM [here](https://www.youtube.com/watch?v=ixBjVgGITHc). Basically, you use a Lagrange multiplier plus a quadratic term that is proved to increase convergence properties (augmented Lagrangian), then optimize iteratively for block of variables and the multiplier.
+
+The augmented Lagrangian for PPC objective is
+
+```{math}
+\begin{align}
+\mathcal{L}(L,S,Y) = |L|_{*} + \lambda|S|_1
++ \left<Y, M - L - S\right>
++ \frac{\rho}{2}|X - L - S|_F^2
+\end{align}
+```
+where $Y$ is a matrix Lagrangian multipliers, each $y_{ij}$ enforcing the constraint on each entry of $M - L - S = 0$, and $\rho$ is the penalty term of the augmented quadratic term, also the step-size of the gradient update of $Y$ (see below) as to ensure duality (watch video).
+
+The steps of the ADMM algorithm for RPCA are
+
+```{math}
+\begin{align*}
+\mathbf{L}_{k+1} &= \mathop{\mathrm{arg\,min}}_{L} \,\,\mathcal{L}(\mathbf{L}, \mathbf{S}_k, \mathbf{Y}_k)\\
+\mathbf{S}_{k+1} &= \mathop{\mathrm{arg\,min}}_{S} \,\, \mathcal{L}(\mathbf{L}_{k+1}, \mathbf{S}, \mathbf{Y}_k)\\
+\mathbf{Y}_{k+1} &= \mathbf{Y}_k + \rho(\mathbf{M} - \mathbf{L}_{k+1} - \mathbf{S}_{k+1}),
+\end{align*}
+```
+where the update for $Y$ is just a gradient ascent step with step-size $\rho$. By completing the square, we can take the
+
 ## Kernel PCA
 
 ## References
