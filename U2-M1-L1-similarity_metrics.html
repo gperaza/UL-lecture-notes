@@ -861,9 +861,9 @@ d_2(\vec{x},\vec{y}) = \sqrt{\left ( \sum_{i=1}^D \left (x_i - y_i \right )^2 \r
 \[
 d_\infty(\vec{x},\vec{y}) = \underset{1\leq i \leq D}{\operatorname{max}} \left | x_i - y_i  \right |
 \]</div>
-<div class="figure align-default" id="id88">
+<div class="figure align-default" id="id89">
 <img alt="_images/chess.png" src="_images/chess.png" />
-<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev_distance">https://en.wikipedia.org/wiki/Chebyshev_distance</a></span><a class="headerlink" href="#id88" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev_distance">https://en.wikipedia.org/wiki/Chebyshev_distance</a></span><a class="headerlink" href="#id89" title="Permalink to this image">¶</a></p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">chebyshev_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span>

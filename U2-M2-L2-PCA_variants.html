@@ -339,6 +339,28 @@
   <a class="reference internal nav-link" href="#kernel-pca">
    Kernel PCA
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#pca-from-the-gram-matrix">
+     PCA from the Gram Matrix
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-kernel-trick">
+     The Kernel trick
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-concentric-clusters">
+     Example: Concentric clusters
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-de-noising">
+     Example: De-noising
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
@@ -360,8 +382,8 @@
 <h1>Some linear and non-linear variants of PCA<a class="headerlink" href="#some-linear-and-non-linear-variants-of-pca" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="sparse-pca">
 <h2>Sparse PCA<a class="headerlink" href="#sparse-pca" title="Permalink to this headline">¶</a></h2>
-<p>One disadvantage of PCA is that the PC are linear combinations of all original variables. This hurts interpretability. An variant that aims to recover new features as limited linear combinations of original features, and aid interpretability of the new components and loadings, is sparse PCA. There are many variants of sparse PCA, but all share the property that the new basis vectors are sparse, i.e., contain many zero entries. A recent overview of Sparse PCA variants can be found in <span id="id1">[<a class="reference internal" href="#id71"><span>1</span></a>]</span>, where the optimization algorithms the different variants are also discussed, including the early methods of SCoTLASS <span id="id2">[<a class="reference internal" href="#id76"><span>2</span></a>]</span> and SPCA <span id="id3">[<a class="reference internal" href="#id75"><span>3</span></a>]</span>. In particular, note that approaches of variance maximization and reconstruction error minimization, although equivalent for PCA, are not equivalent for sparse PCA.</p>
-<p>A particular approach that shares many characteristics with other methods in this course is called dictionary learning. We will now introduce sparse dictionary learning, but keep in mind that other approaches exist, see <span id="id4">[<a class="reference internal" href="#id71"><span>1</span></a>]</span> and references therein.</p>
+<p>One disadvantage of PCA is that the PC are linear combinations of all original variables. This hurts interpretability. An variant that aims to recover new features as limited linear combinations of original features, and aid interpretability of the new components and loadings, is sparse PCA. There are many variants of sparse PCA, but all share the property that the new basis vectors are sparse, i.e., contain many zero entries. A recent overview of Sparse PCA variants can be found in <span id="id1">[<a class="reference internal" href="#id73"><span>1</span></a>]</span>, where the optimization algorithms the different variants are also discussed, including the early methods of SCoTLASS <span id="id2">[<a class="reference internal" href="#id78"><span>2</span></a>]</span> and SPCA <span id="id3">[<a class="reference internal" href="#id77"><span>3</span></a>]</span>. In particular, note that approaches of variance maximization and reconstruction error minimization, although equivalent for PCA, are not equivalent for sparse PCA.</p>
+<p>A particular approach that shares many characteristics with other methods in this course is called dictionary learning. We will now introduce sparse dictionary learning, but keep in mind that other approaches exist, see <span id="id4">[<a class="reference internal" href="#id73"><span>1</span></a>]</span> and references therein.</p>
 <p>Within the dictionary learning framework, the PCA loadings (base vectors) are called a dictionary, and each base vector is called and atom. The principal components are called scores. The PCA algorithm learns a dictionary and scores the solve a particular optimization problem, minimizing the reconstruction error of a low rank representation of the data set. We can code the PCA objective within the dictionary learning framework as follows</p>
 <div class="math notranslate nohighlight">
 \[
@@ -391,7 +413,7 @@
 \frac{1}{2}\left| X - Y D^{T}  \right |_2^2
 - \lambda_D \left| D \right|_1
 \end{align}\]</div>
-<p>Many methods have been proposed, reviews can be found in <span id="id5">[<a class="reference internal" href="#id74"><span>4</span></a>]</span> and <span id="id6">[<a class="reference internal" href="#id77"><span>5</span></a>]</span>. We will discuss an alternating coordinate descent approach, which, although not the fastest, has proven to be effective in practice and relative easy to implement.</p>
+<p>Many methods have been proposed, reviews can be found in <span id="id5">[<a class="reference internal" href="#id76"><span>4</span></a>]</span> and <span id="id6">[<a class="reference internal" href="#id79"><span>5</span></a>]</span>. We will discuss an alternating coordinate descent approach, which, although not the fastest, has proven to be effective in practice and relative easy to implement.</p>
 <p>The objective function is not convex jointly in both <span class="math notranslate nohighlight">\(D\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>, making it hard to optimize jointly. An popular option, that does not guarantees a global minimum, is to alternate optimization with respect to <span class="math notranslate nohighlight">\(D\)</span>, keeping <span class="math notranslate nohighlight">\(Y\)</span> fixed, and optimizing with respect to <span class="math notranslate nohighlight">\(Y\)</span>, keeping <span class="math notranslate nohighlight">\(D\)</span> fixed, repeating both steps until convergence. Both sub-problems are convex, thus solvable by coordinate descent.</p>
 <p>Let’s focus first on finding the optimal solution for <span class="math notranslate nohighlight">\(D\)</span>, keeping <span class="math notranslate nohighlight">\(Y\)</span> fixed. The optimization problem can be split into independent sub-problems for the rows of <span class="math notranslate nohighlight">\(D\)</span></p>
 <div class="math notranslate nohighlight">
@@ -537,8 +559,8 @@ Y_{:k} = Y_{:k} + \frac{\left(X -  YD^{T}\right) D_{:k}} {|D_{:k}|^2}
 Y_{:k} = \frac{Y_{:k}}{\max(1,|Y_{:k}|_2)}
 \end{align}\]</div>
 <p>The algorithm then repeats optimizing each column iteratively until convergence. Again, we leave the implementation for the assignments.</p>
-<p>Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id7">[<a class="reference internal" href="#id72"><span>6</span></a>]</span>. Other applications for SPCA include image de-noising by compressed sensing.</p>
-<p>We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm (<span id="id8">[<a class="reference internal" href="#id73"><span>7</span></a>]</span>), more efficient, but also harder to implement and less general.</p>
+<p>Further restrictions can be imposed, for example, to enforce structure on the sparse loadings <span id="id7">[<a class="reference internal" href="#id74"><span>6</span></a>]</span>. Other applications for SPCA include image de-noising by compressed sensing.</p>
+<p>We can explore how sparse PCA works using the implementation from sklearn, which implements a different optimization algorithm (<span id="id8">[<a class="reference internal" href="#id75"><span>7</span></a>]</span>), more efficient, but also harder to implement and less general.</p>
 <div class="section" id="example-faces">
 <h3>Example: Faces<a class="headerlink" href="#example-faces" title="Permalink to this headline">¶</a></h3>
 <p>We take the faces example from the scikit-learn documentation. You have already explored faces principal components using standard PCA. Now, let’s take a look at the components using sparse PCA.</p>
@@ -598,7 +620,7 @@ Y_{:k} = \frac{Y_{:k}}{\max(1,|Y_{:k}|_2)}
 </div>
 <div class="section" id="example-sparse-news-data">
 <h3>Example: Sparse news data<a class="headerlink" href="#example-sparse-news-data" title="Permalink to this headline">¶</a></h3>
-<p>We take an example from <span id="id9">[<a class="reference internal" href="#id78"><span>8</span></a>]</span>, dealing with news data. The data set, obtained from <a class="reference external" href="http://cs.nyu.edu/~roweis/data.html">http://cs.nyu.edu/~roweis/data.html</a>, records word appearances in 16242 news postings. Each feature represents one of a hundred words, and takes the value 1 is the word is present in the post, and 0 otherwise.</p>
+<p>We take an example from <span id="id9">[<a class="reference internal" href="#id80"><span>8</span></a>]</span>, dealing with news data. The data set, obtained from <a class="reference external" href="http://cs.nyu.edu/~roweis/data.html">http://cs.nyu.edu/~roweis/data.html</a>, records word appearances in 16242 news postings. Each feature represents one of a hundred words, and takes the value 1 is the word is present in the post, and 0 otherwise.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -1333,26 +1355,26 @@ M = L_0 + N_0
 \]</div>
 <p>for which an analytic solution is obtained by truncating the SVD of <span class="math notranslate nohighlight">\(M=U\Sigma V^T\)</span>, such that <span class="math notranslate nohighlight">\(L = U_{q}\Sigma_{q} V^T_{q}\)</span>.</p>
 <p>A problem with classical PCA is that the solution is extremely sensible to outliers. The presence of a single highly corrupted observation takes the solution far away from the true solution. Since real data sets are likely to be contaminated (e.g., sensor errors, adversarial attacks), this is a real issue for PCA.</p>
-<div class="figure align-default" id="id85">
+<div class="figure align-default" id="id88">
 <img alt="_images/rpca-004.png" src="_images/rpca-004.png" />
-<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id85" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id88" title="Permalink to this image">¶</a></p>
 </div>
 <p>Robust PCA is a modification of the objective of classical PCA that aims to address the presence of outliers and large perturbations. Robust PCA assumes the data matrix <span class="math notranslate nohighlight">\(M\)</span> is composed as a sum of a <strong>low rank</strong> component <span class="math notranslate nohighlight">\(L_{0}\)</span> and a sparse component of arbitrarily large perturbations or corruptions <span class="math notranslate nohighlight">\(S_{0}\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[
 M = L_0 + S_0
 \]</div>
-<div class="figure align-default" id="id86">
+<div class="figure align-default" id="id89">
 <img alt="_images/rpca_sum.png" src="_images/rpca_sum.png" />
-<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id86" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id89" title="Permalink to this image">¶</a></p>
 </div>
-<p>In a seminal paper by Candes et. al. <span id="id10">[<a class="reference internal" href="#id79"><span>9</span></a>]</span>, it was proven that, under broad conditions, the recovery of <span class="math notranslate nohighlight">\(L_0\)</span> and <span class="math notranslate nohighlight">\(S_0\)</span> is possible, and the solution is <strong>exact</strong>. This a rather surprising result, since the problem seems intractable at first sight. Twice the number of unknowns than entries in <span class="math notranslate nohighlight">\(M\)</span>, we <strong>do not know the rank</strong> of <span class="math notranslate nohighlight">\(L_0\)</span> <strong>nor the locations (or number)</strong> of the non-zero entries of <span class="math notranslate nohighlight">\(S_{0}\)</span>. The recovery is, of course, not always possible, since one think of examples where it would not make sense.</p>
+<p>In a seminal paper by Candes et. al. <span id="id10">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>, it was proven that, under broad conditions, the recovery of <span class="math notranslate nohighlight">\(L_0\)</span> and <span class="math notranslate nohighlight">\(S_0\)</span> is possible, and the solution is <strong>exact</strong>. This a rather surprising result, since the problem seems intractable at first sight. Twice the number of unknowns than entries in <span class="math notranslate nohighlight">\(M\)</span>, we <strong>do not know the rank</strong> of <span class="math notranslate nohighlight">\(L_0\)</span> <strong>nor the locations (or number)</strong> of the non-zero entries of <span class="math notranslate nohighlight">\(S_{0}\)</span>. The recovery is, of course, not always possible, since one think of examples where it would not make sense.</p>
 <p>The objective of an idealized RPCA can be expressed as</p>
 <div class="math notranslate nohighlight">
 \[
 \underset{S.T. L + S = M}{\min} rank(L) + \lambda |S|_{0}
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(|S|_0\)</span> is the zero-norm, which counts the number of non-zero elements of <span class="math notranslate nohighlight">\(S\)</span>. Unfortunately this is a very hard problem to optimize, since it is not convex, and both the rank and the 0 norm are discontinuous. In <span id="id11">[<a class="reference internal" href="#id79"><span>9</span></a>]</span>, an relaxed approach through Principal Projection Pursuit is proposed,</p>
+<p>where <span class="math notranslate nohighlight">\(|S|_0\)</span> is the zero-norm, which counts the number of non-zero elements of <span class="math notranslate nohighlight">\(S\)</span>. Unfortunately this is a very hard problem to optimize, since it is not convex, and both the rank and the 0 norm are discontinuous. In <span id="id11">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>, an relaxed approach through Principal Projection Pursuit is proposed,</p>
 <div class="math notranslate nohighlight">
 \[
 \underset{S.T. L + S = M}{\min} |L|_{*} + \lambda |S|_{1}
@@ -1368,17 +1390,17 @@ M = L_0 + S_0
 |UV^T|_\infty \leq \sqrt{\frac{\mu_2 r}{n^2}}
 \end{align}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mu\)</span> are the coherence parameters, i.e., the minimum values that satisfies the requirements. Requiring that the projections are small means that the principal components are spread out among all basis vectors. If this was not the case, and the PC lie along a few basic vectors, then <span class="math notranslate nohighlight">\(L_0\)</span> is sparse.</p>
-<p>The main result from <span id="id12">[<a class="reference internal" href="#id79"><span>9</span></a>]</span> proves that Principal Component Pursuit recovers the exact solutions <span class="math notranslate nohighlight">\(L = L_0\)</span>, <span class="math notranslate nohighlight">\(S = S_0\)</span>, with high probability (<span class="math notranslate nohighlight">\(1 - O(n^{-10})\)</span>), given that the following conditions are satisfied:</p>
+<p>The main result from <span id="id12">[<a class="reference internal" href="#id81"><span>9</span></a>]</span> proves that Principal Component Pursuit recovers the exact solutions <span class="math notranslate nohighlight">\(L = L_0\)</span>, <span class="math notranslate nohighlight">\(S = S_0\)</span>, with high probability (<span class="math notranslate nohighlight">\(1 - O(n^{-10})\)</span>), given that the following conditions are satisfied:</p>
 <ul class="simple">
 <li><p><span class="math notranslate nohighlight">\(rank(L_0) \lesssim \frac{n}{\max{\mu_1,\mu_2}\log^2 n}\)</span></p></li>
 <li><p>The non-zero entries of <span class="math notranslate nohighlight">\(S_0\)</span> are randomly located, and the number of entries <span class="math notranslate nohighlight">\(|S_0|_0 \leq \rho_s n^2\)</span>, where <span class="math notranslate nohighlight">\(\rho_s\)</span> is some constant, the non-vanishing fraction of allowed zeros.</p></li>
 </ul>
-<p>More even, the value of the regularization parameter is universal, given by <span class="math notranslate nohighlight">\(\lambda=n^{-1/2}\)</span>. This conditions turn out to be quite broad, the rank of <span class="math notranslate nohighlight">\(L\)</span> can be quite high, up to <span class="math notranslate nohighlight">\(n/polylog(n)\)</span>, the magnitude of the corruptions can be arbitrarily large and be of any signs, and the proportion of corrupted entries is finite. Numerical simulations show that successful recovery displays a phase transition in the combination of paramters <span class="math notranslate nohighlight">\(rank(L)\)</span> and <span class="math notranslate nohighlight">\(\rho_S\)</span>, i.e., there is a region where the recovery is always successful, and a region where it always fails, see figure below.</p>
-<div class="figure align-default" id="id87">
+<p>More even, the value of the regularization parameter is universal, given by <span class="math notranslate nohighlight">\(\lambda=\max(n,d)}^{-1/2}\)</span>. This conditions turn out to be quite broad, the rank of <span class="math notranslate nohighlight">\(L\)</span> can be quite high, up to <span class="math notranslate nohighlight">\(n/polylog(n)\)</span>, the magnitude of the corruptions can be arbitrarily large and be of any signs, and the proportion of corrupted entries is finite. Numerical simulations show that successful recovery displays a phase transition in the combination of paramters <span class="math notranslate nohighlight">\(rank(L)\)</span> and <span class="math notranslate nohighlight">\(\rho_S\)</span>, i.e., there is a region where the recovery is always successful, and a region where it always fails, see figure below.</p>
+<div class="figure align-default" id="id90">
 <img alt="_images/rpca-phase.png" src="_images/rpca-phase.png" />
-<p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">Images from <span id="id13">[<a class="reference internal" href="#id79"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id87" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">Images from <span id="id13">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id90" title="Permalink to this image">¶</a></p>
 </div>
-<p>More recent work have extended the results above, allowing recovery from a larger fraction of errors <span id="id14">[<a class="reference internal" href="#id80"><span>10</span></a>,<a class="reference internal" href="#id81"><span>11</span></a>]</span>.</p>
+<p>More recent work have extended the results above, allowing recovery from a larger fraction of errors <span id="id14">[<a class="reference internal" href="#id82"><span>10</span></a>,<a class="reference internal" href="#id83"><span>11</span></a>]</span>.</p>
 <p>Finally, Principal Components Pursuit can also extended to matrix completion with corrupted data. Additionally to sparse corruptions, consider also that only a subset <span class="math notranslate nohighlight">\(\Omega\)</span> of the data is observed, the objective is now</p>
 <div class="math notranslate nohighlight">
 \[
@@ -1389,31 +1411,31 @@ M = L_0 + S_0
 <ul class="simple">
 <li><p>Video surveillance, separation of background (low rank) and foreground (sparse).</p></li>
 </ul>
-<div class="figure align-default" id="id88">
+<div class="figure align-default" id="id91">
 <img alt="_images/rpca-video.png" src="_images/rpca-video.png" />
-<p class="caption"><span class="caption-number">Fig. 12 </span><span class="caption-text">Images from <span id="id15">[<a class="reference internal" href="#id79"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id88" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 12 </span><span class="caption-text">Images from <span id="id15">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id91" title="Permalink to this image">¶</a></p>
 </div>
 <ul class="simple">
 <li><p>Face recognition, where shadows and occlusions are interpreted as the sparse component. This works because the column space for images of a face is very low rank.</p></li>
 </ul>
-<div class="figure align-default" id="id89">
+<div class="figure align-default" id="id92">
 <img alt="_images/rpca-faces.png" src="_images/rpca-faces.png" />
-<p class="caption"><span class="caption-number">Fig. 13 </span><span class="caption-text">Images from <span id="id16">[<a class="reference internal" href="#id79"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id89" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 13 </span><span class="caption-text">Images from <span id="id16">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id92" title="Permalink to this image">¶</a></p>
 </div>
 <ul class="simple">
 <li><p>Latent Semantic Indexing, where <span class="math notranslate nohighlight">\(L_0\)</span> could capture the common words across documents, while <span class="math notranslate nohighlight">\(S_0\)</span> would capture the words that best represent each individual document.</p></li>
 <li><p>Graph clustering, where the low rank component corresponds to edges between elements in a cluster, and the sparse component to elements across clusters.</p></li>
 </ul>
-<div class="figure align-default" id="id90">
+<div class="figure align-default" id="id93">
 <img alt="_images/rpca-graph.png" src="_images/rpca-graph.png" />
-<p class="caption"><span class="caption-number">Fig. 14 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id90" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 14 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id93" title="Permalink to this image">¶</a></p>
 </div>
 <ul class="simple">
 <li><p>Gaussian graphical models with sparse covariance matrix and latent variables.</p></li>
 </ul>
-<div class="figure align-default" id="id91">
+<div class="figure align-default" id="id94">
 <img alt="_images/rpca-gaussian.png" src="_images/rpca-gaussian.png" />
-<p class="caption"><span class="caption-number">Fig. 15 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id91" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 15 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id94" title="Permalink to this image">¶</a></p>
 </div>
 <p>The covariance and precision (<span class="math notranslate nohighlight">\(\Lambda = \Sigma^{-1}\)</span>) matrices can be blocked partitioned as</p>
 <div class="math notranslate nohighlight">
@@ -1440,16 +1462,16 @@ M = L_0 + S_0
 <ul class="simple">
 <li><p>Recommendation models where user data is deliberately corrupt, and the recommendation matrix is sparse, the Netflix problem.</p></li>
 </ul>
-<p>For further reading, refer to <span id="id17">[<a class="reference internal" href="#id82"><span>12</span></a>]</span>, <span id="id18">[<a class="reference internal" href="#id83"><span>13</span></a>]</span>, and <span id="id19">[<a class="reference internal" href="#id84"><span>14</span></a>]</span>.</p>
+<p>For further reading, refer to <span id="id17">[<a class="reference internal" href="#id84"><span>12</span></a>]</span>, <span id="id18">[<a class="reference internal" href="#id85"><span>13</span></a>]</span>, and <span id="id19">[<a class="reference internal" href="#id86"><span>14</span></a>]</span>.</p>
 <p>We still haven’t discuss any algorithm to solve Principal Projection Pursuit. Several options have been explored in the literature, a nice algorithm due to its applicability to a wide range of problems is Alternating Direction Method of Multipliers (ADMM). There is a nice video on ADMM <a class="reference external" href="https://www.youtube.com/watch?v=ixBjVgGITHc">here</a>. Basically, you use a Lagrange multiplier plus a quadratic term that is proved to increase convergence properties (augmented Lagrangian), then optimize iteratively for block of variables and the multiplier.</p>
 <p>The augmented Lagrangian for PPC objective is</p>
 <div class="math notranslate nohighlight">
 \[\begin{align}
 \mathcal{L}(L,S,Y) = |L|_{*} + \lambda|S|_1
 + \left&lt;Y, M - L - S\right&gt;
-+ \frac{\rho}{2}|X - L - S|_F^2
++ \frac{\rho}{2}|M - L - S|_F^2
 \end{align}\]</div>
-<p>where <span class="math notranslate nohighlight">\(Y\)</span> is a matrix Lagrangian multipliers, each <span class="math notranslate nohighlight">\(y_{ij}\)</span> enforcing the constraint on each entry of <span class="math notranslate nohighlight">\(M - L - S = 0\)</span>, and <span class="math notranslate nohighlight">\(\rho\)</span> is the penalty term of the augmented quadratic term, also the step-size of the gradient update of <span class="math notranslate nohighlight">\(Y\)</span> (see below) as to ensure duality (watch video).</p>
+<p>where <span class="math notranslate nohighlight">\(Y\)</span> is a matrix Lagrangian multipliers, each <span class="math notranslate nohighlight">\(y_{ij}\)</span> enforcing the constraint on each entry of <span class="math notranslate nohighlight">\(M - L - S = 0\)</span>, and <span class="math notranslate nohighlight">\(\rho\)</span> is the penalty term of the augmented quadratic term, also the step-size of the gradient update of <span class="math notranslate nohighlight">\(Y\)</span> (see below) as to ensure duality (watch video). Note that the inner product for matrices is defined as <span class="math notranslate nohighlight">\(\left&lt; A,B\right&gt; = tr(A^T B)\)</span>.</p>
 <p>The steps of the ADMM algorithm for RPCA are</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align*}
@@ -1457,55 +1479,242 @@ M = L_0 + S_0
 \mathbf{S}_{k+1} &amp;= \mathop{\mathrm{arg\,min}}_{S} \,\, \mathcal{L}(\mathbf{L}_{k+1}, \mathbf{S}, \mathbf{Y}_k)\\
 \mathbf{Y}_{k+1} &amp;= \mathbf{Y}_k + \rho(\mathbf{M} - \mathbf{L}_{k+1} - \mathbf{S}_{k+1}),
 \end{align*}\end{split}\]</div>
-<p>where the update for <span class="math notranslate nohighlight">\(Y\)</span> is just a gradient ascent step with step-size <span class="math notranslate nohighlight">\(\rho\)</span>. By completing the square, we can take the</p>
+<p>where the update for <span class="math notranslate nohighlight">\(Y\)</span> is just a gradient ascent step with step-size <span class="math notranslate nohighlight">\(\rho\)</span>. By completing the square, the Lagrangian takes the form</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\mathcal{L}(L,S,Y) = |L|_{*} + \lambda|S|_1
++ \frac{\rho}{2}|M - L - S + \frac{Y}{\rho}|_F^2 - \frac{|Y|_F^2}{2}
+\end{align}\]</div>
+<p>for which the ADMM steps become, (ignoring constants with respect to each step),</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+\mathbf{L}_{k+1} &amp;= \mathop{\mathrm{arg\,min}}_{L} \,\,|L|_{*}
++ \frac{\rho}{2}\left |M - L - S_k + \frac{Y_k}{\rho}\right|_F^2\\
+\mathbf{S}_{k+1} &amp;= \mathop{\mathrm{arg\,min}}_{S} \,\, \lambda|S|_1
++ \frac{\rho}{2}\left|M - L_{k+1} - S + \frac{Y_k}{\rho}\right|_F^2\\
+\mathbf{Y}_{k+1} &amp;= \mathbf{Y}_k + \rho(\mathbf{M} - \mathbf{L}_{k+1} - \mathbf{S}_{k+1}),
+\end{align*}\end{split}\]</div>
+<p>The first two steps have exact solutions, the second one is given by the soft-thresholding function, just a in the discussion of SPCA. Let’s discuss the minimizing with respect to <span class="math notranslate nohighlight">\(L\)</span> first. To deal with the first objective, we need the gradient of the nuclear norm, so let’s begin there. The nuclear norm can be given either as the trace of the singular value matrix, or the trace of the square root of <span class="math notranslate nohighlight">\(X^TX\)</span> (<span class="math notranslate nohighlight">\(XX^T\)</span> is <span class="math notranslate nohighlight">\(d &gt; n\)</span>). This is the reason is also known as the trace norm.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+tr(\sqrt{X^T X})
+=&amp; tr(\sqrt{V \Sigma U U^T \Sigma V})
+= tr(\sqrt{V \Sigma \Sigma V^T})\\
+=&amp; tr(\sqrt{V \Sigma V^T V \Sigma V^T})
+= tr(\sqrt{(V \Sigma V^T)^2})\\
+=&amp; tr(V \Sigma V^T)
+= tr(\Sigma V^T V)
+= tr(\Sigma)
+= \sum_i \sigma_{i}
+\end{align}\end{split}\]</div>
+<p>For a direct derivation of the full rank case, see <a class="reference external" href="https://math.stackexchange.com/questions/701062/derivative-of-the-nuclear-norm/1016743#701104">here</a>, since we know <span class="math notranslate nohighlight">\(L\)</span> is not full rank, the derivative is discontinuous along the direction where <span class="math notranslate nohighlight">\(L\)</span> changes rank. Remember, for a low rank matrix, points lie in a hyper-plan, if a infinitesimal change takes a point out of the hyperplane (into the tangent sub-space), the rank of <span class="math notranslate nohighlight">\(L\)</span> changes, and the rate of change of the nuclear norm is discontinuous. This means we are dealing with sub-differentials again. An intuitive way to find the sub-differential of the nuclear norm is to use its dual norm. A dual norm, measures the <em>size</em> of a matrix by its effect on another matrix, so the dual of the spectral norm is defined as</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+|A|_{dual} = \mathop{\mathrm{sup}}_{ |Q|_2 \leq 1} \left&lt; Q, A \right&gt;
+\end{align}\]</div>
+<p>This is, find the maximum possible value of <span class="math notranslate nohighlight">\(\left&lt; Q, A \right&gt;\)</span> over all possible matrices <span class="math notranslate nohighlight">\(Q\)</span>, such that <span class="math notranslate nohighlight">\(|Q|_2\leq 1\)</span>. Here <span class="math notranslate nohighlight">\(|Q|_2 = \max(\sigma_i(Q)) = \sigma_1(Q)\)</span> is the spectral norm of <span class="math notranslate nohighlight">\(Q\)</span>, i.e., its maximum singular value. We need to prove that the dual of the spectral norm is the nuclear norm,</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+|A|_{*} = \mathop{\mathrm{sup}}_{ \sigma_1(Q) \leq 1} \left&lt; Q, A \right&gt;
+\end{align}\]</div>
+<p>A full prove is given <a class="reference external" href="https://math.stackexchange.com/questions/1158798/show-that-the-dual-norm-of-the-spectral-norm-is-the-nuclear-norm">here</a>, the idea is that to make the inner product as large as possible, we need a matrix <span class="math notranslate nohighlight">\(Q\)</span> with all singular values equal to 1, “parallel” to <span class="math notranslate nohighlight">\(A\)</span>, so a good choice is <span class="math notranslate nohighlight">\(Q=UV^T\)</span>, where <span class="math notranslate nohighlight">\(U\)</span> and <span class="math notranslate nohighlight">\(V\)</span> come from the SVD of <span class="math notranslate nohighlight">\(A=U\Sigma V^T\)</span>. Under this conditions</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+|A|_{*} =&amp; \mathop{\mathrm{sup}}_{ \sigma_1(Q) \leq 1} \left&lt; Q, A \right&gt;\\
+=&amp; \left&lt; UV^T, A \right&gt; = tr(VU^T U \Sigma V^T)\\
+=&amp; tr(V \Sigma V^T) = tr(V^T V \Sigma ) = tr(\Sigma) = \sum_i\sigma_i(A)
+\end{align}\end{split}\]</div>
+<p>So, taking the sub-gradient,</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\partial_{L} |L|_{*} = \partial \left&lt;Q, L \right&gt; = {Q}
+\end{align}\]</div>
+<p>equal to the set of <span class="math notranslate nohighlight">\(Q\)</span>, with <span class="math notranslate nohighlight">\(|Q|_2&lt;1\)</span>, that maximize the inner product. A possible solution, we have seen, is <span class="math notranslate nohighlight">\(Q = UV^T\)</span>, but it is not the only one. Any matrix <span class="math notranslate nohighlight">\(UV^T + W\)</span>, with <span class="math notranslate nohighlight">\(U^T W= W V^{T} = 0\)</span> and <span class="math notranslate nohighlight">\(|W|_2\leq 1\)</span> also maximizes the inner product, as <span class="math notranslate nohighlight">\(W\)</span> lies of the tangent space of <span class="math notranslate nohighlight">\(L\)</span>, and thus <span class="math notranslate nohighlight">\(\left&lt;W, L \right&gt;\)</span> vanishes.</p>
+<div class="math notranslate nohighlight">
+\[
+tr(W^T L) = tr(L^T W) = tr(V\Sigma U^T W) = 0
+\]</div>
+<p>Making</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\partial_{L} |L|_{*} = \{UV^T + W : U^T W = WV^T = 0, |W|_{2}\leq 1\}
+\end{align}\]</div>
+<p>The first objective</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+|L|_{*} + \frac{\rho}{2}\left |M - L - S_k + \frac{Y_k}{\rho}\right|_F^2
+\end{align}\]</div>
+<p>is in the form (with <span class="math notranslate nohighlight">\(\tau = 1/\rho\)</span>, and <span class="math notranslate nohighlight">\(A = M - S_k + \frac{Y_k}{\rho}\)</span>)</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\tau |L|_{*} + \frac{1}{2}\left |L - A\right|_F^2
+\end{align}\]</div>
+<p>Taking the sub-gradient, and require that zero is part of the set</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+0 \in \tau \partial|L|_{*} + L^{*} - A
+\end{align}\]</div>
+<p>or</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+A - L^{*} \in \tau \partial|L|_{*}
+\end{align}\]</div>
+<p>It is shown in <span id="id20">[<a class="reference internal" href="#id87"><span>15</span></a>]</span>, that the solution is given by the singular value thresholding (SVT) of <span class="math notranslate nohighlight">\(A\)</span>, defined as</p>
+<div class="math notranslate nohighlight">
+\[
+L^{*} = \mathcal{D}_{\tau}(A) = U S_{\tau}(\Sigma) V^T
+= U\ diag(\max(\sigma_i - \tau), 0)\ V^T
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(S_{\tau}\)</span> is the soft-thresholding function <span class="math notranslate nohighlight">\(sgn(x)\max(|x|-\tau, 0)\)</span>, as before, and we take into account that singular values are always positive. SVT sets to zero all singular values of <span class="math notranslate nohighlight">\(A\)</span> less than <span class="math notranslate nohighlight">\(\tau\)</span>. To see that <span class="math notranslate nohighlight">\(\mathcal{D_{\tau}(L)}\)</span> is indeed a solution we can follow <span id="id21">[<a class="reference internal" href="#id87"><span>15</span></a>]</span>, and do <span class="math notranslate nohighlight">\(A = U_0\Sigma_{0}V^T_0 +  U_1\Sigma_{1}V^T_1\)</span> where <span class="math notranslate nohighlight">\(U_0\)</span>, <span class="math notranslate nohighlight">\(V_{0}\)</span> (resp. <span class="math notranslate nohighlight">\(U_1\)</span>, <span class="math notranslate nohighlight">\(V_1\)</span>) are the singular vectors associated with singular values greater than <span class="math notranslate nohighlight">\(\tau\)</span> (resp. smaller than or equal to <span class="math notranslate nohighlight">\(\tau\)</span>). Then,</p>
+<div class="math notranslate nohighlight">
+\[
+L^{*} = \mathcal{D}_{\tau}(A) = U_0(\Sigma_{0} - \tau I) V_0^{T}
+\]</div>
+<p>and</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+A - L^{*}
+=&amp; U_0\Sigma_{0}V^T_0 +  U_1\Sigma_{1}V^T_1 - U_0(\Sigma_{0} - \tau I) V_0^{T}\\
+=&amp; \tau(U_0 V_0 + \frac{U_1 \Sigma_1 V^T_1}{\tau})\\
+=&amp; \tau(U_0 V_0 + W)
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(|W|_{2} = |\frac{U_1 \Sigma_1 V^T_1}{\tau}|_{2} &lt; 1\)</span> since all singular values of <span class="math notranslate nohighlight">\(\Sigma_{1}\)</span> are bounded by <span class="math notranslate nohighlight">\(\tau\)</span>. This automatically shows that <span class="math notranslate nohighlight">\(A-L^{*} \in \tau\partial|L|_{*}\)</span>, since by definition <span class="math notranslate nohighlight">\(U_0^TW = WV_0^T = 0\)</span>.</p>
+<p>So, the solution of the first step is given by</p>
+<div class="math notranslate nohighlight">
+\[
+L_{k+1} = \mathcal{D}_{\frac{1}{\rho}}\left( M - S_k + \frac{Y_k}{\rho}  \right)
+\]</div>
+<p>Now, onto the second step, the objective</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\lambda|S|_1 + \frac{\rho}{2}\left|M - L_{k+1} - S + \frac{Y_k}{\rho}\right|_F^2
+\end{align}\]</div>
+<p>is in the form (with <span class="math notranslate nohighlight">\(\tau = \lambda/\rho\)</span> and <span class="math notranslate nohighlight">\(A = M - L_{k+1} + Y_k/\rho\)</span>)</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+\tau|S|_1 + \frac{1}{2}\left|S - A \right|_F^2
+\end{align}\]</div>
+<p>obtaining the sub-gradient, it is easy to find the solution in terms of the soft-thresholding function as</p>
+<div class="math notranslate nohighlight">
+\[
+S_{k+1} = S_{\frac{\lambda}{\rho}}\left( M - L_{k+1} + \frac{Y_k}{\rho}  \right)
+\]</div>
+<p>A nice example on using RPCA implemented in TensorLy can be found <a class="reference external" href="http://jeankossaifi.com/blog/rpca.html">here</a>.</p>
 </div>
 <div class="section" id="kernel-pca">
 <h2>Kernel PCA<a class="headerlink" href="#kernel-pca" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pca-from-the-gram-matrix">
+<h3>PCA from the Gram Matrix<a class="headerlink" href="#pca-from-the-gram-matrix" title="Permalink to this headline">¶</a></h3>
+<p>We have shown that PCA can be obtained from the SVD of a centered data matrix <span class="math notranslate nohighlight">\(X=UDV^T\)</span>, and the principal components are <span class="math notranslate nohighlight">\(Z = UD\)</span>. Now suppose we do not have access to the data matrix, only to the matrix of inner products, the Gram matrix <span class="math notranslate nohighlight">\(G = X X^T\)</span>. We can still obtain the principal components from the eigen decomposition of the Gram matrix <span class="math notranslate nohighlight">\(G=U D^2 U^{T}\)</span>. If the inner products of the Gram matrix are not centered, we can use the double centered Gram matrix <span class="math notranslate nohighlight">\((I - M)G(1 -M)\)</span>, with <span class="math notranslate nohighlight">\(M=\frac{1}{N}1 1^{T}\)</span> being the mean operator, so that the centered data matrix is <span class="math notranslate nohighlight">\(X_c = (I - M)X\)</span>, so that <span class="math notranslate nohighlight">\((I - M)G(1 -M) = (I - M)XX^T(1 -M) = X_c X_c^T\)</span>.</p>
+<p>If we were to know the data matrix, the loadings or eigenvectors of the covariance matrix can be obtained from the following relation, considering the eigen value equation for <span class="math notranslate nohighlight">\(G\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+G u_i =&amp; \lambda_i u_i\\
+X X^T u_i =&amp; \lambda_i u_i\\
+X^T X X^T u_i = &amp; X^T \lambda_i u_i\\
+\Sigma (X^T u_i) =&amp; \lambda (X^T u_i)\\
+\Sigma v_i =&amp; \lambda v_i
+\end{align}\end{split}\]</div>
+<p>so, the loadings are <span class="math notranslate nohighlight">\(v_i = X^Tu_i\)</span>. Unfortunately, if the data matrix is unknown, the loadings cannot be recovered. This alternatively is useful is <span class="math notranslate nohighlight">\(d &gt;&gt; n\)</span>, so we avoid the computation of large covariance matrix.</p>
+<p>In the case we cannot recover the loadings, we can still van project new points into the loadings space, as long as we have the inner products with the original data points. Consider a n-dimensional vector <span class="math notranslate nohighlight">\(g_0\)</span> of inner products between a new point <span class="math notranslate nohighlight">\(x_0\)</span> and all observations <span class="math notranslate nohighlight">\(x_i\)</span>. <span class="math notranslate nohighlight">\(g_{0i} = x_0^T x_i\)</span>. The centered projection of <span class="math notranslate nohighlight">\(x_0\)</span> onto the principal components is given by (homework)</p>
+<div class="math notranslate nohighlight">
+\[
+z_0 = D^{-1}U^T\left(I-M\right)\left(k_0 - \frac{1}{N} K 1\right)
+\]</div>
+</div>
+<div class="section" id="the-kernel-trick">
+<h3>The Kernel trick<a class="headerlink" href="#the-kernel-trick" title="Permalink to this headline">¶</a></h3>
+<p>Many learning algorithms take the Gram matrix as input, rather then the data matrix. The Gram matrix is the matrix of pairwise inner products of observation vectors, defined as <span class="math notranslate nohighlight">\(G = X X^T\)</span>, such that <span class="math notranslate nohighlight">\(G_{ij}=\left&lt;x_i, x_j\right&gt;\)</span>.</p>
+<p>For such cases, a simple way to make those algorithms non-linear us to substitute the Gram matrix for a Kernel matrix, where each entry <span class="math notranslate nohighlight">\(K_{ij} = k(x_i, x_j)\)</span> is a kernel function of observation vector pairs, usually a similarity metric.</p>
+<p>A kernel function can be interpreted as an inner product in a different vector space (possibly of infinite dimension), for which the coordinate vectors are not known. By using the kernel matrix, the computation of the coordinates in the new space can be avoided, since for well defined kernels, finding the inner product directly is much more efficient.</p>
+<div class="math notranslate nohighlight">
+\[
+k(x_i, x_j) =\left&lt;\phi(x_i), \phi(x_j)\right&gt;_{\mathcal{V}}
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\phi(x)\)</span> is a feature map from the original vector space to the new space <span class="math notranslate nohighlight">\(\mathcal{V}\)</span>.</p>
+<div class="figure align-default" id="id95">
+<img alt="_images/Kernel_trick_idea.svg" src="_images/Kernel_trick_idea.svg" /><p class="caption"><span class="caption-number">Fig. 16 </span><span class="caption-text">SVM with kernel given by ϕ(a, b) = (a, b, a² + b²) and thus K(x, y) = x.T y + |x|² |y|². The training points are mapped to a 3-dimensional space where a separating hyperplane can be easily found. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/File:Kernel_trick_idea.svg">https://en.wikipedia.org/wiki/File:Kernel_trick_idea.svg</a></span><a class="headerlink" href="#id95" title="Permalink to this image">¶</a></p>
+</div>
+<p>Popular kernels are:</p>
+<ul class="simple">
+<li><p>Gaussian: <span class="math notranslate nohighlight">\(\exp\left(-\beta|x_i-x_j|^2\right)\)</span></p></li>
+<li><p>Polynomial: <span class="math notranslate nohighlight">\((1 + x_i^T x_j)^p\)</span></p></li>
+<li><p>Hyperbolic tangent: <span class="math notranslate nohighlight">\(\tanh(x_i^T x_j + \delta)\)</span></p></li>
+</ul>
+<p>The idea of Kernel PCA is to use the Kernel matrix instead of the Gram matrix, so we are interested in the eigen decomposition of <span class="math notranslate nohighlight">\((I - M)K(1 -M) = UD^2U^T\)</span>, where we are using the doubled centered kernel matrix, since PCA needs centered data to work. Note that even if the original data matrix is centered, we still need to center the Kernel matrix, since nothing assures that the new features <span class="math notranslate nohighlight">\(\phi(x)\)</span> are centered.</p>
+<p>Note that the right eigenvectors of the decomposition <span class="math notranslate nohighlight">\(\phi(X) = UDV^T\)</span>, i.e., the eigenvectors (loadings) in feature space, can be expanded in terms of the basis of observations,</p>
+<div class="math notranslate nohighlight">
+\[
+v_m = \sum_{j=1}^n \alpha_{jm}\phi(x_j)
+\]</div>
+<p>With this expansion, the projection of any observation onto the mth principal component is given by</p>
+<div class="math notranslate nohighlight">
+\[
+z_{im} = v_m^T \phi(x_i) = \sum_{j=1}^n \alpha_{jm}\phi(x_j)^T \phi(x_i)
+= \sum_{j=1}^n \alpha_{jm}K(x_i, x_j)
+\]</div>
+<p>As an exercise, show that the coefficients are given by <span class="math notranslate nohighlight">\(\alpha_{jm} = u_{jm}/d_m\)</span>, assume a centered K matrix. This is, the vector of coefficients, <span class="math notranslate nohighlight">\(\alpha_m\)</span> is equal to the <span class="math notranslate nohighlight">\(m\)</span> eigenvector divided by the square of the eigenvalue, <span class="math notranslate nohighlight">\(\alpha_m = u_m/d_m\)</span>.</p>
+<p>If the K matrix is not centered, we can still project any existing observation by centering K before, and any new observation <span class="math notranslate nohighlight">\(x_0\)</span>, by applying (show in assignments)</p>
+<div class="math notranslate nohighlight">
+\[
+\vec{z}_{m} = A (I - M)\left(\vec{k}_0 - \frac{1}{N} K \vec{1}\right)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(A\)</span> is the matrix of column vectors <span class="math notranslate nohighlight">\(\alpha_m\)</span> given by <span class="math notranslate nohighlight">\(A=U D^{-1}\)</span>, and <span class="math notranslate nohighlight">\(k_0\)</span> is a vector of kernel products <span class="math notranslate nohighlight">\(\phi(x_0)^T\phi(x_i)\)</span> with all observations <span class="math notranslate nohighlight">\(x_i\)</span>.</p>
+</div>
+<div class="section" id="example-concentric-clusters">
+<h3>Example: Concentric clusters<a class="headerlink" href="#example-concentric-clusters" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="example-de-noising">
+<h3>Example: De-noising<a class="headerlink" href="#example-de-noising" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id20"><dl class="citation">
-<dt class="label" id="id71"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
+<p id="id22"><dl class="citation">
+<dt class="label" id="id73"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
 <dd><p>Hui Zou and Lingzhou Xue. A selective overview of sparse principal component analysis. <em>Proceedings of the IEEE</em>, 106(8):1311–1320, 2018.</p>
 </dd>
-<dt class="label" id="id76"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="id78"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
 <dd><p>Ian T Jolliffe, Nickolay T Trendafilov, and Mudassir Uddin. A modified principal component technique based on the lasso. <em>Journal of computational and Graphical Statistics</em>, 12(3):531–547, 2003.</p>
 </dd>
-<dt class="label" id="id75"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dt class="label" id="id77"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
 <dd><p>Hui Zou, Trevor Hastie, and Robert Tibshirani. Sparse principal component analysis. <em>Journal of computational and graphical statistics</em>, 15(2):265–286, 2006.</p>
 </dd>
-<dt class="label" id="id74"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
+<dt class="label" id="id76"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
 <dd><p>Francis Bach, Rodolphe Jenatton, Julien Mairal, and Guillaume Obozinski. Optimization with sparsity-inducing penalties. <em>arXiv preprint arXiv:1108.0775</em>, 2011.</p>
 </dd>
-<dt class="label" id="id77"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
+<dt class="label" id="id79"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
 <dd><p>Julien Mairal, Francis Bach, and Jean Ponce. Sparse modeling for image and vision processing. <em>arXiv preprint arXiv:1411.3230</em>, 2014.</p>
 </dd>
-<dt class="label" id="id72"><span class="brackets"><a class="fn-backref" href="#id7">6</a></span></dt>
+<dt class="label" id="id74"><span class="brackets"><a class="fn-backref" href="#id7">6</a></span></dt>
 <dd><p>Rodolphe Jenatton, Guillaume Obozinski, and Francis Bach. Structured sparse principal component analysis. In <em>Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics</em>, 366–373. JMLR Workshop and Conference Proceedings, 2010.</p>
 </dd>
-<dt class="label" id="id73"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
+<dt class="label" id="id75"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
 <dd><p>Julien Mairal, Francis Bach, Jean Ponce, and Guillermo Sapiro. Online dictionary learning for sparse coding. In <em>Proceedings of the 26th annual international conference on machine learning</em>, 689–696. 2009.</p>
 </dd>
-<dt class="label" id="id78"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
+<dt class="label" id="id80"><span class="brackets"><a class="fn-backref" href="#id9">8</a></span></dt>
 <dd><p>Youwei Zhang, Alexandre d'Aspremont, and Laurent El Ghaoui. Sparse pca: convex relaxations, algorithms and applications. In <em>Handbook on Semidefinite, Conic and Polynomial Optimization</em>, pages 915–940. Springer, 2012.</p>
 </dd>
-<dt class="label" id="id79"><span class="brackets">9</span><span class="fn-backref">(<a href="#id10">1</a>,<a href="#id11">2</a>,<a href="#id12">3</a>,<a href="#id13">4</a>,<a href="#id15">5</a>,<a href="#id16">6</a>)</span></dt>
+<dt class="label" id="id81"><span class="brackets">9</span><span class="fn-backref">(<a href="#id10">1</a>,<a href="#id11">2</a>,<a href="#id12">3</a>,<a href="#id13">4</a>,<a href="#id15">5</a>,<a href="#id16">6</a>)</span></dt>
 <dd><p>Emmanuel J Candès, Xiaodong Li, Yi Ma, and John Wright. Robust principal component analysis? <em>Journal of the ACM (JACM)</em>, 58(3):1–37, 2011.</p>
 </dd>
-<dt class="label" id="id80"><span class="brackets"><a class="fn-backref" href="#id14">10</a></span></dt>
+<dt class="label" id="id82"><span class="brackets"><a class="fn-backref" href="#id14">10</a></span></dt>
 <dd><p>Yudong Chen, Ali Jalali, Sujay Sanghavi, and Constantine Caramanis. Low-rank matrix recovery from errors and erasures. <em>IEEE Transactions on Information Theory</em>, 59(7):4324–4337, 2013.</p>
 </dd>
-<dt class="label" id="id81"><span class="brackets"><a class="fn-backref" href="#id14">11</a></span></dt>
+<dt class="label" id="id83"><span class="brackets"><a class="fn-backref" href="#id14">11</a></span></dt>
 <dd><p>Arvind Ganesh, John Wright, Xiaodong Li, Emmanuel J Candes, and Yi Ma. Dense error correction for low-rank matrices via principal component pursuit. In <em>2010 IEEE international symposium on information theory</em>, 1513–1517. IEEE, 2010.</p>
 </dd>
-<dt class="label" id="id82"><span class="brackets"><a class="fn-backref" href="#id17">12</a></span></dt>
+<dt class="label" id="id84"><span class="brackets"><a class="fn-backref" href="#id17">12</a></span></dt>
 <dd><p>Venkat Chandrasekaran, Sujay Sanghavi, Pablo A Parrilo, and Alan S Willsky. Rank-sparsity incoherence for matrix decomposition. <em>SIAM Journal on Optimization</em>, 21(2):572–596, 2011.</p>
 </dd>
-<dt class="label" id="id83"><span class="brackets"><a class="fn-backref" href="#id18">13</a></span></dt>
+<dt class="label" id="id85"><span class="brackets"><a class="fn-backref" href="#id18">13</a></span></dt>
 <dd><p>Venkat Chandrasekaran, Pablo A Parrilo, and Alan S Willsky. Latent variable graphical model selection via convex optimization. In <em>2010 48th Annual Allerton Conference on Communication, Control, and Computing (Allerton)</em>, 1610–1613. IEEE, 2010.</p>
 </dd>
-<dt class="label" id="id84"><span class="brackets"><a class="fn-backref" href="#id19">14</a></span></dt>
+<dt class="label" id="id86"><span class="brackets"><a class="fn-backref" href="#id19">14</a></span></dt>
 <dd><p>Yudong Chen. Incoherence-optimal matrix completion. <em>IEEE Transactions on Information Theory</em>, 61(5):2909–2923, 2015.</p>
+</dd>
+<dt class="label" id="id87"><span class="brackets">15</span><span class="fn-backref">(<a href="#id20">1</a>,<a href="#id21">2</a>)</span></dt>
+<dd><p>Jian-Feng Cai, Emmanuel J Candès, and Zuowei Shen. A singular value thresholding algorithm for matrix completion. <em>SIAM Journal on optimization</em>, 20(4):1956–1982, 2010.</p>
 </dd>
 </dl>
 </p>

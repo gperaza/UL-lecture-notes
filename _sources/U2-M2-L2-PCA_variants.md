@@ -483,7 +483,7 @@ The main result from {cite}`candes2011robust` proves that Principal Component Pu
 -   $rank(L_0) \lesssim \frac{n}{\max{\mu_1,\mu_2}\log^2 n}$
 -   The non-zero entries of $S_0$ are randomly located, and the number of entries $|S_0|_0 \leq \rho_s n^2$, where $\rho_s$ is some constant, the non-vanishing fraction of allowed zeros.
 
-More even, the value of the regularization parameter is universal, given by $\lambda=n^{-1/2}$. This conditions turn out to be quite broad, the rank of $L$ can be quite high, up to $n/polylog(n)$, the magnitude of the corruptions can be arbitrarily large and be of any signs, and the proportion of corrupted entries is finite. Numerical simulations show that successful recovery displays a phase transition in the combination of paramters $rank(L)$ and $\rho_S$, i.e., there is a region where the recovery is always successful, and a region where it always fails, see figure below.
+More even, the value of the regularization parameter is universal, given by $\lambda=\max(n,d)}^{-1/2}$. This conditions turn out to be quite broad, the rank of $L$ can be quite high, up to $n/polylog(n)$, the magnitude of the corruptions can be arbitrarily large and be of any signs, and the proportion of corrupted entries is finite. Numerical simulations show that successful recovery displays a phase transition in the combination of paramters $rank(L)$ and $\rho_S$, i.e., there is a region where the recovery is always successful, and a region where it always fails, see figure below.
 
 ```{figure} Figures/rpca-phase.png
 Images from {cite}`candes2011robust`.
@@ -566,10 +566,10 @@ The augmented Lagrangian for PPC objective is
 \begin{align}
 \mathcal{L}(L,S,Y) = |L|_{*} + \lambda|S|_1
 + \left<Y, M - L - S\right>
-+ \frac{\rho}{2}|X - L - S|_F^2
++ \frac{\rho}{2}|M - L - S|_F^2
 \end{align}
 ```
-where $Y$ is a matrix Lagrangian multipliers, each $y_{ij}$ enforcing the constraint on each entry of $M - L - S = 0$, and $\rho$ is the penalty term of the augmented quadratic term, also the step-size of the gradient update of $Y$ (see below) as to ensure duality (watch video).
+where $Y$ is a matrix Lagrangian multipliers, each $y_{ij}$ enforcing the constraint on each entry of $M - L - S = 0$, and $\rho$ is the penalty term of the augmented quadratic term, also the step-size of the gradient update of $Y$ (see below) as to ensure duality (watch video). Note that the inner product for matrices is defined as $\left< A,B\right> = tr(A^T B)$.
 
 The steps of the ADMM algorithm for RPCA are
 
@@ -580,9 +580,241 @@ The steps of the ADMM algorithm for RPCA are
 \mathbf{Y}_{k+1} &= \mathbf{Y}_k + \rho(\mathbf{M} - \mathbf{L}_{k+1} - \mathbf{S}_{k+1}),
 \end{align*}
 ```
-where the update for $Y$ is just a gradient ascent step with step-size $\rho$. By completing the square, we can take the
+where the update for $Y$ is just a gradient ascent step with step-size $\rho$. By completing the square, the Lagrangian takes the form
+
+```{math}
+\begin{align}
+\mathcal{L}(L,S,Y) = |L|_{*} + \lambda|S|_1
++ \frac{\rho}{2}|M - L - S + \frac{Y}{\rho}|_F^2 - \frac{|Y|_F^2}{2}
+\end{align}
+```
+for which the ADMM steps become, (ignoring constants with respect to each step),
+
+```{math}
+\begin{align*}
+\mathbf{L}_{k+1} &= \mathop{\mathrm{arg\,min}}_{L} \,\,|L|_{*}
++ \frac{\rho}{2}\left |M - L - S_k + \frac{Y_k}{\rho}\right|_F^2\\
+\mathbf{S}_{k+1} &= \mathop{\mathrm{arg\,min}}_{S} \,\, \lambda|S|_1
++ \frac{\rho}{2}\left|M - L_{k+1} - S + \frac{Y_k}{\rho}\right|_F^2\\
+\mathbf{Y}_{k+1} &= \mathbf{Y}_k + \rho(\mathbf{M} - \mathbf{L}_{k+1} - \mathbf{S}_{k+1}),
+\end{align*}
+```
+The first two steps have exact solutions, the second one is given by the soft-thresholding function, just a in the discussion of SPCA. Let\'s discuss the minimizing with respect to $L$ first. To deal with the first objective, we need the gradient of the nuclear norm, so let\'s begin there. The nuclear norm can be given either as the trace of the singular value matrix, or the trace of the square root of $X^TX$ ($XX^T$ is $d > n$). This is the reason is also known as the trace norm.
+
+```{math}
+\begin{align}
+tr(\sqrt{X^T X})
+=& tr(\sqrt{V \Sigma U U^T \Sigma V})
+= tr(\sqrt{V \Sigma \Sigma V^T})\\
+=& tr(\sqrt{V \Sigma V^T V \Sigma V^T})
+= tr(\sqrt{(V \Sigma V^T)^2})\\
+=& tr(V \Sigma V^T)
+= tr(\Sigma V^T V)
+= tr(\Sigma)
+= \sum_i \sigma_{i}
+\end{align}
+```
+For a direct derivation of the full rank case, see [here](https://math.stackexchange.com/questions/701062/derivative-of-the-nuclear-norm/1016743#701104), since we know $L$ is not full rank, the derivative is discontinuous along the direction where $L$ changes rank. Remember, for a low rank matrix, points lie in a hyper-plan, if a infinitesimal change takes a point out of the hyperplane (into the tangent sub-space), the rank of $L$ changes, and the rate of change of the nuclear norm is discontinuous. This means we are dealing with sub-differentials again. An intuitive way to find the sub-differential of the nuclear norm is to use its dual norm. A dual norm, measures the *size* of a matrix by its effect on another matrix, so the dual of the spectral norm is defined as
+
+```{math}
+\begin{align}
+|A|_{dual} = \mathop{\mathrm{sup}}_{ |Q|_2 \leq 1} \left< Q, A \right>
+\end{align}
+```
+This is, find the maximum possible value of $\left< Q, A \right>$ over all possible matrices $Q$, such that $|Q|_2\leq 1$. Here $|Q|_2 = \max(\sigma_i(Q)) = \sigma_1(Q)$ is the spectral norm of $Q$, i.e., its maximum singular value. We need to prove that the dual of the spectral norm is the nuclear norm,
+
+```{math}
+\begin{align}
+|A|_{*} = \mathop{\mathrm{sup}}_{ \sigma_1(Q) \leq 1} \left< Q, A \right>
+\end{align}
+```
+A full prove is given [here](https://math.stackexchange.com/questions/1158798/show-that-the-dual-norm-of-the-spectral-norm-is-the-nuclear-norm), the idea is that to make the inner product as large as possible, we need a matrix $Q$ with all singular values equal to 1, \"parallel\" to $A$, so a good choice is $Q=UV^T$, where $U$ and $V$ come from the SVD of $A=U\Sigma V^T$. Under this conditions
+
+```{math}
+\begin{align}
+|A|_{*} =& \mathop{\mathrm{sup}}_{ \sigma_1(Q) \leq 1} \left< Q, A \right>\\
+=& \left< UV^T, A \right> = tr(VU^T U \Sigma V^T)\\
+=& tr(V \Sigma V^T) = tr(V^T V \Sigma ) = tr(\Sigma) = \sum_i\sigma_i(A)
+\end{align}
+```
+So, taking the sub-gradient,
+
+```{math}
+\begin{align}
+\partial_{L} |L|_{*} = \partial \left<Q, L \right> = {Q}
+\end{align}
+```
+equal to the set of $Q$, with $|Q|_2<1$, that maximize the inner product. A possible solution, we have seen, is $Q = UV^T$, but it is not the only one. Any matrix $UV^T + W$, with $U^T W= W V^{T} = 0$ and $|W|_2\leq 1$ also maximizes the inner product, as $W$ lies of the tangent space of $L$, and thus $\left<W, L \right>$ vanishes.
+
+$$
+tr(W^T L) = tr(L^T W) = tr(V\Sigma U^T W) = 0
+$$
+
+Making
+
+```{math}
+\begin{align}
+\partial_{L} |L|_{*} = \{UV^T + W : U^T W = WV^T = 0, |W|_{2}\leq 1\}
+\end{align}
+```
+The first objective
+
+```{math}
+\begin{align}
+|L|_{*} + \frac{\rho}{2}\left |M - L - S_k + \frac{Y_k}{\rho}\right|_F^2
+\end{align}
+```
+is in the form (with $\tau = 1/\rho$, and $A = M - S_k + \frac{Y_k}{\rho}$)
+
+```{math}
+\begin{align}
+\tau |L|_{*} + \frac{1}{2}\left |L - A\right|_F^2
+\end{align}
+```
+Taking the sub-gradient, and require that zero is part of the set
+
+```{math}
+\begin{align}
+0 \in \tau \partial|L|_{*} + L^{*} - A
+\end{align}
+```
+or
+
+```{math}
+\begin{align}
+A - L^{*} \in \tau \partial|L|_{*}
+\end{align}
+```
+It is shown in {cite}`cai2010singular`, that the solution is given by the singular value thresholding (SVT) of $A$, defined as
+
+$$
+L^{*} = \mathcal{D}_{\tau}(A) = U S_{\tau}(\Sigma) V^T
+= U\ diag(\max(\sigma_i - \tau), 0)\ V^T
+$$
+
+where $S_{\tau}$ is the soft-thresholding function $sgn(x)\max(|x|-\tau, 0)$, as before, and we take into account that singular values are always positive. SVT sets to zero all singular values of $A$ less than $\tau$. To see that $\mathcal{D_{\tau}(L)}$ is indeed a solution we can follow {cite}`cai2010singular`, and do $A = U_0\Sigma_{0}V^T_0 +  U_1\Sigma_{1}V^T_1$ where $U_0$, $V_{0}$ (resp. $U_1$, $V_1$) are the singular vectors associated with singular values greater than $\tau$ (resp. smaller than or equal to $\tau$). Then,
+
+$$
+L^{*} = \mathcal{D}_{\tau}(A) = U_0(\Sigma_{0} - \tau I) V_0^{T}
+$$
+
+and
+
+```{math}
+\begin{align}
+A - L^{*}
+=& U_0\Sigma_{0}V^T_0 +  U_1\Sigma_{1}V^T_1 - U_0(\Sigma_{0} - \tau I) V_0^{T}\\
+=& \tau(U_0 V_0 + \frac{U_1 \Sigma_1 V^T_1}{\tau})\\
+=& \tau(U_0 V_0 + W)
+\end{align}
+```
+where $|W|_{2} = |\frac{U_1 \Sigma_1 V^T_1}{\tau}|_{2} < 1$ since all singular values of $\Sigma_{1}$ are bounded by $\tau$. This automatically shows that $A-L^{*} \in \tau\partial|L|_{*}$, since by definition $U_0^TW = WV_0^T = 0$.
+
+So, the solution of the first step is given by
+
+$$
+L_{k+1} = \mathcal{D}_{\frac{1}{\rho}}\left( M - S_k + \frac{Y_k}{\rho}  \right)
+$$
+
+Now, onto the second step, the objective
+
+```{math}
+\begin{align}
+\lambda|S|_1 + \frac{\rho}{2}\left|M - L_{k+1} - S + \frac{Y_k}{\rho}\right|_F^2
+\end{align}
+```
+is in the form (with $\tau = \lambda/\rho$ and $A = M - L_{k+1} + Y_k/\rho$)
+
+```{math}
+\begin{align}
+\tau|S|_1 + \frac{1}{2}\left|S - A \right|_F^2
+\end{align}
+```
+obtaining the sub-gradient, it is easy to find the solution in terms of the soft-thresholding function as
+
+$$
+S_{k+1} = S_{\frac{\lambda}{\rho}}\left( M - L_{k+1} + \frac{Y_k}{\rho}  \right)
+$$
+
+A nice example on using RPCA implemented in TensorLy can be found [here](http://jeankossaifi.com/blog/rpca.html).
 
 ## Kernel PCA
+
+### PCA from the Gram Matrix
+
+We have shown that PCA can be obtained from the SVD of a centered data matrix $X=UDV^T$, and the principal components are $Z = UD$. Now suppose we do not have access to the data matrix, only to the matrix of inner products, the Gram matrix $G = X X^T$. We can still obtain the principal components from the eigen decomposition of the Gram matrix $G=U D^2 U^{T}$. If the inner products of the Gram matrix are not centered, we can use the double centered Gram matrix $(I - M)G(1 -M)$, with $M=\frac{1}{N}1 1^{T}$ being the mean operator, so that the centered data matrix is $X_c = (I - M)X$, so that $(I - M)G(1 -M) = (I - M)XX^T(1 -M) = X_c X_c^T$.
+
+If we were to know the data matrix, the loadings or eigenvectors of the covariance matrix can be obtained from the following relation, considering the eigen value equation for $G$
+
+```{math}
+\begin{align}
+G u_i =& \lambda_i u_i\\
+X X^T u_i =& \lambda_i u_i\\
+X^T X X^T u_i = & X^T \lambda_i u_i\\
+\Sigma (X^T u_i) =& \lambda (X^T u_i)\\
+\Sigma v_i =& \lambda v_i
+\end{align}
+```
+so, the loadings are $v_i = X^Tu_i$. Unfortunately, if the data matrix is unknown, the loadings cannot be recovered. This alternatively is useful is $d >> n$, so we avoid the computation of large covariance matrix.
+
+In the case we cannot recover the loadings, we can still van project new points into the loadings space, as long as we have the inner products with the original data points. Consider a n-dimensional vector $g_0$ of inner products between a new point $x_0$ and all observations $x_i$. $g_{0i} = x_0^T x_i$. The centered projection of $x_0$ onto the principal components is given by (homework)
+
+$$
+z_0 = D^{-1}U^T\left(I-M\right)\left(k_0 - \frac{1}{N} K 1\right)
+$$
+
+### The Kernel trick
+
+Many learning algorithms take the Gram matrix as input, rather then the data matrix. The Gram matrix is the matrix of pairwise inner products of observation vectors, defined as $G = X X^T$, such that $G_{ij}=\left<x_i, x_j\right>$.
+
+For such cases, a simple way to make those algorithms non-linear us to substitute the Gram matrix for a Kernel matrix, where each entry $K_{ij} = k(x_i, x_j)$ is a kernel function of observation vector pairs, usually a similarity metric.
+
+A kernel function can be interpreted as an inner product in a different vector space (possibly of infinite dimension), for which the coordinate vectors are not known. By using the kernel matrix, the computation of the coordinates in the new space can be avoided, since for well defined kernels, finding the inner product directly is much more efficient.
+
+$$
+k(x_i, x_j) =\left<\phi(x_i), \phi(x_j)\right>_{\mathcal{V}}
+$$
+
+where $\phi(x)$ is a feature map from the original vector space to the new space $\mathcal{V}$.
+
+```{figure} Figures/Kernel_trick_idea.svg
+SVM with kernel given by ϕ(a, b) = (a, b, a² + b²) and thus K(x, y) = x.T y + \|x\|² \|y\|². The training points are mapped to a 3-dimensional space where a separating hyperplane can be easily found. Source: <https://en.wikipedia.org/wiki/File:Kernel_trick_idea.svg>
+```
+
+Popular kernels are:
+
+-   Gaussian: $\exp\left(-\beta|x_i-x_j|^2\right)$
+-   Polynomial: $(1 + x_i^T x_j)^p$
+-   Hyperbolic tangent: $\tanh(x_i^T x_j + \delta)$
+
+The idea of Kernel PCA is to use the Kernel matrix instead of the Gram matrix, so we are interested in the eigen decomposition of $(I - M)K(1 -M) = UD^2U^T$, where we are using the doubled centered kernel matrix, since PCA needs centered data to work. Note that even if the original data matrix is centered, we still need to center the Kernel matrix, since nothing assures that the new features $\phi(x)$ are centered.
+
+Note that the right eigenvectors of the decomposition $\phi(X) = UDV^T$, i.e., the eigenvectors (loadings) in feature space, can be expanded in terms of the basis of observations,
+
+$$
+v_m = \sum_{j=1}^n \alpha_{jm}\phi(x_j)
+$$
+
+With this expansion, the projection of any observation onto the mth principal component is given by
+
+$$
+z_{im} = v_m^T \phi(x_i) = \sum_{j=1}^n \alpha_{jm}\phi(x_j)^T \phi(x_i)
+= \sum_{j=1}^n \alpha_{jm}K(x_i, x_j)
+$$
+
+As an exercise, show that the coefficients are given by $\alpha_{jm} = u_{jm}/d_m$, assume a centered K matrix. This is, the vector of coefficients, $\alpha_m$ is equal to the $m$ eigenvector divided by the square of the eigenvalue, $\alpha_m = u_m/d_m$.
+
+If the K matrix is not centered, we can still project any existing observation by centering K before, and any new observation $x_0$, by applying (show in assignments)
+
+$$
+\vec{z}_{m} = A (I - M)\left(\vec{k}_0 - \frac{1}{N} K \vec{1}\right)
+$$
+
+where $A$ is the matrix of column vectors $\alpha_m$ given by $A=U D^{-1}$, and $k_0$ is a vector of kernel products $\phi(x_0)^T\phi(x_i)$ with all observations $x_i$.
+
+### Example: Concentric clusters
+
+### Example: De-noising
 
 ## References
 
