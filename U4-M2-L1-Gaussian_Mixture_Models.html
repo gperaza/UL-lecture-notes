@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>&lt;no title&gt; &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
+    <title>Gaussian Mixture Models &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -54,6 +54,8 @@
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Freedman-Diaconis Rule" href="freedman-diaconis.html" />
+    <link rel="prev" title="Independent Component Analysis" href="U4-M1-L2-Independent_Component_Analysis.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -254,7 +256,7 @@
   Unit 4 - Probabilistic Methods
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1">
   <a class="reference internal" href="U4-M1-L1-Latent_variable_models.html">
    Latent Variable Models
@@ -265,8 +267,8 @@
    Independent Component Analysis
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="U4-M2-L1-Gaussian_Mixture_Models.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Gaussian Mixture Models
   </a>
  </li>
@@ -322,7 +324,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/matrix-factorization.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/U4-M2-L1-Gaussian_Mixture_Models.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -342,7 +344,7 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/gperaza/UL-lecture-notes/issues/new?title=Issue%20on%20page%20%2Fmatrix-factorization.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/gperaza/UL-lecture-notes/issues/new?title=Issue%20on%20page%20%2FU4-M2-L1-Gaussian_Mixture_Models.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
@@ -367,7 +369,17 @@
             <i class="fas fa-list"></i> Contents
         </div>
         <nav id="bd-toc-nav">
-            <ul class="simple nav section-nav flex-column">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-em-algorithm-for-gmm">
+   The EM algorithm for GMM
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#dirichlet-priors">
+   Dirichlet priors
+  </a>
+ </li>
 </ul>
 
         </nav>
@@ -379,7 +391,16 @@
         
               <div>
                 
-  
+  <div class="section" id="gaussian-mixture-models">
+<h1>Gaussian Mixture Models<a class="headerlink" href="#gaussian-mixture-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="the-em-algorithm-for-gmm">
+<h2>The EM algorithm for GMM<a class="headerlink" href="#the-em-algorithm-for-gmm" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="dirichlet-priors">
+<h2>Dirichlet priors<a class="headerlink" href="#dirichlet-priors" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
     <script type="text/x-thebe-config">
     {
         requestKernel: true,
@@ -408,6 +429,8 @@
     
     <div class='prev-next-bottom'>
         
+    <a class='left-prev' id="prev-link" href="U4-M1-L2-Independent_Component_Analysis.html" title="previous page">Independent Component Analysis</a>
+    <a class='right-next' id="next-link" href="freedman-diaconis.html" title="next page">Freedman-Diaconis Rule</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
