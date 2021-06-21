@@ -814,6 +814,61 @@ where $A$ is the matrix of column vectors $\alpha_m$ given by $A=U D^{-1}$, and 
 
 ### Example: Concentric clusters
 
+``` python
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.decomposition import  KernelPCA
+
+np.random.seed(42)
+
+rads = [1 , 2.8, 5]
+n = 150
+
+X = []
+y = [0]*150 + [1]*150 + [2]*150
+
+for r in rads:
+    theta = np.random.uniform(0, 2*np.pi, size=n)
+    X.append(np.hstack([r*np.cos(theta)[:,None],
+                        r*np.sin(theta)[:,None]]))
+
+X = np.concatenate(X)
+X = X + np.random.normal(loc=0, scale=0.25, size=X.shape)
+
+fig, ax = plt.subplots(2, 2, figsize=(16,16))
+ax[0,0].scatter(X[:,0], X[:,1], c=y)
+ax[0,0].axis('equal')
+
+kpca = KernelPCA(kernel="rbf", gamma=0.5, n_components=2)
+X_kpca = kpca.fit_transform(X)
+ax[0,1].set_title('RBF, $\gamma=1/2$')
+ax[0,1].scatter(X_kpca[:,0], X_kpca[:,1], c=y)
+ax[0,1].axis('equal')
+
+kpca = KernelPCA(kernel="rbf", gamma=0.2, n_components=2)
+X_kpca = kpca.fit_transform(X)
+ax[1,0].set_title('RBF, $\gamma=1/5$')
+ax[1,0].scatter(X_kpca[:,0], X_kpca[:,1], c=y)
+ax[1,0].axis('equal')
+
+# Precompute Kernel
+# phi(x1,x2) = (x1, x2, x1^2 + x2^2)
+# K(x,y) = x.y + |x|^2 |y|^2
+
+X2 = X**2
+Xs = X2.sum(axis=1)
+K = X{cite}`X`.T + Xs[:,None] @ Xs[None,:]
+
+kpca = KernelPCA(kernel='precomputed', n_components=2)
+X_kpca = kpca.fit_transform(K)
+ax[1,1].set_title('Custom kernel: $K(x,y) = x^T y + |x|^2 |y|^2$')
+ax[1,1].scatter(X_kpca[:,0], X_kpca[:,1], c=y)
+ax[1,1].axis('equal');
+```
+
+![](./.ob-jupyter/82d19181d3b6c26c6b9a3628cdf59cc8640ade24.png)
+
 ### Example: De-noising
 
 ## References

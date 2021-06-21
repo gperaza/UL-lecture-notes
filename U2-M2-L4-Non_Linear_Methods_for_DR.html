@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Freedman-Diaconis Rule &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
+    <title>Non-linear Dimensionality Reduction &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -52,11 +52,10 @@
         const thebe_selector_output = ".output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Non-linear Dimensionality Reduction" href="U2-M2-L4-Non_Linear_Methods_for_DR.html" />
+    <link rel="next" title="Freedman-Diaconis Rule" href="freedman-diaconis.html" />
+    <link rel="prev" title="Other Linear Methods for DR" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -147,7 +146,7 @@
   Unit 2 - Dimensionality Reduction
  </span>
 </p>
-<ul class="nav sidenav_l1">
+<ul class="current nav sidenav_l1">
  <li class="toctree-l1 collapsible-parent">
   <a class="reference internal" href="U2-M1-L1-similarity_metrics.html">
    (Dis)similarity metrics
@@ -214,8 +213,8 @@
    Other Linear Methods for DR
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="U2-M2-L4-Non_Linear_Methods_for_DR.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Non-linear Dimensionality Reduction
   </a>
  </li>
@@ -225,9 +224,9 @@
   Appendix
  </span>
 </p>
-<ul class="current nav sidenav_l1">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="freedman-diaconis.html">
    Freedman-Diaconis Rule
   </a>
  </li>
@@ -271,7 +270,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/freedman-diaconis.md"><button type="button"
+        <a class="dropdown-buttons" href="_sources/U2-M2-L4-Non_Linear_Methods_for_DR.md"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.md</button></a>
         <!-- Download PDF via print -->
@@ -291,7 +290,7 @@
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/gperaza/UL-lecture-notes/issues/new?title=Issue%20on%20page%20%2Ffreedman-diaconis.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/gperaza/UL-lecture-notes/issues/new?title=Issue%20on%20page%20%2FU2-M2-L4-Non_Linear_Methods_for_DR.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
         
@@ -318,6 +317,61 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#local-mds">
+   Local MDS
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#local-linear-embedding-lle">
+   Local Linear Embedding (LLE)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#isomap">
+   Isomap
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#laplacian-eigenmaps">
+   Laplacian Eigenmaps
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#self-organizing-maps">
+   Self Organizing Maps
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#auto-encoders">
+   Auto encoders
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#maximum-variance-unfolding-mvu">
+   Maximum Variance Unfolding (MVU)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#diffusion-maps">
+   Diffusion Maps
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#t-sne">
+   t-SNE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#uniform-manifold-approximation-and-projection-umap">
+   Uniform Manifold Approximation and Projection (UMAP)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ivis">
+   IVIS
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
    References
   </a>
@@ -333,130 +387,44 @@
         
               <div>
                 
-  <div class="section" id="freedman-diaconis-rule">
-<h1>Freedman-Diaconis Rule<a class="headerlink" href="#freedman-diaconis-rule" title="Permalink to this headline">¶</a></h1>
-<p>There is a rule of thumb for determining the optimal number of bins in a histogram. The Freedman-Diaconis rule states that the optimal bin width can be estimated as</p>
-<div class="math notranslate nohighlight">
-\[
-h = \frac{2\ IQR}{n^{1/3}}
-\]</div>
-<p>The asymptotic (large <span class="math notranslate nohighlight">\(n\)</span>) optimal bin width was derived by Scott <span id="id1">[<a class="reference internal" href="#id9"><span>1</span></a>,<span></span>]</span> yet, its value depends on the derivative of the theoretical distribution, often not known. Freedman and Diaconis claimed &#64;freedman1981histogram the bin width can be robustly estimated by the formula above, which works well most of the time, under the requirements that the true distribution has squared integrable and continuous first and second derivatives.</p>
-<p>It is worth it to provide a rough derivation of the FD rule, as it is an nice exercise in the art of approximation.</p>
-<p>To find the optimal bin width, we minimize the Mean Integrated Squared Error (MISE),</p>
-<div class="math notranslate nohighlight">
-\[
-MISE = E\left[ \int \left\{ H(x) - f(x)  \right\}^{2}\right],
-\]</div>
-<p>where <span class="math notranslate nohighlight">\(f(x)\)</span> is the underlying probability density function and <span class="math notranslate nohighlight">\(H(x)\)</span> is the histogram function, which gives the height bin <span class="math notranslate nohighlight">\(j\)</span> containing <span class="math notranslate nohighlight">\(x\)</span>,</p>
-<div class="math notranslate nohighlight">
-\[
-H(x) = \frac{N_{j}(x)}{N h}
-\]</div>
-<p>The MISE gives the expected area between the estimated density (histogram) and the true density (<span class="math notranslate nohighlight">\(f(x)\)</span>).</p>
-<p>Within each bin, the count number <span class="math notranslate nohighlight">\(N_j\)</span> is a binomial random variable with parameters <span class="math notranslate nohighlight">\(p=hf_j\)</span> and <span class="math notranslate nohighlight">\(n=N\)</span> (# of trials), where <span class="math notranslate nohighlight">\(p\)</span> is the probability of an observation lying in bin <span class="math notranslate nohighlight">\(j\)</span> and</p>
-<div class="math notranslate nohighlight">
-\[
-f_j = \frac{1}{h}\int_{\text{bin }j}f(u) du.
-\]</div>
-<p>Thus we obtain</p>
-<div class="math notranslate nohighlight">
-\[
-E\left[ H(x) \right] = \frac{E\left[ N_{j}  \right]}{Nh} = f_j(x)
-\]</div>
-<p>and</p>
-<div class="math notranslate nohighlight">
-\[
-Var\left(H(x)\right) = \frac{Var\left( N_{j}  \right)}{N^2 h^2}
-= \frac{f_j\left( 1 - h f_j \right)}{N h}
-\]</div>
-<p>so</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align}
-E\left[ \right\{ H(x) - f(x)\left\}^{2}  \right]
-=&amp; E\left[ H^2(x) \right] - 2f(x) E\left[H(x)\right] + f^2(x) \\
-=&amp; Var(H(x)) + E[H(x)]^2 - 2f(x) E\left[H(x)\right] + f^2(x) \\
-=&amp; \frac{f_j\left( 1 - h f_j \right)}{N h} + f_j^2 - 2 f f_j + f^2\\
-=&amp; \frac{f_j}{Nh} - \frac{f_j^2}{N} + (f_j - f)^2
-\end{align}\end{split}\]</div>
-<p>and integrating over the whole interval, with <span class="math notranslate nohighlight">\(\int p_j = h\sum p_j =
-h = h\int f_j \rightarrow \int f_j = 1\)</span></p>
-<div class="math notranslate nohighlight">
-\[
-MISE = \frac{1}{Nh} - \frac{1}{N}\int f_j^2(x)dx + \int (f_j(x) - f(x))^2 dx.
-\]</div>
-<p>The first term above refers to the sampling error made, and grows as <span class="math notranslate nohighlight">\(h\rightarrow 0\)</span> since bin counts stop reflecting the true density, some even being left empty. The last term refers to the bias from discretization, and goes to zero with <span class="math notranslate nohighlight">\(h\)</span>, as we show below. The mid term is proportional to <span class="math notranslate nohighlight">\(\sim \frac{1}{N}\)</span>, and vanishes in the asymptotic limit <span class="math notranslate nohighlight">\(N\rightarrow \infty\)</span>, which is the limit that interests us.</p>
-<p>To deal with third term in the MISE, we expand <span class="math notranslate nohighlight">\(f(u)\)</span> around <span class="math notranslate nohighlight">\(x\)</span>, keeping the linear terms, which amounts to discarding contributions of order at most <span class="math notranslate nohighlight">\(O(h^{2})\)</span></p>
-<div class="math notranslate nohighlight">
-\[
-f(u) \approx f(x) + f'(x)(u-x)
-\]</div>
-<p>The expression for <span class="math notranslate nohighlight">\(f_j(x)\)</span> can now be approximated</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align}
-f_j \approx&amp; \frac{1}{h}\int_{\text{bin }j}\left( f(x) + f'(x)(u-x)  \right) du\\
-=&amp; \frac{1}{h} \left( hf(x) + \frac{f'(x)}{2}\left( u-x \right)^{2} \Big|_{x_j}^{x_{j+1}} \right)\\
-=&amp; f(x) + \frac{f'(x)}{2h}\left[\left( x_{j+1} -x \right)^{2} - \left( x_{j} -x \right)^{2}\right]\\
-=&amp; f(x) + \frac{f'(x)}{2h}\left[\left( (x_{j+1} - x_j) - (x - x_j) \right)^{2} - \left( x - x_j \right)^{2}\right]\\
-=&amp; f(x) + \frac{f'(x)}{2h}\left[\left( h - (x - x_j) \right)^{2} - \left( x - x_j \right)^{2}\right]\\
-=&amp; f(x) + \frac{f'(x)}{2h}\left[ h^2 - 2h(x-x_j) \right]\\
-=&amp; f(x) + \frac{hf'(x)}{2} - (x-x_j)f'(x),
-\end{align}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(x_{j}\)</span> is the lower limit of bin <span class="math notranslate nohighlight">\(j\)</span>. We can identify the bias of <span class="math notranslate nohighlight">\(E[H(x)]\)</span> as <span class="math notranslate nohighlight">\(\frac{hf'(x)}{2} - (x-x_j)f'(x)\)</span>.</p>
-<p>Plugging this expansion into the MISE, remebering the second term vanishes,</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align}
-MISE \approx&amp; \frac{1}{Nh} + \int \left(\frac{hf'(x)}{2} - (x-x_j)f'(x)\right)^2 dx\\
-=&amp; \frac{1}{Nh} + \frac{h^2}{4}\int f'^2(x)dx + \int (x-x_j)^2f'^2(x) dx - h\int (x-x_j)f'^2(x) dx
-\end{align}\end{split}\]</div>
-<p>We can split the second a third integrals into the sum of integrals for each bin <span class="math notranslate nohighlight">\(j\)</span>, for which <span class="math notranslate nohighlight">\(x_j\)</span> are constants. With a change of variable, <span class="math notranslate nohighlight">\(y=x-x_j\)</span>, we have</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align}
-\int (x-x_j)^2f'^2(x) dx = \sum_j \int_0^h  y^2f'^2(y + x_j) dy\\
-\int (x-x_j)f'^2(x) dx = \sum_j \int_0^h y f'^2(y + x_j) dy.
-\end{align}\end{split}\]</div>
-<p>Expanding yet again <span class="math notranslate nohighlight">\(f'(y + x_{j}) \approx f'(x_{j}) + O(h)\)</span></p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align}
-\sum_j \int_0^h  y^2(f'^2(x_j) +  O(h))dy = \sum_j \frac{h^{3}}{3} f'^2(x_j) + O(h^4) \\
-\sum_j \int_0^h y (f'^2(x_j) +  O(h))dy = \sum_j \frac{h^{2}}{2} f'^2(x_j) +  O(h^{3}).
-\end{align}\end{split}\]</div>
-<p>Dropping the higher order terms, we can approximate the sums by integrals, by identifying <span class="math notranslate nohighlight">\(h = \Delta x\)</span>,</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align}
-\sum_j \frac{h^{3}}{3} f'^2(x_j) \approx \frac{h^{2}}{3} \int  f'^2(x)dx  \\
-\sum_j \frac{h^{2}}{2} f'^2(x_j) \approx \frac{h}{2}\int f'^2(x)dx.
-\end{align}\end{split}\]</div>
-<p>Plugging back into the MISE equation</p>
-<div class="math notranslate nohighlight">
-\[\begin{align}
-MISE \approx&amp; \frac{1}{Nh} + \left(\frac{h^2}{4} + \frac{h^2}{3} - \frac{h^2}{2}\right)\int f'^2(x)dx
-= \frac{1}{Nh} + \frac{h^2}{12}\int f'^2(x)dx.
-\end{align}\]</div>
-<p>And optmizing with respect to <span class="math notranslate nohighlight">\(h\)</span>, one obtains the optimal bin width <span class="math notranslate nohighlight">\(h^{*}\)</span></p>
-<div class="math notranslate nohighlight">
-\[
--\frac{1}{N (h^{*})^{2}} + \frac{h^{*}}{6} \int f'^2(x)dx = 0.
-\]</div>
-<p>Which yields</p>
-<div class="math notranslate nohighlight">
-\[
-h^* = \left(\frac{6}{N \int f'^2(x)dx}\right)^\frac{1}{3}
-\]</div>
-<p>This optimal bin width depends on the density <span class="math notranslate nohighlight">\(f(x)\)</span>. Assuming a normal distribution gives</p>
-<div class="math notranslate nohighlight">
-\[
-h^* = \left(\frac{24\sqrt{\pi}}{N}\right)^{\frac{1}{3}}s
-\]</div>
-<p>Another choice is to approximate the integral more robustly using the IQR, leading to the FD rule.</p>
+  <div class="section" id="non-linear-dimensionality-reduction">
+<h1>Non-linear Dimensionality Reduction<a class="headerlink" href="#non-linear-dimensionality-reduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="local-mds">
+<h2>Local MDS<a class="headerlink" href="#local-mds" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="local-linear-embedding-lle">
+<h2>Local Linear Embedding (LLE)<a class="headerlink" href="#local-linear-embedding-lle" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="isomap">
+<h2>Isomap<a class="headerlink" href="#isomap" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="laplacian-eigenmaps">
+<h2>Laplacian Eigenmaps<a class="headerlink" href="#laplacian-eigenmaps" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="self-organizing-maps">
+<h2>Self Organizing Maps<a class="headerlink" href="#self-organizing-maps" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="auto-encoders">
+<h2>Auto encoders<a class="headerlink" href="#auto-encoders" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="maximum-variance-unfolding-mvu">
+<h2>Maximum Variance Unfolding (MVU)<a class="headerlink" href="#maximum-variance-unfolding-mvu" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="diffusion-maps">
+<h2>Diffusion Maps<a class="headerlink" href="#diffusion-maps" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="t-sne">
+<h2>t-SNE<a class="headerlink" href="#t-sne" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="uniform-manifold-approximation-and-projection-umap">
+<h2>Uniform Manifold Approximation and Projection (UMAP)<a class="headerlink" href="#uniform-manifold-approximation-and-projection-umap" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="ivis">
+<h2>IVIS<a class="headerlink" href="#ivis" title="Permalink to this headline">¶</a></h2>
+</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id2"><dl class="citation">
-<dt class="label" id="id9"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p>David W Scott. On optimal and data-based histograms. <em>Biometrika</em>, 66(3):605–610, 1979.</p>
-</dd>
-</dl>
-</p>
-</div>
+<span class="target" id="id1"></span></div>
 </div>
 
     <script type="text/x-thebe-config">
@@ -487,7 +455,8 @@ h^* = \left(\frac{24\sqrt{\pi}}{N}\right)^{\frac{1}{3}}s
     
     <div class='prev-next-bottom'>
         
-    <a class='left-prev' id="prev-link" href="U2-M2-L4-Non_Linear_Methods_for_DR.html" title="previous page">Non-linear Dimensionality Reduction</a>
+    <a class='left-prev' id="prev-link" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" title="previous page">Other Linear Methods for DR</a>
+    <a class='right-next' id="next-link" href="freedman-diaconis.html" title="next page">Freedman-Diaconis Rule</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
