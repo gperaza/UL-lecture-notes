@@ -489,15 +489,17 @@ S_M({z_i}) = \sum_{i &gt; j} \left(d_{ij} - |z_i - z_j|\right)^2
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align}
 \sum_{i&gt;j} d_{ij}|z_i - z_j|
-=&amp; \sum_{i&gt;j} d_{ij}\frac{|z_i - z_j|^{2}}{|z_i - z_j|}\\
-=&amp; (n-1)\sum_{i}|z_i|^2 + - 2\sum_{i&gt;j}\left&lt;z_i, z_j\right&gt;\\
-=&amp; (n-1)\sum_{i}|z_i|^2  - \sum_{i\neq j}\left&lt;z_i, z_j\right&gt;\\
-=&amp; n\sum_{i}|z_i|^2  - \sum_{i, j}\left&lt;z_i, z_j\right&gt;\\
-=&amp; n\left(\sum_{i}|z_i|^2  - \frac{1}{n}\sum_{i, j}\left&lt;z_i, z_j\right&gt;\right)\\
-=&amp; tr\left(Z^T Z - \frac{1}{n} Z^T \vec{1}\vec{1}^T Z  \right)\\
-=&amp; tr\left(nZ^T (I - M) Z \right)\\
-=&amp; tr\left(Z^T (nP) Z \right)\\
-=&amp; tr\left(Z^T V Z \right)
+=&amp; \sum_{i&gt;j} \frac{d_{ij}}{|z_i - z_j|}|z_i - z_j|^{2}\\
+=&amp; \sum_{i&gt;j} s_{ij}|z_i - z_j|^{2}
+\end{align}\end{split}\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+s_{ij} =
+\begin{cases}
+\frac{d_{ij}}{|z_i - z_j|} &amp; |z_i - z_j| &gt; 0\\
+0 &amp; |z_i - z_j| = 0
+\end{cases}
 \end{align}\end{split}\]</div>
 </div>
 <div class="section" id="shephard-kruskal-non-metric-scaling">

@@ -94,15 +94,19 @@ This second term is quadratic and easy to optimize. The third term can be writte
 ```{math}
 \begin{align}
 \sum_{i>j} d_{ij}|z_i - z_j|
-=& \sum_{i>j} d_{ij}\frac{|z_i - z_j|^{2}}{|z_i - z_j|}\\
-=& (n-1)\sum_{i}|z_i|^2 + - 2\sum_{i>j}\left<z_i, z_j\right>\\
-=& (n-1)\sum_{i}|z_i|^2  - \sum_{i\neq j}\left<z_i, z_j\right>\\
-=& n\sum_{i}|z_i|^2  - \sum_{i, j}\left<z_i, z_j\right>\\
-=& n\left(\sum_{i}|z_i|^2  - \frac{1}{n}\sum_{i, j}\left<z_i, z_j\right>\right)\\
-=& tr\left(Z^T Z - \frac{1}{n} Z^T \vec{1}\vec{1}^T Z  \right)\\
-=& tr\left(nZ^T (I - M) Z \right)\\
-=& tr\left(Z^T (nP) Z \right)\\
-=& tr\left(Z^T V Z \right)
+=& \sum_{i>j} \frac{d_{ij}}{|z_i - z_j|}|z_i - z_j|^{2}\\
+=& \sum_{i>j} s_{ij}|z_i - z_j|^{2}
+\end{align}
+```
+where
+
+```{math}
+\begin{align}
+s_{ij} =
+\begin{cases}
+\frac{d_{ij}}{|z_i - z_j|} & |z_i - z_j| > 0\\
+0 & |z_i - z_j| = 0
+\end{cases}
 \end{align}
 ```
 ### Shephard-Kruskal non-metric scaling
