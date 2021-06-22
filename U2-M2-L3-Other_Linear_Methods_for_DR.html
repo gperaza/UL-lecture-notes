@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Other Linear Methods for DR &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
+    <title>Other Dimensionality Reduction Methods &#8212; Lecture Notes in Unsupervised and Reinforcement Learning</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -52,6 +52,8 @@
         const thebe_selector_output = ".output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Non-linear Dimensionality Reduction" href="U2-M2-L4-Non_Linear_Methods_for_DR.html" />
@@ -210,7 +212,7 @@
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Other Linear Methods for DR
+   Other Dimensionality Reduction Methods
   </a>
  </li>
  <li class="toctree-l1">
@@ -374,6 +376,23 @@
   <a class="reference internal nav-link" href="#multidimensional-scaling-mds">
    Multidimensional Scaling (MDS)
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#classical-mds">
+     Classical MDS
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#shephard-kruskal-non-metric-scaling">
+     Shephard-Kruskal non-metric scaling
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example">
+     Example:
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#non-negative-matrix-factorization-nnmf">
@@ -401,11 +420,92 @@
         
               <div>
                 
-  <div class="section" id="other-linear-methods-for-dr">
-<h1>Other Linear Methods for DR<a class="headerlink" href="#other-linear-methods-for-dr" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="other-dimensionality-reduction-methods">
+<h1>Other Dimensionality Reduction Methods<a class="headerlink" href="#other-dimensionality-reduction-methods" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="multidimensional-scaling-mds">
 <h2>Multidimensional Scaling (MDS)<a class="headerlink" href="#multidimensional-scaling-mds" title="Permalink to this headline">¶</a></h2>
-<p>Equivalent to PCA if euclidean distance is used.</p>
+<p>Multidimensional Scaling works directly on the distance or dissimilarity matrix <span class="math notranslate nohighlight">\(D\)</span> and tries to find a set of vectors <span class="math notranslate nohighlight">\(z_i\)</span> that reproduces the distance matrix (preserves pairwise distance) as close as possible, with the liberty of choosing the dimensions of the <span class="math notranslate nohighlight">\(z_i\)</span>.</p>
+<p>MDS can be classified onto metric, and non metric MDS. Metric MDS tries to preserve the actual distance values in the distance matrix, while non-metric MDS just preserves the rank. Classical MDS and the least squares scalings are metric scalings, and Shephard-Kruskal is a non-metric scaling.</p>
+<div class="section" id="classical-mds">
+<h3>Classical MDS<a class="headerlink" href="#classical-mds" title="Permalink to this headline">¶</a></h3>
+<p>Classical MDS is a linear dimensionality reduction method. To perform classical MDS, we first transform the distance matrix into a <strong>centered</strong> Gram matrix, through the equation</p>
+<div class="math notranslate nohighlight">
+\[
+G = -\frac{1}{2}(I - \frac{1}{N}\vec{1}\vec{1}^T) D^2 (I - \frac{1}{N}\vec{1}\vec{1}^T)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(M = \frac{1}{N}\vec{1}\vec{1}^T\)</span> is the mean operator, and <span class="math notranslate nohighlight">\(D^2\)</span> is the squared distance matrix, not <span class="math notranslate nohighlight">\(DD\)</span>. As en exercise, prove the previous statement.</p>
+<p>The Gram matrix, being positive semi-definite, can be factorized as <span class="math notranslate nohighlight">\(G=XX^T\)</span>, so that <span class="math notranslate nohighlight">\(g_{ij} = x_i^T x_j\)</span>. Classical MDS seeks to minimize</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}
+S_C(\{z_i\}) = \sum_{ij} \left( g_{ij} - z_i^T z_j  \right)^2
+= \frac{1}{2}|G - ZZ^T|_F^2
+$$ But this is same objective as PCA, only applied to the Gram matrix instead of the covariance matrix. The best low rank approximation is given by the eigen-decomposition of the Gram matrix, $G=U S^2 U^T$, such that $Z = U_q S_q$. From this discussion, it is clear that classical MDS is equivalent to PCA if euclidean distances are used. In fact, if the distances are Euclidean, the full rank model recovers the exact original configuration of points.\\Note that classical MDS assumes euclidean distances, so as to have a positive semi-definite Gram matrix. For non-euclidean distances, negative eigenvalues arise from the decomposition, which mean we cannot take $S = \sqrt(S^2)$ on the diagonal elements. In such cases, we can restrict the solution to the coordinates associated with positive eigenvalues, still obtaining a solution, but the solution is no longer equivalent to PCA.\\### Least squares or Kruskal-Shephard scaling\\In metric MDS, the coordinates $z_i$ are found by minimizing the stress function,\end{aligned}\end{align} \]</div>
+<p>S_M({z_i}) = \sum_{i \neq j} \left(d_{ij} - |z_i - z_j|\right)^2
+$$</p>
+<p>This objective does not have a closed form solution, and must be optimized numerically. The solution are no longer the same as those obtained from PCA, and can be non-linear.</p>
+<p>The stress can be minimized with a number of optimizes, including the ones based on gradient descent. If the Euclidean distance is used, the SMACOF (Scaling by MAjorizing a COmplicated Function) algorithm can be used. SMACOF is a <a class="reference external" href="https://en.wikipedia.org/wiki/MM_algorithm">majorize-minimization</a> (MM) algorithm, in which instead of minimizing the objective directly, we minimize a lower bound, the majorizing function.</p>
+<p>A general MM algorithm works as follows. Let <span class="math notranslate nohighlight">\(f(x)\)</span> be the function to be minimized. The majorized function <span class="math notranslate nohighlight">\(g(x, x_m)\)</span> must satisfy</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+g(x | x_m) \leq f(x) \forall x\\
+g(x_m | x_m) = f(x_m)
+\end{align}\end{split}\]</div>
+<p>The point <span class="math notranslate nohighlight">\(x_{m}\)</span> is where <span class="math notranslate nohighlight">\(g(x|x_{m})\)</span> touches <span class="math notranslate nohighlight">\(f(x)\)</span>. At each iteration we find the minimum of <span class="math notranslate nohighlight">\(g\)</span> and move <span class="math notranslate nohighlight">\(x_m\)</span> to this new minimum.</p>
+<div class="math notranslate nohighlight">
+\[
+x _{m+1} = \arg \min _{x}g(x |x_{m})}
+\]</div>
+<p>The above iterative method will guarantee that <span class="math notranslate nohighlight">\(f(x_{m})\)</span> will converge to a local optimum or a saddle point as <span class="math notranslate nohighlight">\(m\)</span> goes to infinity.</p>
+<div class="math notranslate nohighlight">
+\[
+f(x _{m+1}) \leq g(x _{m+1}|x _{m}) \leq g(x_{m}|x_{m}) = f(x_{m})
+\]</div>
+<p>In the following figure from Wikipedia illustrates the process for maximization.</p>
+<p><img alt="Source: https://en.wikipedia.org/wiki/File:Mmalgorithm.jpg" src="_images/Mmalgorithm.jpg" /></p>
+<p>A possible majorizing function for the stress can be obtained from the stress function,</p>
+<div class="math notranslate nohighlight">
+\[
+S_M({z_i}) = \sum_{i &gt; j} \left(d_{ij} - |z_i - z_j|\right)^2
+= \sum_{i &gt; j} d_{ij}^2 + \sum_{i &gt; j} |z_i - z_j|^2 - 2\sum_{i &gt; j} d_{ij}|z_i - z_j|
+\]</div>
+<p>The first term is constant. The second term is squared in the <span class="math notranslate nohighlight">\(z_i\)</span> and can be written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{align}
+|z_i - z_j|^2 = |z_i|^2 + |z_j|^2 - 2\left&lt;z_i, z_j\right&gt;
+\end{align}\]</div>
+<p>so,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\sum_{i&gt;j} |z_i - z_j|^2 =&amp; (n-1)\sum_{i}|z_i|^2 + - 2\sum_{i&gt;j}\left&lt;z_i, z_j\right&gt;\\
+=&amp; (n-1)\sum_{i}|z_i|^2  - \sum_{i\neq j}\left&lt;z_i, z_j\right&gt;\\
+=&amp; n\sum_{i}|z_i|^2  - \sum_{i, j}\left&lt;z_i, z_j\right&gt;\\
+=&amp; n\left(\sum_{i}|z_i|^2  - \frac{1}{n}\sum_{i, j}\left&lt;z_i, z_j\right&gt;\right)\\
+=&amp; tr\left(Z^T Z - \frac{1}{n} Z^T \vec{1}\vec{1}^T Z  \right)\\
+=&amp; tr\left(nZ^T (I - M) Z \right)\\
+=&amp; tr\left(Z^T (nP) Z \right)\\
+=&amp; tr\left(Z^T V Z \right)
+\end{align}\end{split}\]</div>
+<p>This second term is quadratic and easy to optimize. The third term can be written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\sum_{i&gt;j} d_{ij}|z_i - z_j|
+=&amp; \sum_{i&gt;j} d_{ij}\frac{|z_i - z_j|^{2}}{|z_i - z_j|}\\
+=&amp; (n-1)\sum_{i}|z_i|^2 + - 2\sum_{i&gt;j}\left&lt;z_i, z_j\right&gt;\\
+=&amp; (n-1)\sum_{i}|z_i|^2  - \sum_{i\neq j}\left&lt;z_i, z_j\right&gt;\\
+=&amp; n\sum_{i}|z_i|^2  - \sum_{i, j}\left&lt;z_i, z_j\right&gt;\\
+=&amp; n\left(\sum_{i}|z_i|^2  - \frac{1}{n}\sum_{i, j}\left&lt;z_i, z_j\right&gt;\right)\\
+=&amp; tr\left(Z^T Z - \frac{1}{n} Z^T \vec{1}\vec{1}^T Z  \right)\\
+=&amp; tr\left(nZ^T (I - M) Z \right)\\
+=&amp; tr\left(Z^T (nP) Z \right)\\
+=&amp; tr\left(Z^T V Z \right)
+\end{align}\end{split}\]</div>
+</div>
+<div class="section" id="shephard-kruskal-non-metric-scaling">
+<h3>Shephard-Kruskal non-metric scaling<a class="headerlink" href="#shephard-kruskal-non-metric-scaling" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="example">
+<h3>Example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 <div class="section" id="non-negative-matrix-factorization-nnmf">
 <h2>Non-negative matrix factorization (NNMF)<a class="headerlink" href="#non-negative-matrix-factorization-nnmf" title="Permalink to this headline">¶</a></h2>
