@@ -56,7 +56,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Other Linear Methods for DR" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" />
+    <link rel="next" title="Other Dimensionality Reduction Methods" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" />
     <link rel="prev" title="Principal Component Analysis" href="assignments-dummy/U2-M2-L1-dim_red_PCA.html" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -212,7 +212,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="U2-M2-L3-Other_Linear_Methods_for_DR.html">
-   Other Linear Methods for DR
+   Other Dimensionality Reduction Methods
   </a>
  </li>
  <li class="toctree-l1">
@@ -1414,18 +1414,18 @@ M = L_0 + N_0
 \]</div>
 <p>for which an analytic solution is obtained by truncating the SVD of <span class="math notranslate nohighlight">\(M=U\Sigma V^T\)</span>, such that <span class="math notranslate nohighlight">\(L = U_{q}\Sigma_{q} V^T_{q}\)</span>.</p>
 <p>A problem with classical PCA is that the solution is extremely sensible to outliers. The presence of a single highly corrupted observation takes the solution far away from the true solution. Since real data sets are likely to be contaminated (e.g., sensor errors, adversarial attacks), this is a real issue for PCA.</p>
-<div class="figure align-default" id="id88">
+<div class="figure align-default" id="id89">
 <img alt="_images/rpca-004.png" src="_images/rpca-004.png" />
-<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id88" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id89" title="Permalink to this image">¶</a></p>
 </div>
 <p>Robust PCA is a modification of the objective of classical PCA that aims to address the presence of outliers and large perturbations. Robust PCA assumes the data matrix <span class="math notranslate nohighlight">\(M\)</span> is composed as a sum of a <strong>low rank</strong> component <span class="math notranslate nohighlight">\(L_{0}\)</span> and a sparse component of arbitrarily large perturbations or corruptions <span class="math notranslate nohighlight">\(S_{0}\)</span>,</p>
 <div class="math notranslate nohighlight">
 \[
 M = L_0 + S_0
 \]</div>
-<div class="figure align-default" id="id89">
+<div class="figure align-default" id="id90">
 <img alt="_images/rpca_sum.png" src="_images/rpca_sum.png" />
-<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id89" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id90" title="Permalink to this image">¶</a></p>
 </div>
 <p>In a seminal paper by Candes et. al. <span id="id10">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>, it was proven that, under broad conditions, the recovery of <span class="math notranslate nohighlight">\(L_0\)</span> and <span class="math notranslate nohighlight">\(S_0\)</span> is possible, and the solution is <strong>exact</strong>. This a rather surprising result, since the problem seems intractable at first sight. Twice the number of unknowns than entries in <span class="math notranslate nohighlight">\(M\)</span>, we <strong>do not know the rank</strong> of <span class="math notranslate nohighlight">\(L_0\)</span> <strong>nor the locations (or number)</strong> of the non-zero entries of <span class="math notranslate nohighlight">\(S_{0}\)</span>. The recovery is, of course, not always possible, since one think of examples where it would not make sense.</p>
 <p>The objective of an idealized RPCA can be expressed as</p>
@@ -1455,9 +1455,9 @@ M = L_0 + S_0
 <li><p>The non-zero entries of <span class="math notranslate nohighlight">\(S_0\)</span> are randomly located, and the number of entries <span class="math notranslate nohighlight">\(|S_0|_0 \leq \rho_s n^2\)</span>, where <span class="math notranslate nohighlight">\(\rho_s\)</span> is some constant, the non-vanishing fraction of allowed zeros.</p></li>
 </ul>
 <p>More even, the value of the regularization parameter is universal, given by <span class="math notranslate nohighlight">\(\lambda=\max(n,d)}^{-1/2}\)</span>. This conditions turn out to be quite broad, the rank of <span class="math notranslate nohighlight">\(L\)</span> can be quite high, up to <span class="math notranslate nohighlight">\(n/polylog(n)\)</span>, the magnitude of the corruptions can be arbitrarily large and be of any signs, and the proportion of corrupted entries is finite. Numerical simulations show that successful recovery displays a phase transition in the combination of paramters <span class="math notranslate nohighlight">\(rank(L)\)</span> and <span class="math notranslate nohighlight">\(\rho_S\)</span>, i.e., there is a region where the recovery is always successful, and a region where it always fails, see figure below.</p>
-<div class="figure align-default" id="id90">
+<div class="figure align-default" id="id91">
 <img alt="_images/rpca-phase.png" src="_images/rpca-phase.png" />
-<p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">Images from <span id="id13">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id90" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">Images from <span id="id13">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id91" title="Permalink to this image">¶</a></p>
 </div>
 <p>More recent work have extended the results above, allowing recovery from a larger fraction of errors <span id="id14">[<a class="reference internal" href="#id82"><span>10</span></a>,<a class="reference internal" href="#id83"><span>11</span></a>]</span>.</p>
 <p>Finally, Principal Components Pursuit can also extended to matrix completion with corrupted data. Additionally to sparse corruptions, consider also that only a subset <span class="math notranslate nohighlight">\(\Omega\)</span> of the data is observed, the objective is now</p>
@@ -1470,31 +1470,31 @@ M = L_0 + S_0
 <ul class="simple">
 <li><p>Video surveillance, separation of background (low rank) and foreground (sparse).</p></li>
 </ul>
-<div class="figure align-default" id="id91">
+<div class="figure align-default" id="id92">
 <img alt="_images/rpca-video.png" src="_images/rpca-video.png" />
-<p class="caption"><span class="caption-number">Fig. 12 </span><span class="caption-text">Images from <span id="id15">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id91" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 12 </span><span class="caption-text">Images from <span id="id15">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id92" title="Permalink to this image">¶</a></p>
 </div>
 <ul class="simple">
 <li><p>Face recognition, where shadows and occlusions are interpreted as the sparse component. This works because the column space for images of a face is very low rank.</p></li>
 </ul>
-<div class="figure align-default" id="id92">
+<div class="figure align-default" id="id93">
 <img alt="_images/rpca-faces.png" src="_images/rpca-faces.png" />
-<p class="caption"><span class="caption-number">Fig. 13 </span><span class="caption-text">Images from <span id="id16">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id92" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 13 </span><span class="caption-text">Images from <span id="id16">[<a class="reference internal" href="#id81"><span>9</span></a>]</span>.</span><a class="headerlink" href="#id93" title="Permalink to this image">¶</a></p>
 </div>
 <ul class="simple">
 <li><p>Latent Semantic Indexing, where <span class="math notranslate nohighlight">\(L_0\)</span> could capture the common words across documents, while <span class="math notranslate nohighlight">\(S_0\)</span> would capture the words that best represent each individual document.</p></li>
 <li><p>Graph clustering, where the low rank component corresponds to edges between elements in a cluster, and the sparse component to elements across clusters.</p></li>
 </ul>
-<div class="figure align-default" id="id93">
+<div class="figure align-default" id="id94">
 <img alt="_images/rpca-graph.png" src="_images/rpca-graph.png" />
-<p class="caption"><span class="caption-number">Fig. 14 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id93" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 14 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id94" title="Permalink to this image">¶</a></p>
 </div>
 <ul class="simple">
 <li><p>Gaussian graphical models with sparse covariance matrix and latent variables.</p></li>
 </ul>
-<div class="figure align-default" id="id94">
+<div class="figure align-default" id="id95">
 <img alt="_images/rpca-gaussian.png" src="_images/rpca-gaussian.png" />
-<p class="caption"><span class="caption-number">Fig. 15 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id94" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 15 </span><span class="caption-text">Image taken from a presentation by Yuxin Chen (<a class="reference external" href="http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf">http://www.princeton.edu/~yc5/ele520_math_data/lectures/robust_PCA.pdf</a>)</span><a class="headerlink" href="#id95" title="Permalink to this image">¶</a></p>
 </div>
 <p>The covariance and precision (<span class="math notranslate nohighlight">\(\Lambda = \Sigma^{-1}\)</span>) matrices can be blocked partitioned as</p>
 <div class="math notranslate nohighlight">
@@ -1691,8 +1691,8 @@ z_0 = D^{-1}U^T\left(I-M\right)\left(k_0 - \frac{1}{N} K 1\right)
 k(x_i, x_j) =\left&lt;\phi(x_i), \phi(x_j)\right&gt;_{\mathcal{V}}
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\phi(x)\)</span> is a feature map from the original vector space to the new space <span class="math notranslate nohighlight">\(\mathcal{V}\)</span>.</p>
-<div class="figure align-default" id="id95">
-<img alt="_images/Kernel_trick_idea.svg" src="_images/Kernel_trick_idea.svg" /><p class="caption"><span class="caption-number">Fig. 16 </span><span class="caption-text">SVM with kernel given by ϕ(a, b) = (a, b, a² + b²) and thus K(x, y) = x.T y + |x|² |y|². The training points are mapped to a 3-dimensional space where a separating hyperplane can be easily found. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/File:Kernel_trick_idea.svg">https://en.wikipedia.org/wiki/File:Kernel_trick_idea.svg</a></span><a class="headerlink" href="#id95" title="Permalink to this image">¶</a></p>
+<div class="figure align-default" id="id96">
+<img alt="_images/Kernel_trick_idea.svg" src="_images/Kernel_trick_idea.svg" /><p class="caption"><span class="caption-number">Fig. 16 </span><span class="caption-text">SVM with kernel given by ϕ(a, b) = (a, b, a² + b²) and thus K(x, y) = x.T y + |x|² |y|². The training points are mapped to a 3-dimensional space where a separating hyperplane can be easily found. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/File:Kernel_trick_idea.svg">https://en.wikipedia.org/wiki/File:Kernel_trick_idea.svg</a></span><a class="headerlink" href="#id96" title="Permalink to this image">¶</a></p>
 </div>
 <p>Popular kernels are:</p>
 <ul class="simple">
@@ -1862,7 +1862,7 @@ ax[1,1].axis(&#39;equal&#39;);
     <div class='prev-next-bottom'>
         
     <a class='left-prev' id="prev-link" href="assignments-dummy/U2-M2-L1-dim_red_PCA.html" title="previous page">Principal Component Analysis</a>
-    <a class='right-next' id="next-link" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" title="next page">Other Linear Methods for DR</a>
+    <a class='right-next' id="next-link" href="U2-M2-L3-Other_Linear_Methods_for_DR.html" title="next page">Other Dimensionality Reduction Methods</a>
 
     </div>
     <footer class="footer mt-5 mt-md-0">
