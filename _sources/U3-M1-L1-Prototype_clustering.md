@@ -250,7 +250,25 @@ The following example illustrates a bad local minimum for 3 clusters. The exampl
 
 ![](Figures/bad-kmeans.png)
 
+### Application: Vector Quantization and Compression
+
 ## K-medoids
+
+A modification of K-means that can be used with categorical data and is more robust to outliers, since it allows for distance metrics different than squared euclidean, is K-medoids.
+
+The K-medoids replaces the calculation of centroids in the K-means algorithm, which is the only step that assumes squared distaces. Instead of calculating the centroids as the mean of points in a cluster, the centroids are now required to be one instance of the cluster members. This is, the prototype of the cluster is now one the points in the cluster. The point chosen as prototype is the one the minimizes the distances from it to all other points in the cluster. In fact, since centroids are not computed, the K-medoids algorithm can be written in a way that only needs as input the dissimilarity matrix $D$, instead of the data matrix $X$. The algorithm is:
+
+1.  Randomly choose initial centroids $\{\mu_k\} \subset X$.
+2.  Repeat until convergence:
+    1.  $C_i = \mathop{\mathrm{argmin}}_{j} D(x_i, \mu_j)$
+    2.  $\mu_k = x_{i^*_k}$, where $i_k^{*} =
+          \mathop{\mathrm{argmin}}_{i:C_i=k}\sum_{C_j=k} D(x_i,x_j)$
+
+This advantages come at a cost. The computational complexity of K-medoids is $O(N^2)$ on step 2, in contrast to $O(KN)$ as in K-means. Step 1, being the same as in K-means, is of order $O(KN)$. So, K-medoids is computationally more expensive than K-means.
+
+There are other optimization algorithms for K-medoids, for example, the PAM algorithm works as follows: PAM method works by computing the cost of swapping a medoid with any non-medoid point. Then, make the swap that decreases the cost the most. Repeating the swapping until convergence.
+
+You will implement K-medoids in the assignment.
 
 ## References
 

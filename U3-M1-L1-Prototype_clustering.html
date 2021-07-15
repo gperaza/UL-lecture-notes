@@ -397,6 +397,11 @@
      Example: Bad local minimum
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#application-vector-quantization-and-compression">
+     Application: Vector Quantization and Compression
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -633,9 +638,27 @@ E[W(C)] \leq 8(\log k + 2)W^{*}(C)
 <p>The following example illustrates a bad local minimum for 3 clusters. The example is taken from the slides of David S. Rosenberg.</p>
 <p><img alt="" src="_images/bad-kmeans.png" /></p>
 </div>
+<div class="section" id="application-vector-quantization-and-compression">
+<h3>Application: Vector Quantization and Compression<a class="headerlink" href="#application-vector-quantization-and-compression" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 <div class="section" id="k-medoids">
 <h2>K-medoids<a class="headerlink" href="#k-medoids" title="Permalink to this headline">¶</a></h2>
+<p>A modification of K-means that can be used with categorical data and is more robust to outliers, since it allows for distance metrics different than squared euclidean, is K-medoids.</p>
+<p>The K-medoids replaces the calculation of centroids in the K-means algorithm, which is the only step that assumes squared distaces. Instead of calculating the centroids as the mean of points in a cluster, the centroids are now required to be one instance of the cluster members. This is, the prototype of the cluster is now one the points in the cluster. The point chosen as prototype is the one the minimizes the distances from it to all other points in the cluster. In fact, since centroids are not computed, the K-medoids algorithm can be written in a way that only needs as input the dissimilarity matrix <span class="math notranslate nohighlight">\(D\)</span>, instead of the data matrix <span class="math notranslate nohighlight">\(X\)</span>. The algorithm is:</p>
+<ol class="simple">
+<li><p>Randomly choose initial centroids <span class="math notranslate nohighlight">\(\{\mu_k\} \subset X\)</span>.</p></li>
+<li><p>Repeat until convergence:</p>
+<ol class="simple">
+<li><p><span class="math notranslate nohighlight">\(C_i = \mathop{\mathrm{argmin}}_{j} D(x_i, \mu_j)\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_k = x_{i^*_k}\)</span>, where <span class="math notranslate nohighlight">\(i_k^{*} =
+  \mathop{\mathrm{argmin}}_{i:C_i=k}\sum_{C_j=k} D(x_i,x_j)\)</span></p></li>
+</ol>
+</li>
+</ol>
+<p>This advantages come at a cost. The computational complexity of K-medoids is <span class="math notranslate nohighlight">\(O(N^2)\)</span> on step 2, in contrast to <span class="math notranslate nohighlight">\(O(KN)\)</span> as in K-means. Step 1, being the same as in K-means, is of order <span class="math notranslate nohighlight">\(O(KN)\)</span>. So, K-medoids is computationally more expensive than K-means.</p>
+<p>There are other optimization algorithms for K-medoids, for example, the PAM algorithm works as follows: PAM method works by computing the cost of swapping a medoid with any non-medoid point. Then, make the swap that decreases the cost the most. Repeating the swapping until convergence.</p>
+<p>You will implement K-medoids in the assignment.</p>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
