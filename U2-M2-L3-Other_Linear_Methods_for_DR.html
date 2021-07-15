@@ -418,6 +418,18 @@
   <a class="reference internal nav-link" href="#non-negative-matrix-factorization-nnmf">
    Non-negative matrix factorization (NNMF)
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#optimization">
+     Optimization
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-news-data-again">
+     Example: News data (again)
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#random-projection">
@@ -513,7 +525,7 @@ S_M({z_i}) = \sum_{i &lt; j} \left(d_{ij} - |z_i - z_j|\right)^2
 =&amp; tr\left(Z^T (nP) Z \right)\\
 =&amp; tr\left(Z^T V Z \right)
 \end{align}\end{split}\]</div>
-<p>Another way to derive the above expression is taken from the definitive book on MDS <span id="id1">[<a class="reference internal" href="#id68"><span>1</span></a>]</span>. Consider the distance <span class="math notranslate nohighlight">\(|z_i - z_j|\)</span>, it can be expressed as a sum over columns of the matrix <span class="math notranslate nohighlight">\(Z\)</span>, <span class="math notranslate nohighlight">\(z_{il} - z_{jl} = (e_i - e_j)^T Z_{:l}\)</span>, where the <span class="math notranslate nohighlight">\(e_i\)</span> are Cartesian unit versors. Each <span class="math notranslate nohighlight">\(e_i\)</span> selects component <span class="math notranslate nohighlight">\(i\)</span> from each column of <span class="math notranslate nohighlight">\(Z\)</span>, so that <span class="math notranslate nohighlight">\((z_{il} - z_{jl})^2 = Z_{:l}^T (e_i - e_j) (e_i - e_j)^T Z_{:l}\)</span>. The squared distance is then</p>
+<p>Another way to derive the above expression is taken from the definitive book on MDS <span id="id1">[<a class="reference internal" href="#id76"><span>1</span></a>]</span>. Consider the distance <span class="math notranslate nohighlight">\(|z_i - z_j|\)</span>, it can be expressed as a sum over columns of the matrix <span class="math notranslate nohighlight">\(Z\)</span>, <span class="math notranslate nohighlight">\(z_{il} - z_{jl} = (e_i - e_j)^T Z_{:l}\)</span>, where the <span class="math notranslate nohighlight">\(e_i\)</span> are Cartesian unit versors. Each <span class="math notranslate nohighlight">\(e_i\)</span> selects component <span class="math notranslate nohighlight">\(i\)</span> from each column of <span class="math notranslate nohighlight">\(Z\)</span>, so that <span class="math notranslate nohighlight">\((z_{il} - z_{jl})^2 = Z_{:l}^T (e_i - e_j) (e_i - e_j)^T Z_{:l}\)</span>. The squared distance is then</p>
 <div class="math notranslate nohighlight">
 \[\begin{align}
 | z_{i} - z_j | ^2 = \sum_l Z^T_{:l}(e_i - e_j)(e_i - e_j)^TZ_{:l} |
@@ -604,9 +616,9 @@ S_{Sm}({z_i}) = \sum_{i &lt; j} \frac{\left(d_{ij} - |z_i - z_j|\right)^2}{d_{ij
 S_{NM}(\{z_i\}) = \frac{\sum_{i&lt;j}\left(|z_i - z_j| - \theta(d_{ij}) \right)^2}{\sum_{i&lt;j}|z_i-z_j|^2}
 \]</div>
 <p>where <span class="math notranslate nohighlight">\(\theta\)</span> is a monotonically increasing function. Optimizing non-metric stress can be done in two steps, optimize over the <span class="math notranslate nohighlight">\(z_{i}\)</span> with fixed <span class="math notranslate nohighlight">\(\theta\)</span>, then finding an appropriate <span class="math notranslate nohighlight">\(\theta\)</span>, for example using isotonic regression.</p>
-<div class="figure align-default" id="id69">
+<div class="figure align-default" id="id80">
 <img alt="_images/nm-mds.png" src="_images/nm-mds.png" />
-<p class="caption"><span class="caption-number">Fig. 17 </span><span class="caption-text">Source: <a class="reference external" href="https://www.stat.pitt.edu/sungkyu/course/2221Fall13/lec8_mds_combined.pdf">https://www.stat.pitt.edu/sungkyu/course/2221Fall13/lec8_mds_combined.pdf</a></span><a class="headerlink" href="#id69" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 19 </span><span class="caption-text">Source: <a class="reference external" href="https://www.stat.pitt.edu/sungkyu/course/2221Fall13/lec8_mds_combined.pdf">https://www.stat.pitt.edu/sungkyu/course/2221Fall13/lec8_mds_combined.pdf</a></span><a class="headerlink" href="#id80" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <div class="section" id="example-road-distance">
@@ -1221,15 +1233,801 @@ Subnum
 </div>
 <div class="section" id="non-negative-matrix-factorization-nnmf">
 <h2>Non-negative matrix factorization (NNMF)<a class="headerlink" href="#non-negative-matrix-factorization-nnmf" title="Permalink to this headline">¶</a></h2>
+<p>NNMF seeks for a matrix decomposition <span class="math notranslate nohighlight">\(X = YD^T\)</span> where all entries of <span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(Y\)</span>, and <span class="math notranslate nohighlight">\(D\)</span> must be positive. Again, we interpret the matrix <span class="math notranslate nohighlight">\(D\)</span> as a dictionary of basis vectors or atoms, and the matrix <span class="math notranslate nohighlight">\(Y\)</span> as a matrix of coefficients, where each row of <span class="math notranslate nohighlight">\(X\)</span> is a linear combination of atoms, with coefficients given by rows of <span class="math notranslate nohighlight">\(Y\)</span>. Often, data is non negative by nature, e.g., image data, stock value, counts, scores, etc. For such applications, obtaining a positive dictionary and positive transformed observations aids interpretability.</p>
+<p>The problem of NNMF can be stated as</p>
+<div class="math notranslate nohighlight">
+\[
+\mathop{\mathrm{min}}_{Y\in\mathcal{R}^{n \times r}, D\in\mathcal{R}^{d\times r} } \,\,
+\left|X - YD^T\right|_F^2, \quad \text{S.T}\quad Y,D \geq 0
+\]</div>
+<p>The non-negativity constraints encourage sparsity and part based decomposition, we cannot subtract atom elements, only additions are allowed. Different cost functions are also used, as well as regularization terms (see for example the sklearn implementation). Possible options are the Kullback-Leibler divergence for matrices, and the Itakura-Saito divergence. When Lasso regularization is added, the problem is similar to sparse dictionary learning or sparse PCA.</p>
+<p>NNMF with the cost given by the Kullback-Leibler divergence</p>
+<div class="math notranslate nohighlight">
+\[
+\mathop{\mathrm{min}} \sum_{i,j} x_{ij}\log\frac{x_{ij}}{(YD^T)_{ij}} - x_{ij} + (YD^T)_{ij}
+\]</div>
+<p>is equivalent to Probabilistic Latent Semantic Analysis, and can also be interpreted as a maximum likelihood estimation of a Poisson model with mean <span class="math notranslate nohighlight">\(E[x_{ij}]=(YD^T)_{ij}\)</span>, so that the objective is</p>
+<div class="math notranslate nohighlight">
+\[
+\mathop{\mathrm{max}} \sum_{i,j} x_{ij}\log (YD^T)_{ij} - (YD^T)_{ij}
+\]</div>
+<p>For the Itakura-Sato divergence, the objective is</p>
+<div class="math notranslate nohighlight">
+\[
+\mathop{\mathrm{max}} \sum_{i,j}  \frac{x_{ij}}{(YD^T)_{ij}} - \log\frac{x_{ij}}{(YD^T)_{ij}} - 1
+\]</div>
+<p>Unlike the least squares and the KL objective, the IS divergence is not bi-convex, it is only convex in <span class="math notranslate nohighlight">\(YD^T\)</span>, but it has the advantage of being scale invariant, and provides higher accuracy in therepresentation of data with large dynamic range, such as audio spectra <span id="id2">[<a class="reference internal" href="#id78"><span>2</span></a>]</span>.</p>
+<p>A generalized option for the cost is the <span class="math notranslate nohighlight">\(\beta\)</span>-divergence, for which the three options above are special cases (IS (<span class="math notranslate nohighlight">\(\beta=0\)</span>), KL (<span class="math notranslate nohighlight">\(\beta=1\)</span>) divergences and LS (<span class="math notranslate nohighlight">\(\beta=2\)</span>))</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+d_{\beta}(X, Y) =
+\begin{cases}
+\sum_{i,j} \frac{1}{\beta(\beta - 1)}(X_{ij}^\beta + (\beta-1)(YD^T)_{ij}^\beta - \beta X_{ij} (YD^T)_{ij}^{\beta - 1}) &amp; \beta \in \mathcal{R}\backslash [0,1]\\
+KL &amp; \beta = 1\\
+IS &amp; \beta = 0
+\end{cases}
+\end{align}\end{split}\]</div>
+<p>For other options see references in <span id="id3">[<a class="reference internal" href="#id78"><span>2</span></a>]</span>. The choice of cost function depends on the application and the characteristics of the data. The least-squares cost can be shown to be equivalent to ML estimation on a Gaussian model, while the IS cost is equivalent to ML estimation using an exponential model. The <span class="math notranslate nohighlight">\(\beta\)</span>-divergence allows us to tune the divergence using <span class="math notranslate nohighlight">\(\beta\)</span> as a hyper-parameter.</p>
+<p>For a classical example, consider the example of faces again, for which we now obtain part based decomposition, unlike PCA.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">NMF</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_olivetti_faces</span>
+
+<span class="n">n_row</span><span class="p">,</span> <span class="n">n_col</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">7</span>
+<span class="n">n_components</span> <span class="o">=</span> <span class="n">n_row</span> <span class="o">*</span> <span class="n">n_col</span>
+<span class="n">image_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+<span class="c1">#faces, _ = fetch_olivetti_faces(return_X_y=True, shuffle=True,</span>
+<span class="c1">#                                random_state=0)</span>
+
+<span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;Data/faces.gz&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">faces</span> <span class="o">=</span> <span class="n">faces</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">faces</span><span class="p">))</span>
+
+<span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">faces</span><span class="o">.</span><span class="n">shape</span>
+
+<span class="k">def</span> <span class="nf">plot_gallery</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">n_col</span><span class="o">=</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_row</span><span class="o">=</span><span class="n">n_row</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">n_col</span><span class="p">,</span> <span class="mf">2.26</span> <span class="o">*</span> <span class="n">n_row</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">n_row</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="o">-</span><span class="n">comp</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_shape</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">),</span>
+                   <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+                   <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
+                   <span class="n">vmin</span><span class="o">=-</span><span class="n">vmax</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(())</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.93</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">NMF</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;nndsvd&#39;</span><span class="p">,</span>
+                <span class="n">tol</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;cd&#39;</span><span class="p">)</span>
+<span class="n">estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
+<span class="n">components_</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">components_</span>
+
+<span class="n">plot_gallery</span><span class="p">(</span><span class="s2">&quot;First Components&quot;</span><span class="p">,</span> <span class="n">components_</span><span class="p">[:</span><span class="n">n_components</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/1a889748b547bc25b39c4334ab3ea8a88b1dd550.png" /></p>
+<p>When we seek an exact solution <span class="math notranslate nohighlight">\(X=YD^T\)</span>, the method is called “exact” NNMF, and the minimum rank for which such solution can be found is the non-negative rank of <span class="math notranslate nohighlight">\(X\)</span>, <span class="math notranslate nohighlight">\(rank_{+}(X)\)</span>, for which <span class="math notranslate nohighlight">\(rank(X) \leq rank_{+}X \leq min(n,d)\)</span>.</p>
+<p>Most of the time, though, we seek an approximate factorization, such that <span class="math notranslate nohighlight">\(X=YD^T + U\)</span>, with <span class="math notranslate nohighlight">\(U\)</span> matrix of small noise, not necessarily positive.</p>
+<p>If the <span class="math notranslate nohighlight">\(x_i\)</span> are restricted to be <a class="reference external" href="https://en.wikipedia.org/wiki/Convex_combination">convex combinations</a> of the columns of <span class="math notranslate nohighlight">\(D\)</span>, i.e. <span class="math notranslate nohighlight">\(|y_i|_1=1\)</span>, NNMF is called archetypical analysis (AA). In AA, the atoms are forced to lie on the periphery of the convex hull of <span class="math notranslate nohighlight">\(X\)</span>.</p>
+<p>The solutions to the NNMF problem are not unique (for a discussion see <span id="id4">[<a class="reference internal" href="#id77"><span>3</span></a>]</span>), so often additional constraints are imposed to identify the most relevant solution to specific applications (see references in <span id="id5">[<a class="reference internal" href="#id78"><span>2</span></a>]</span>). Note that for any matrix <span class="math notranslate nohighlight">\(Q\)</span>, <span class="math notranslate nohighlight">\(YQ\)</span> and <span class="math notranslate nohighlight">\(Q^{-1}D^T\)</span> are also solutions, as long as <span class="math notranslate nohighlight">\(YQ &gt; 0\)</span> and <span class="math notranslate nohighlight">\(Q^{-1}D^T &gt; 0\)</span>, so that <span class="math notranslate nohighlight">\(X = YD^T = YQQ^{-1}D^T\)</span>. In particular, <span class="math notranslate nohighlight">\(Q\)</span> can be any non-negative generalized permutation matrix (a rotated diagonal matrix), which amounts to scaling and permutations of the atom vectors. For a geometric interpretation of the ill-posedness, note that NMF assumes the data is well described by asimplicial convex cone <span class="math notranslate nohighlight">\(\mathcal{C}_D =  \{\sum_{k=1}^{K} \lambda_k d_k;\ \lambda_k &gt; 0\}\)</span> generated by the columns of <span class="math notranslate nohighlight">\(D\)</span> <span id="id6">[<a class="reference internal" href="#id78"><span>2</span></a>]</span>, but there are many such possible cones as demonstrated in the image below. The observations can be generated as linear combinations of any colored pair of dotted lines.</p>
+<div class="figure align-default" id="id81">
+<img alt="_images/nnmf-cone.png" src="_images/nnmf-cone.png" />
+<p class="caption"><span class="caption-number">Fig. 20 </span><span class="caption-text">Image from <span id="id7">[<a class="reference internal" href="#id78"><span>2</span></a>]</span>.</span><a class="headerlink" href="#id81" title="Permalink to this image">¶</a></p>
+</div>
+<p>One applications of NNMF is that of clustering, where NNMF acts like a soft version of K-Means. Here, the dictionary can be thought as of cluster prototypes, or centers. Then, the coefficients <span class="math notranslate nohighlight">\(Y\)</span> are soft cluster membership indicators.</p>
+<p>In spectral images, NNMF can decompose the image into per element spectra and element abundances:</p>
+<p>as the columns of matrix U ; on the right, the abundances of each material in each pixel (referred to as the abundance maps). Image from <span id="id8">[<a class="reference internal" href="#id77"><span>3</span></a>]</span>. <img alt="" src="_images/nnmf-spectral-decomposition.png" /></p>
+<p>For other applications, see references in <span id="id9">[<a class="reference internal" href="#id78"><span>2</span></a>]</span>.</p>
+<div class="section" id="optimization">
+<h3>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">¶</a></h3>
+<p>For bi-convex cost functions, such as LS or KL, alternative approaches are possible and popular. For example, block coordinate descent is implemented in Scikit Learn for LS and KL costs, while the general <span class="math notranslate nohighlight">\(\beta\)</span>-divergence is optimized using a multiplicative update rule. With the cost given by <span class="math notranslate nohighlight">\(C\)</span>, the MU rules take the form</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+y_{ik} = y_{ik}\frac{\left[\nabla_{y_{ik}} C\right]_{-}}{\left[\nabla_{y_{ik}} C\right]_+}\\
+d_{ik} = d_{ik}\frac{\left[\nabla_{d_{ik}} C\right]_{-}}{\left[\nabla_{d_{ik}} C\right]_+}
+\end{align}\end{split}\]</div>
+<p>with the gradient decomposition</p>
+<div class="math notranslate nohighlight">
+\[
+\nabla C = \left[\nabla C\right]_{+} - \left[\nabla C\right]_{-}
+\]</div>
+<p>If the gradient is negative then <span class="math notranslate nohighlight">\(\frac{\nabla C_{-}}{\nabla C_{+}} &gt; 0\)</span> and the MU rule makes the corresponding parameter larger, towards the minimum. Similarly, for a positive gradien <span class="math notranslate nohighlight">\(\frac{\nabla C_{-}}{\nabla C_{+}} &lt; 0\)</span> and the parameter decreases. Since the multiplicative terms is always positive, matrix elements remain positive during optimization. It can shown that the MU rules are equivalent gradient descent with an adaptive step-size.</p>
+<p>For example, for the <span class="math notranslate nohighlight">\(\beta\)</span>-divergence, the gradient is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\frac{\partial C}{\partial y_{hk}} = \sum_{i,j} (YD^T)_{ij}^{\beta-1} - X_{ij} (YD^T)_{ij}^{\beta - 2})\frac{\partial(YD^T)_{ij}}{\partial y_{hk}}\\
+\frac{\partial C}{\partial d_{hk}} = \sum_{i,j} (YD^T)_{ij}^{\beta-1} - X_{ij} (YD^T)_{ij}^{\beta - 2})\frac{\partial(YD^T)_{ij}}{\partial d_{hk}}
+\end{align}\end{split}\]</div>
+<p>evaluating the last derivatives,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\frac{\partial(YD^T)_{ij}}{\partial y_{hk}}
+=&amp; \frac{\partial \sum_{l} y_{il} d_{jl}}{\partial y_{hk}}
+= d_{jk} \delta_{ih}\\
+\frac{\partial(YD^T)_{ij}}{\partial d_{hk}}
+=&amp; \frac{\partial \sum_{l} y_{il} d_{jl}}{\partial d_{hk}}
+= y_{ik} \delta_{jh}
+\end{align}\end{split}\]</div>
+<p>results in</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+\frac{\partial C}{\partial y_{hk}} =&amp; \sum_{j} (YD^T)_{hj}^{\beta-1} - X_{hj} (YD^T)_{hj}^{\beta - 2})d_{jk}\\
+ =&amp; D_{:,k}^T \left[(YD^T)^{\beta-1} - X \circledcirc (YD^T)^{\beta - 2}\right]_{h,:}\\
+=&amp; \left[(YD^T)^{\beta-1}D - X \circledcirc (YD^T)^{\beta - 2}D\right]_{hk}\\
+\frac{\partial C}{\partial d_{hk}} =&amp; \sum_{i} (YD^T)_{ih}^{\beta-1} - X_{ih} (YD^T)_{ih}^{\beta - 2})y_{ik}\\
+ =&amp; Y_{:,k}^T \left[(YD^T)^{\beta-1} - X \circledcirc (YD^T)^{\beta - 2}\right]_{:,h}
+=&amp;
+\end{align}\end{split}\]</div>
+<p>which can be written as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{align}\\\end{align}\end{aligned}\end{align} \]</div>
+</div>
+<div class="section" id="example-news-data-again">
+<h3>Example: News data (again)<a class="headerlink" href="#example-news-data-again" title="Permalink to this headline">¶</a></h3>
+<p>The data set, obtained from <a class="reference external" href="http://cs.nyu.edu/~roweis/data.html">http://cs.nyu.edu/~roweis/data.html</a>, records word appearances in 16242 news postings. Each feature represents one of a hundred words, and takes the value 1 is the word is present in the post, and 0 otherwise.</p>
+<p>NNMF with the cost given by the Kullback-Leibler divergence is equivalent to Probabilistic Latent Semantic Analysis. Here we use the Frobenius norm on the postings data set. A nice example on topic extraction is also available on the Scikit Learn documentation <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf_lda.html">here</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">news</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data/20news_w100.csv&#39;</span><span class="p">)</span>
+<span class="n">news</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>aids</p></th>
+<th class="head"><p>baseball</p></th>
+<th class="head"><p>bible</p></th>
+<th class="head"><p>bmw</p></th>
+<th class="head"><p>cancer</p></th>
+<th class="head"><p>car</p></th>
+<th class="head"><p>card</p></th>
+<th class="head"><p>case</p></th>
+<th class="head"><p>children</p></th>
+<th class="head"><p>christian</p></th>
+<th class="head"><p>computer</p></th>
+<th class="head"><p>course</p></th>
+<th class="head"><p>data</p></th>
+<th class="head"><p>dealer</p></th>
+<th class="head"><p>disease</p></th>
+<th class="head"><p>disk</p></th>
+<th class="head"><p>display</p></th>
+<th class="head"><p>doctor</p></th>
+<th class="head"><p>dos</p></th>
+<th class="head"><p>drive</p></th>
+<th class="head"><p>driver</p></th>
+<th class="head"><p>earth</p></th>
+<th class="head"><p>email</p></th>
+<th class="head"><p>engine</p></th>
+<th class="head"><p>evidence</p></th>
+<th class="head"><p>fact</p></th>
+<th class="head"><p>fans</p></th>
+<th class="head"><p>files</p></th>
+<th class="head"><p>food</p></th>
+<th class="head"><p>format</p></th>
+<th class="head"><p>ftp</p></th>
+<th class="head"><p>games</p></th>
+<th class="head"><p>god</p></th>
+<th class="head"><p>government</p></th>
+<th class="head"><p>graphics</p></th>
+<th class="head"><p>gun</p></th>
+<th class="head"><p>health</p></th>
+<th class="head"><p>help</p></th>
+<th class="head"><p>hit</p></th>
+<th class="head"><p>hockey</p></th>
+<th class="head"><p>honda</p></th>
+<th class="head"><p>human</p></th>
+<th class="head"><p>image</p></th>
+<th class="head"><p>insurance</p></th>
+<th class="head"><p>israel</p></th>
+<th class="head"><p>jesus</p></th>
+<th class="head"><p>jews</p></th>
+<th class="head"><p>launch</p></th>
+<th class="head"><p>law</p></th>
+<th class="head"><p>league</p></th>
+<th class="head"><p>lunar</p></th>
+<th class="head"><p>mac</p></th>
+<th class="head"><p>mars</p></th>
+<th class="head"><p>medicine</p></th>
+<th class="head"><p>memory</p></th>
+<th class="head"><p>mission</p></th>
+<th class="head"><p>moon</p></th>
+<th class="head"><p>msg</p></th>
+<th class="head"><p>nasa</p></th>
+<th class="head"><p>nhl</p></th>
+<th class="head"><p>number</p></th>
+<th class="head"><p>oil</p></th>
+<th class="head"><p>orbit</p></th>
+<th class="head"><p>patients</p></th>
+<th class="head"><p>pc</p></th>
+<th class="head"><p>phone</p></th>
+<th class="head"><p>players</p></th>
+<th class="head"><p>power</p></th>
+<th class="head"><p>president</p></th>
+<th class="head"><p>problem</p></th>
+<th class="head"><p>program</p></th>
+<th class="head"><p>puck</p></th>
+<th class="head"><p>question</p></th>
+<th class="head"><p>religion</p></th>
+<th class="head"><p>research</p></th>
+<th class="head"><p>rights</p></th>
+<th class="head"><p>satellite</p></th>
+<th class="head"><p>science</p></th>
+<th class="head"><p>scsi</p></th>
+<th class="head"><p>season</p></th>
+<th class="head"><p>server</p></th>
+<th class="head"><p>shuttle</p></th>
+<th class="head"><p>software</p></th>
+<th class="head"><p>solar</p></th>
+<th class="head"><p>space</p></th>
+<th class="head"><p>state</p></th>
+<th class="head"><p>studies</p></th>
+<th class="head"><p>system</p></th>
+<th class="head"><p>team</p></th>
+<th class="head"><p>technology</p></th>
+<th class="head"><p>university</p></th>
+<th class="head"><p>version</p></th>
+<th class="head"><p>video</p></th>
+<th class="head"><p>vitamin</p></th>
+<th class="head"><p>war</p></th>
+<th class="head"><p>water</p></th>
+<th class="head"><p>win</p></th>
+<th class="head"><p>windows</p></th>
+<th class="head"><p>won</p></th>
+<th class="head"><p>world</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">nnmf</span> <span class="o">=</span> <span class="n">NMF</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;nndsvd&#39;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;cd&#39;</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">nnmf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">news</span><span class="p">)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">nnmf</span><span class="o">.</span><span class="n">components_</span>
+
+<span class="n">words</span> <span class="o">=</span> <span class="n">news</span><span class="o">.</span><span class="n">columns</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">D</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Set of words associated with component </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> (above certain threshold):&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">words</span><span class="p">[</span><span class="n">c</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="nb">print</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Set of words associated with component 1 (above certain threshold):
+[&#39;card&#39;, &#39;computer&#39;, &#39;data&#39;, &#39;disk&#39;, &#39;dos&#39;, &#39;drive&#39;, &#39;files&#39;, &#39;help&#39;, &#39;memory&#39;, &#39;number&#39;, &#39;pc&#39;, &#39;problem&#39;, &#39;program&#39;, &#39;software&#39;, &#39;system&#39;, &#39;version&#39;, &#39;windows&#39;]
+
+Set of words associated with component 2 (above certain threshold):
+[&#39;case&#39;, &#39;children&#39;, &#39;christian&#39;, &#39;course&#39;, &#39;evidence&#39;, &#39;fact&#39;, &#39;god&#39;, &#39;government&#39;, &#39;human&#39;, &#39;law&#39;, &#39;number&#39;, &#39;power&#39;, &#39;question&#39;, &#39;religion&#39;, &#39;state&#39;, &#39;world&#39;]
+
+Set of words associated with component 3 (above certain threshold):
+[&#39;computer&#39;, &#39;email&#39;, &#39;phone&#39;, &#39;research&#39;, &#39;science&#39;, &#39;university&#39;]
+
+</pre></div>
+</div>
+<p>We have identified topics using the larger components of each atom, corresponding to the most relevant words for each topic. Since all coefficients are positive, this dictionary is more interpretable than the one obtained previously for sparse PCA.</p>
+</div>
 </div>
 <div class="section" id="random-projection">
 <h2>Random Projection<a class="headerlink" href="#random-projection" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id2"><dl class="citation">
-<dt class="label" id="id68"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<p id="id10"><dl class="citation">
+<dt class="label" id="id76"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p>Ingwer Borg and Patrick JF Groenen. <em>Modern multidimensional scaling: Theory and applications</em>. Springer Science &amp; Business Media, 2005.</p>
+</dd>
+<dt class="label" id="id78"><span class="brackets">2</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id3">2</a>,<a href="#id5">3</a>,<a href="#id6">4</a>,<a href="#id7">5</a>,<a href="#id9">6</a>)</span></dt>
+<dd><p>Slim Essid and Alexey Ozerov. A tutorial on nonnegative matrix factorisation with applications to audiovisual content analysis. In <em>Tutorial at ICME 2014</em>. 2014.</p>
+</dd>
+<dt class="label" id="id77"><span class="brackets">3</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id8">2</a>)</span></dt>
+<dd><p>Nicolas Gillis. Introduction to nonnegative matrix factorization. <em>arXiv preprint arXiv:1703.00663</em>, 2017.</p>
 </dd>
 </dl>
 </p>

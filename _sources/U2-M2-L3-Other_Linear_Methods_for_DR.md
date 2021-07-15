@@ -346,6 +346,218 @@ for i, label in enumerate(factors):
 
 ## Non-negative matrix factorization (NNMF)
 
+NNMF seeks for a matrix decomposition $X = YD^T$ where all entries of $X$, $Y$, and $D$ must be positive. Again, we interpret the matrix $D$ as a dictionary of basis vectors or atoms, and the matrix $Y$ as a matrix of coefficients, where each row of $X$ is a linear combination of atoms, with coefficients given by rows of $Y$. Often, data is non negative by nature, e.g., image data, stock value, counts, scores, etc. For such applications, obtaining a positive dictionary and positive transformed observations aids interpretability.
+
+The problem of NNMF can be stated as
+
+$$
+\mathop{\mathrm{min}}_{Y\in\mathcal{R}^{n \times r}, D\in\mathcal{R}^{d\times r} } \,\,
+\left|X - YD^T\right|_F^2, \quad \text{S.T}\quad Y,D \geq 0
+$$
+
+The non-negativity constraints encourage sparsity and part based decomposition, we cannot subtract atom elements, only additions are allowed. Different cost functions are also used, as well as regularization terms (see for example the sklearn implementation). Possible options are the Kullback-Leibler divergence for matrices, and the Itakura-Saito divergence. When Lasso regularization is added, the problem is similar to sparse dictionary learning or sparse PCA.
+
+NNMF with the cost given by the Kullback-Leibler divergence
+
+$$
+\mathop{\mathrm{min}} \sum_{i,j} x_{ij}\log\frac{x_{ij}}{(YD^T)_{ij}} - x_{ij} + (YD^T)_{ij}
+$$
+
+is equivalent to Probabilistic Latent Semantic Analysis, and can also be interpreted as a maximum likelihood estimation of a Poisson model with mean $E[x_{ij}]=(YD^T)_{ij}$, so that the objective is
+
+$$
+\mathop{\mathrm{max}} \sum_{i,j} x_{ij}\log (YD^T)_{ij} - (YD^T)_{ij}
+$$
+
+For the Itakura-Sato divergence, the objective is
+
+$$
+\mathop{\mathrm{max}} \sum_{i,j}  \frac{x_{ij}}{(YD^T)_{ij}} - \log\frac{x_{ij}}{(YD^T)_{ij}} - 1
+$$
+
+Unlike the least squares and the KL objective, the IS divergence is not bi-convex, it is only convex in $YD^T$, but it has the advantage of being scale invariant, and provides higher accuracy in therepresentation of data with large dynamic range, such as audio spectra {cite}`essid2014tutorial`.
+
+A generalized option for the cost is the $\beta$-divergence, for which the three options above are special cases (IS ($\beta=0$), KL ($\beta=1$) divergences and LS ($\beta=2$))
+
+```{math}
+\begin{align}
+d_{\beta}(X, Y) =
+\begin{cases}
+\sum_{i,j} \frac{1}{\beta(\beta - 1)}(X_{ij}^\beta + (\beta-1)(YD^T)_{ij}^\beta - \beta X_{ij} (YD^T)_{ij}^{\beta - 1}) & \beta \in \mathcal{R}\backslash [0,1]\\
+KL & \beta = 1\\
+IS & \beta = 0
+\end{cases}
+\end{align}
+```
+For other options see references in {cite}`essid2014tutorial`. The choice of cost function depends on the application and the characteristics of the data. The least-squares cost can be shown to be equivalent to ML estimation on a Gaussian model, while the IS cost is equivalent to ML estimation using an exponential model. The $\beta$-divergence allows us to tune the divergence using $\beta$ as a hyper-parameter.
+
+For a classical example, consider the example of faces again, for which we now obtain part based decomposition, unlike PCA.
+
+``` python
+from sklearn.decomposition import NMF
+from sklearn.datasets import fetch_olivetti_faces
+
+n_row, n_col = 7, 7
+n_components = n_row * n_col
+image_shape = (32, 32)
+
+#faces, _ = fetch_olivetti_faces(return_X_y=True, shuffle=True,
+#                                random_state=0)
+
+faces = np.loadtxt('Data/faces.gz', delimiter=',')
+faces = faces + abs(np.min(faces))
+
+n_samples, n_features = faces.shape
+
+def plot_gallery(title, images, n_col=n_col, n_row=n_row, cmap=plt.cm.gray):
+    plt.figure(figsize=(2. * n_col, 2.26 * n_row))
+    plt.suptitle(title, size=16)
+    for i, comp in enumerate(images):
+        plt.subplot(n_row, n_col, i + 1)
+        vmax = max(comp.max(), -comp.min())
+        plt.imshow(comp.reshape(image_shape, order='F'),
+                   cmap=cmap,
+                   interpolation='nearest',
+                   vmin=-vmax, vmax=vmax)
+        plt.xticks(())
+        plt.yticks(())
+    plt.subplots_adjust(0.01, 0.05, 0.99, 0.93, 0.04, 0.)
+
+estimator = NMF(n_components=n_components, init='nndsvd',
+                tol=5e-2, solver='cd')
+estimator.fit(faces)
+components_ = estimator.components_
+
+plot_gallery("First Components", components_[:n_components])
+```
+
+![](./.ob-jupyter/1a889748b547bc25b39c4334ab3ea8a88b1dd550.png)
+
+When we seek an exact solution $X=YD^T$, the method is called \"exact\" NNMF, and the minimum rank for which such solution can be found is the non-negative rank of $X$, $rank_{+}(X)$, for which $rank(X) \leq rank_{+}X \leq min(n,d)$.
+
+Most of the time, though, we seek an approximate factorization, such that $X=YD^T + U$, with $U$ matrix of small noise, not necessarily positive.
+
+If the $x_i$ are restricted to be [convex combinations](https://en.wikipedia.org/wiki/Convex_combination) of the columns of $D$, i.e. $|y_i|_1=1$, NNMF is called archetypical analysis (AA). In AA, the atoms are forced to lie on the periphery of the convex hull of $X$.
+
+The solutions to the NNMF problem are not unique (for a discussion see {cite}`gillis2017introduction`), so often additional constraints are imposed to identify the most relevant solution to specific applications (see references in {cite}`essid2014tutorial`). Note that for any matrix $Q$, $YQ$ and $Q^{-1}D^T$ are also solutions, as long as $YQ > 0$ and $Q^{-1}D^T > 0$, so that $X = YD^T = YQQ^{-1}D^T$. In particular, $Q$ can be any non-negative generalized permutation matrix (a rotated diagonal matrix), which amounts to scaling and permutations of the atom vectors. For a geometric interpretation of the ill-posedness, note that NMF assumes the data is well described by asimplicial convex cone $\mathcal{C}_D =  \{\sum_{k=1}^{K} \lambda_k d_k;\ \lambda_k > 0\}$ generated by the columns of $D$ {cite}`essid2014tutorial`, but there are many such possible cones as demonstrated in the image below. The observations can be generated as linear combinations of any colored pair of dotted lines.
+
+```{figure} Figures/nnmf-cone.png
+Image from {cite}`essid2014tutorial`.
+```
+
+One applications of NNMF is that of clustering, where NNMF acts like a soft version of K-Means. Here, the dictionary can be thought as of cluster prototypes, or centers. Then, the coefficients $Y$ are soft cluster membership indicators.
+
+In spectral images, NNMF can decompose the image into per element spectra and element abundances:
+
+```{=org}
+#+CAPTION: Illustration of the decomposition of a hyperspectral image with three endmembers. On the left, the hyperspectral image M ; in the middle, the spectral signatures of the three endmembers
+```
+as the columns of matrix U ; on the right, the abundances of each material in each pixel (referred to as the abundance maps). Image from {cite}`gillis2017introduction`. ![](Figures/nnmf-spectral-decomposition.png)
+
+For other applications, see references in {cite}`essid2014tutorial`.
+
+### Optimization
+
+For bi-convex cost functions, such as LS or KL, alternative approaches are possible and popular. For example, block coordinate descent is implemented in Scikit Learn for LS and KL costs, while the general $\beta$-divergence is optimized using a multiplicative update rule. With the cost given by $C$, the MU rules take the form
+
+```{math}
+\begin{align}
+y_{ik} = y_{ik}\frac{\left[\nabla_{y_{ik}} C\right]_{-}}{\left[\nabla_{y_{ik}} C\right]_+}\\
+d_{ik} = d_{ik}\frac{\left[\nabla_{d_{ik}} C\right]_{-}}{\left[\nabla_{d_{ik}} C\right]_+}
+\end{align}
+```
+with the gradient decomposition
+
+$$
+\nabla C = \left[\nabla C\right]_{+} - \left[\nabla C\right]_{-}
+$$
+
+If the gradient is negative then $\frac{\nabla C_{-}}{\nabla C_{+}} > 0$ and the MU rule makes the corresponding parameter larger, towards the minimum. Similarly, for a positive gradien $\frac{\nabla C_{-}}{\nabla C_{+}} < 0$ and the parameter decreases. Since the multiplicative terms is always positive, matrix elements remain positive during optimization. It can shown that the MU rules are equivalent gradient descent with an adaptive step-size.
+
+For example, for the $\beta$-divergence, the gradient is
+
+```{math}
+\begin{align}
+\frac{\partial C}{\partial y_{hk}} = \sum_{i,j} (YD^T)_{ij}^{\beta-1} - X_{ij} (YD^T)_{ij}^{\beta - 2})\frac{\partial(YD^T)_{ij}}{\partial y_{hk}}\\
+\frac{\partial C}{\partial d_{hk}} = \sum_{i,j} (YD^T)_{ij}^{\beta-1} - X_{ij} (YD^T)_{ij}^{\beta - 2})\frac{\partial(YD^T)_{ij}}{\partial d_{hk}}
+\end{align}
+```
+evaluating the last derivatives,
+
+```{math}
+\begin{align}
+\frac{\partial(YD^T)_{ij}}{\partial y_{hk}}
+=& \frac{\partial \sum_{l} y_{il} d_{jl}}{\partial y_{hk}}
+= d_{jk} \delta_{ih}\\
+\frac{\partial(YD^T)_{ij}}{\partial d_{hk}}
+=& \frac{\partial \sum_{l} y_{il} d_{jl}}{\partial d_{hk}}
+= y_{ik} \delta_{jh}
+\end{align}
+```
+results in
+
+```{math}
+\begin{align}
+\frac{\partial C}{\partial y_{hk}} =& \sum_{j} (YD^T)_{hj}^{\beta-1} - X_{hj} (YD^T)_{hj}^{\beta - 2})d_{jk}\\
+ =& D_{:,k}^T \left[(YD^T)^{\beta-1} - X \circledcirc (YD^T)^{\beta - 2}\right]_{h,:}\\
+=& \left[(YD^T)^{\beta-1}D - X \circledcirc (YD^T)^{\beta - 2}D\right]_{hk}\\
+\frac{\partial C}{\partial d_{hk}} =& \sum_{i} (YD^T)_{ih}^{\beta-1} - X_{ih} (YD^T)_{ih}^{\beta - 2})y_{ik}\\
+ =& Y_{:,k}^T \left[(YD^T)^{\beta-1} - X \circledcirc (YD^T)^{\beta - 2}\right]_{:,h}
+=&
+\end{align}
+```
+which can be written as
+
+```{math}
+\begin{align}
+
+\end{align}
+```
+### Example: News data (again)
+
+The data set, obtained from <http://cs.nyu.edu/~roweis/data.html>, records word appearances in 16242 news postings. Each feature represents one of a hundred words, and takes the value 1 is the word is present in the post, and 0 otherwise.
+
+NNMF with the cost given by the Kullback-Leibler divergence is equivalent to Probabilistic Latent Semantic Analysis. Here we use the Frobenius norm on the postings data set. A nice example on topic extraction is also available on the Scikit Learn documentation [here](https://scikit-learn.org/stable/auto_examples/applications/plot_topics_extraction_with_nmf_lda.html).
+
+``` python
+news = pd.read_csv('Data/20news_w100.csv')
+news.head()
+```
+
+|     | aids | baseball | bible | bmw | cancer | car | card | case | children | christian | computer | course | data | dealer | disease | disk | display | doctor | dos | drive | driver | earth | email | engine | evidence | fact | fans | files | food | format | ftp | games | god | government | graphics | gun | health | help | hit | hockey | honda | human | image | insurance | israel | jesus | jews | launch | law | league | lunar | mac | mars | medicine | memory | mission | moon | msg | nasa | nhl | number | oil | orbit | patients | pc  | phone | players | power | president | problem | program | puck | question | religion | research | rights | satellite | science | scsi | season | server | shuttle | software | solar | space | state | studies | system | team | technology | university | version | video | vitamin | war | water | win | windows | won | world |
+|-----|------|----------|-------|-----|--------|-----|------|------|----------|-----------|----------|--------|------|--------|---------|------|---------|--------|-----|-------|--------|-------|-------|--------|----------|------|------|-------|------|--------|-----|-------|-----|------------|----------|-----|--------|------|-----|--------|-------|-------|-------|-----------|--------|-------|------|--------|-----|--------|-------|-----|------|----------|--------|---------|------|-----|------|-----|--------|-----|-------|----------|-----|-------|---------|-------|-----------|---------|---------|------|----------|----------|----------|--------|-----------|---------|------|--------|--------|---------|----------|-------|-------|-------|---------|--------|------|------------|------------|---------|-------|---------|-----|-------|-----|---------|-----|-------|
+| 0   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 1     | 0      | 0        | 0    | 0    | 0     | 0    | 0      | 0   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 0     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 0   | 0     | 0       | 0     | 0         | 0       | 0       | 0    | 0        | 0        | 1        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 1        | 0     | 0     | 0     | 0       | 1      | 0    | 0          | 0          | 0       | 1     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+| 1   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 0     | 0      | 0        | 0    | 0    | 0     | 0    | 0      | 0   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 0     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 0   | 0     | 0       | 0     | 0         | 0       | 0       | 0    | 0        | 0        | 0        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 0        | 0     | 0     | 1     | 0       | 0      | 0    | 0          | 0          | 0       | 0     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+| 2   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 0     | 0      | 0        | 0    | 0    | 1     | 0    | 0      | 1   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 0     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 0   | 0     | 0       | 0     | 0         | 0       | 0       | 0    | 0        | 0        | 0        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 0        | 0     | 0     | 0     | 0       | 0      | 0    | 0          | 0          | 1       | 0     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+| 3   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 1     | 0      | 0        | 0    | 0    | 0     | 0    | 0      | 0   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 0     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 1   | 0     | 0       | 0     | 0         | 0       | 0       | 0    | 0        | 0        | 0        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 0        | 0     | 0     | 0     | 0       | 0      | 0    | 0          | 1          | 0       | 0     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+| 4   | 0    | 0        | 0     | 0   | 0      | 0   | 0    | 0    | 0        | 0         | 0        | 0      | 0    | 0      | 0       | 0    | 0       | 0      | 0   | 0     | 0      | 0     | 0     | 0      | 0        | 0    | 0    | 0     | 0    | 0      | 1   | 0     | 0   | 0          | 0        | 0   | 0      | 0    | 0   | 0      | 0     | 0     | 1     | 0         | 0      | 0     | 0    | 0      | 0   | 0      | 0     | 0   | 0    | 0        | 0      | 0       | 0    | 0   | 0    | 0   | 0      | 0   | 0     | 0        | 0   | 0     | 0       | 0     | 0         | 0       | 1       | 0    | 0        | 0        | 0        | 0      | 0         | 0       | 0    | 0      | 0      | 0       | 0        | 0     | 0     | 0     | 0       | 0      | 0    | 0          | 0          | 1       | 0     | 0       | 0   | 0     | 0   | 0       | 0   | 0     |
+
+``` python
+nnmf = NMF(n_components=3, init='nndsvd', solver='cd')
+Y = nnmf.fit_transform(news)
+D = nnmf.components_
+
+words = news.columns
+for i, c in enumerate(D):
+    print(f"Set of words associated with component {i+1} (above certain threshold):")
+    print(list(words[c > 1]))
+    print()
+```
+
+``` example
+Set of words associated with component 1 (above certain threshold):
+['card', 'computer', 'data', 'disk', 'dos', 'drive', 'files', 'help', 'memory', 'number', 'pc', 'problem', 'program', 'software', 'system', 'version', 'windows']
+
+Set of words associated with component 2 (above certain threshold):
+['case', 'children', 'christian', 'course', 'evidence', 'fact', 'god', 'government', 'human', 'law', 'number', 'power', 'question', 'religion', 'state', 'world']
+
+Set of words associated with component 3 (above certain threshold):
+['computer', 'email', 'phone', 'research', 'science', 'university']
+
+```
+
+We have identified topics using the larger components of each atom, corresponding to the most relevant words for each topic. Since all coefficients are positive, this dictionary is more interpretable than the one obtained previously for sparse PCA.
+
 ## Random Projection
 
 ## References

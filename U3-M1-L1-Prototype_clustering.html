@@ -52,6 +52,8 @@
         const thebe_selector_output = ".output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Hierarchical Clustering" href="U3-M1-L2-Hierarchical_clustering.html" />
@@ -210,7 +212,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="U2-M2-L3-Other_Linear_Methods_for_DR.html">
-   Other Linear Methods for DR
+   Other Dimensionality Reduction Methods
   </a>
  </li>
  <li class="toctree-l1">
@@ -371,8 +373,40 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#prerequisites">
+   Prerequisites
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#k-means">
    K-Means
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#id2">
+     K-means++
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-clustering-old-faithful-data">
+     Example: Clustering Old-faithful data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-bad-local-minimum">
+     Example: Bad local minimum
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#k-medoids">
+   K-medoids
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
   </a>
  </li>
 </ul>
@@ -388,8 +422,229 @@
                 
   <div class="section" id="prototype-clustering">
 <h1>Prototype Clustering<a class="headerlink" href="#prototype-clustering" title="Permalink to this headline">¶</a></h1>
+<p>It is easier to start describing clustering by its objective. When clustering data, we aim to find subsets of observations that are similar to one another, while being different from observations in other sets.</p>
+<p>Whether the groups occur naturally in feature space, or we are imposing some partition, a primal concern is how to measure similarity and dissimilarity among observations. We have already discussed several measures of similarly and dissimilarity before in the course. When we now refer to a (dis)similarity measure, we may refer to an arbitrary measure of the one discusses if none is specified. Most algorithms take a dissimilarity or <strong>distance matrix</strong> as their input.</p>
+<p>Since clustering algorithms define groups by similarity, different metrics will result in different clusters. The metric needs to be chosen with the nature of the data in mind, and the many options provide a degree of flexibility to many algorithms, allowing us to adapt them for different types of data. In fact, choosing an appropriate dissimilarity measure is crucial and sometimes more important than the clustering algorithm itself. For example, for mixed data types, or for numerical variables with different scale, the weighted dissimilarity can be used</p>
+<div class="math notranslate nohighlight">
+\[
+D(x_i, x_j) = \sum_l w_l\ d_l(x_{il},x_{jl}); \quad \sum_l w_l = 1
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(d_l\)</span> is the dissimilarity for feature <span class="math notranslate nohighlight">\(l\)</span>. The weight <span class="math notranslate nohighlight">\(w_l\)</span> sets the influence of feature <span class="math notranslate nohighlight">\(l\)</span> in the overall dissimilarity between observations as follows. Consider the mean dissimilarity</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{D} = \frac{1}{N^2}\sum_{ij} D(x_i,x_j) = \sum_l w_j\ \bar{d}_l
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{d}_l = \frac{1}{N^2}\sum_{ij}d_l(x_i,x_j)
+\]</div>
+<p>is the mean dissimilarity for feature <span class="math notranslate nohighlight">\(l\)</span>. If we want the overall contributions for all features to be the same, we can choose <span class="math notranslate nohighlight">\(w_l = 1/\bar{d}_l\)</span> (note not all weights are the same in this case). For numerical variables and using the 2-norm, <span class="math notranslate nohighlight">\(\bar{d}_l = 2\sigma^2_l\)</span>, and the relative importance of each feature is proportional to its variance. Standardizing the data set is akin to make <span class="math notranslate nohighlight">\(w_l=1/2\sigma^2_l\)</span>, and gives all features equal importance. This is often recommended, but not always works well. Sometimes some features have naturally more discriminative power for clustering, and should be weighted more. Consider the following example:</p>
+<div class="figure align-default" id="id73">
+<img alt="_images/clustering-scaling.png" src="_images/clustering-scaling.png" />
+<p class="caption"><span class="caption-number">Fig. 21 </span><span class="caption-text">Simulated data: on the left, K-means clustering (with K=2) has been applied to the raw data. The two colors indicate the cluster memberships. On the right, the features were first standardized before clustering. This is equivalent to using feature weights <span class="math notranslate nohighlight">\(1/[2 · var(X_j)]\)</span>. The standardization has obscured the two well-separated groups. Note that each plot uses the same units in the horizontal and vertical axes. Source: <span id="id1">[<a class="reference internal" href="#id51"><span>1</span></a>]</span>, p.506</span><a class="headerlink" href="#id73" title="Permalink to this image">¶</a></p>
+</div>
+<p>The first type of clustering we consider is <strong>prototype clustering</strong>, in which each cluster is represented by a <strong>prototype</strong>. All members of the cluster are supposed to be derived (noisy) versions of their prototype, with the prototype possessing the aggregated, or more important characteristics of the cluster members. For given clusters, one way of estimating such prototypes is to average all observations belonging to each cluster, resulting in cluster <strong>centroids</strong> as prototypes.</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>When dealing with hard cluster assignments (non-probabilistic), each observation is assigned to a single cluster. Let <span class="math notranslate nohighlight">\(K\)</span> be the number of clusters. This assignment can be encoded with a vector <span class="math notranslate nohighlight">\(C\)</span> of length <span class="math notranslate nohighlight">\(n\)</span> (# of observations), with each entry <span class="math notranslate nohighlight">\(C_i=k\)</span>, with <span class="math notranslate nohighlight">\(k = 1,\ldots,K\)</span> an integer denoting the membership of observation <span class="math notranslate nohighlight">\(i\)</span>.</p>
+<p>The objective is to find the best partition <span class="math notranslate nohighlight">\(C^{*}\)</span> that results in clusters with small within dissimilarity (similar observations in the same cluster) and large between cluster dissimilarity. One way to specify this objective is through a loss function that explicitly measures such dissimilarities.</p>
+<p>Consider the total point “scatter” <span class="math notranslate nohighlight">\(T\)</span>, the sum of all pair distances in the data set. <span class="math notranslate nohighlight">\(T\)</span> can be decomposed as follows,</p>
+<div class="math notranslate nohighlight">
+\[
+T = \frac{1}{2}\sum_{ij} d(x_i,x_j)
+= \sum_k\sum_{C_i=k}\left( \sum_{C_j=k}d(x_i,x_j) + \sum_{C_j\neq k}d(x_i,x_j) \right) = W(C) + B(C)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(W(C)\)</span> is the within cluster scatter, and <span class="math notranslate nohighlight">\(B(C)\)</span> is the between cluster scatter. A good partition can be either found by minimizing <span class="math notranslate nohighlight">\(W(C)\)</span>, which sums up dissimilarities within each cluster, or, equivalently, by maximizing <span class="math notranslate nohighlight">\(B(C)\)</span>, which sums up dissimilarities between different clusters. All keeping <span class="math notranslate nohighlight">\(T\)</span>, constant.</p>
+<p>As a loss function the <em>within cluster</em> point scatter</p>
+<div class="math notranslate nohighlight">
+\[
+W(C) = T - B(C) = \frac{1}{2}\sum_{k=1}^K \sum_{i,C_i=k}\sum_{j,C_j=k} d(x_i,x_j)
+\]</div>
+<p>works well.</p>
+<p>A naive way to try to minimize <span class="math notranslate nohighlight">\(W(C)\)</span> is to test all possible partitions <span class="math notranslate nohighlight">\(C\)</span> of <span class="math notranslate nohighlight">\(K\)</span> clusters and keep the best one. We did something like this when discussing the Fisher-Jenks discretization in 1D, but while the FJ discretization takes advantage of continuity of the partitions, in more dimensions, we need to perform an extensive search.</p>
+<p>The number of possible partitions are given by the <a class="reference external" href="https://en.wikipedia.org/wiki/Stirling_numbers_of_the_second_kind">Stirling numbers of the Second kind</a>,</p>
+<div class="math notranslate nohighlight">
+\[
+S(N,K) = \frac{1}{K!}\sum_{k=1}^K (-1)^{K-k}{K \choose k}k^{N}
+\]</div>
+<p>which results in a combinatorial explosion even for moderate values of <span class="math notranslate nohighlight">\(N\)</span> and <span class="math notranslate nohighlight">\(K\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">comb</span><span class="p">,</span> <span class="n">factorial</span>
+
+<span class="k">def</span> <span class="nf">S</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">K</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">comb</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">k</span><span class="o">**</span><span class="n">N</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">//</span><span class="n">factorial</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;S(10, 4) = </span><span class="si">{</span><span class="n">S</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;S(19, 4) = </span><span class="si">{</span><span class="n">S</span><span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;S(100, 4) = </span><span class="si">{</span><span class="n">S</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So, a brute force search is impractical. One option is a greedy search, or greedy descent of the loss function. This kind of iterative algorithms decrease the value of the loss function at each step and are guaranteed to find a local minima by exploring a reduced subset of partitions. Their local nature makes them susceptible to starting conditions and the local minimum found may be far from the global minimum. The most popular clustering algorithm of this type is by far the K-means algorithm described next.</p>
+</div>
 <div class="section" id="k-means">
 <h2>K-Means<a class="headerlink" href="#k-means" title="Permalink to this headline">¶</a></h2>
+<p>K-means clustering is prototype or partition clustering algorithm designed for numerical variables. The dissimilarity metric used in K-means is the squared euclidean distance, for which <span class="math notranslate nohighlight">\(W(C)\)</span> becomes</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+W(C) =&amp; \frac{1}{2}\sum_{k=1}^K
+ \sum_{C_i=k}\sum_{C_j=k}|x_i - x_j|^2\\
+=&amp; \sum_{k=1}^K N_k \sum_{C_i=k} |x_i - \bar{x}_k|^{2}
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(N_k\)</span> is the number of elements in cluster <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(\bar{x}_k = \frac{1}{N_k}\sum_{C_i=k} x_i\)</span> is the mean vector of observations assigned to cluster <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p><strong>Exercise:</strong> Prove the above equality.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+&amp;\sum_{ij} |x_i - x_j|^2 = \sum_{ijl} (x_{il} - x_{jl})^2\\
+&amp;= \sum_{ijl} \left((x_{il} - \bar{x}_l) - (x_{jl} - \bar{x}_l)\right)^{2}\\
+&amp;=\sum_{ijl} (x_{il} -\bar{x}_{l})^2 + (x_{jl} -\bar{x}_{l})^2 - 2(x_{il} -\bar{x}_{l})(x_{jl} -\bar{x}_{l})\\
+&amp;=\sum_{ij} |x_i - \bar{x}|^2 + \sum_{ij}|x_j - \bar{x}|^2
+-2\sum_{ijl}(x_{il} -\bar{x}_{l})(x_{jl} -\bar{x}_{l})\\
+&amp;=2N\sum_i |x_i - \bar{x}|^2
+- 2\sum_l(\sum_i x_{il} - N \bar{x}_{l})(\sum_j x_{jl} - N\bar{x}_{l})\\
+&amp;= 2N\sum_i |x_i - \bar{x}|^2
+\end{align}\end{split}\]</div>
+<p>Here each <span class="math notranslate nohighlight">\(\bar{x}_k\)</span> is a cluster centroid, and acts as the cluster prototype or representative. Minimizing <span class="math notranslate nohighlight">\(W(C)\)</span> is achieved by finding an assignment that minimizes the mean distance of points to its prototype within each cluster. Under this condition, each point is assigned to the centroid that is closer to it, defining a partition of space called the Voronoi tesselation.</p>
+<p>K-means solves the minimization problem</p>
+<div class="math notranslate nohighlight">
+\[
+C^{*} = \mathop{\mathrm{min}}_{C}
+\sum_{k=1}^K N_k \sum_{C_i=k} |x_i - \bar{x}_k|^{2}
+\]</div>
+<p>by splitting the problem into two convex problems with an easy solution. Consider first the expanded problem of finding the partition and the centroids.</p>
+<div class="math notranslate nohighlight">
+\[
+\mathop{\mathrm{min}}_{C,\{\mu_k\}}
+\sum_{k=1}^K N_k \sum_{C_i=k} |x_i - \mu_k|^{2}
+\]</div>
+<p>We now perform an iterative optimization on the two sets of variables. For fixed centroids, finding the partition is easy, as we assign each point to its closest centroid. For a fixed partition, the solution for the centroids is given by the mean of all points of each partition,</p>
+<div class="math notranslate nohighlight">
+\[
+\bar{x}_k = \mathop{\mathrm{argmin}}_{\mu_k}
+ \sum_{C_i=k} |x_i - \mu_k|^{2}
+\]</div>
+<p><strong><strong>Exercise:</strong></strong> Give proof for the solution of each component of the biconvex problem given above.</p>
+<p>Iterating this steps always reduces the loss function <span class="math notranslate nohighlight">\(W(C)\)</span>, converging in a local minimum. Since the local minimum may be suboptimal, it is recommended to repeat the K-mean algorithm with different starting conditions and keep the best partition.</p>
+<p>The K-means algorithm is as follows:</p>
+<ol class="simple">
+<li><p>Randomly choose initial centroids <span class="math notranslate nohighlight">\(\{\mu_k\} \subset X\)</span>.</p></li>
+<li><p>Repeat until convergence:</p>
+<ol class="simple">
+<li><p><span class="math notranslate nohighlight">\(C_i = \mathop{\mathrm{argmin}}_{j} |x_i - \mu_j|^2\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_k = \bar{x_k}\)</span></p></li>
+</ol>
+</li>
+</ol>
+<p>You will implement K-means in the assignment, for the examples in the notes we’ll use the implementation in SciKit-Learn.</p>
+<div class="section" id="id2">
+<h3>K-means++<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>K-mean++ is a way to initialize the K-means algorithm in a smarter way, as to keep the initialization points far from each other.</p>
+<p>To perform the initialization, first choose one initial centroid at random among the observations in <span class="math notranslate nohighlight">\(X\)</span>. Then, for the remaining centroids, choose the next centroid among the remaining points in <span class="math notranslate nohighlight">\(X\)</span> with probability proportional to the squared distance from the nearest centroid.</p>
+<p>K-means++ guarantees that</p>
+<div class="math notranslate nohighlight">
+\[
+E[W(C)] \leq 8(\log k + 2)W^{*}(C)
+\]</div>
+</div>
+<div class="section" id="example-clustering-old-faithful-data">
+<h3>Example: Clustering Old-faithful data<a class="headerlink" href="#example-clustering-old-faithful-data" title="Permalink to this headline">¶</a></h3>
+<p>We’ll use the classic Old Faithful data set. The data set comprises 272 observations, each of which represents a single eruption and contains two variables corresponding to the duration in minutes of the eruption, and the time until the next eruption, also in minutes. The data set seems to be composed of two clusters. We will first standardize the data, as its useful for this data set, but remember the discussion above.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;Data/old-faithful.csv&#39;</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">Xs</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">random_state</span> <span class="o">=</span> <span class="mi">170</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+<span class="n">centroids</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cluster_centers_</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Duration&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Time since last eruption&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">Xs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">centroids</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">centroids</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src=".ob-jupyter/0190738e5cb6f5377142254c57d1c7da205160cc.png" /></p>
+<p>Let’s try to visualize the process</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">celluloid</span> <span class="kn">import</span> <span class="n">Camera</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">camera</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="n">c1</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="p">]</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Duration&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Time since last eruption&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">Xs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="n">c1a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">c2a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1a</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c1a</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;X-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c2a</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c2a</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;X-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">camera</span><span class="o">.</span><span class="n">snap</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+    <span class="n">random_state</span> <span class="o">=</span> <span class="mi">170</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                   <span class="n">n_init</span><span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                   <span class="n">init</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]]))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+    <span class="n">c1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">c2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Duration&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Time since last eruption&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">Xs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">c1a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+    <span class="n">c2a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c1a</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c1a</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;X-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c2a</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c2a</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;X-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">snap</span><span class="p">()</span>
+
+<span class="n">animation</span> <span class="o">=</span> <span class="n">camera</span><span class="o">.</span><span class="n">animate</span><span class="p">()</span>
+<span class="n">animation</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;Figures/kmeans.gif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/kmeans-slow.gif" /></p>
+<p>Note that without standardizing Time dominates the distance metric.</p>
+<p><img alt="" src="_images/7c258471cdebf4d9306be0a22d6f0ddc54cf515d.png" /></p>
+<p>What if we chose the number of clusters wrong? We still find a partition that minimizes the scatter, bit it may be misleading.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+<span class="n">centroids</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cluster_centers_</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Duration&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Time since last eruption&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">Xs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">Xs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">centroids</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">centroids</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="s1">&#39;magenta&#39;</span><span class="p">),</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/24e061f8969e1704d4b9a5e5eaa414ef9bf6a7b5.png" /></p>
+</div>
+<div class="section" id="example-bad-local-minimum">
+<h3>Example: Bad local minimum<a class="headerlink" href="#example-bad-local-minimum" title="Permalink to this headline">¶</a></h3>
+<p>The following example illustrates a bad local minimum for 3 clusters. The example is taken from the slides of David S. Rosenberg.</p>
+<p><img alt="" src="_images/bad-kmeans.png" /></p>
+</div>
+</div>
+<div class="section" id="k-medoids">
+<h2>K-medoids<a class="headerlink" href="#k-medoids" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="id3"><dl class="citation">
+<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Trevor Hastie, Robert Tibshirani, and Jerome Friedman. <em>The elements of statistical learning: data mining, inference, and prediction</em>. Springer Science &amp; Business Media, 2009.</p>
+</dd>
+</dl>
+</p>
 </div>
 </div>
 

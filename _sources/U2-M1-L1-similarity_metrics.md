@@ -204,7 +204,9 @@ From the last inequality
 ```
 thus, proving the asseveration.
 
-![The following figure shows unit circles (the set of all points that are at the unit distance from the centre) with various values of $p$. Source: <https://en.wikipedia.org/wiki/Minkowski_distance>](Figures/2D_unit_balls.svg)
+```{figure} Figures/2D_unit_balls.svg
+The following figure shows unit circles (the set of all points that are at the unit distance from the centre) with various values of $p$. Source: <https://en.wikipedia.org/wiki/Minkowski_distance>
+```
 
 #### $l_1$, Manhattan distance
 
@@ -216,7 +218,9 @@ $$
 
 It\'s called the city block distance, since it sums the absolute difference of each component, akin to summing the orthogonal distances transversed when moving on a squared road network. It is preferred over the $l_2$ norm when outliers are present. A good standardization for the Manhattan distance is to divide each its feature by its range.
 
-![Taxicab geometry versus Euclidean distance: In taxicab geometry, the red, yellow, and blue paths all have the same shortest path length of 12. In Euclidean geometry, the green line has length and is the unique shortest path. Source: <https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg>](Figures/Manhattan_distance.svg)
+```{figure} Figures/Manhattan_distance.svg
+Taxicab geometry versus Euclidean distance: In taxicab geometry, the red, yellow, and blue paths all have the same shortest path length of 12. In Euclidean geometry, the green line has length and is the unique shortest path. Source: <https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg>
+```
 
 ``` python
 D = proximity_matrix(X, measure=minkowski_d, p=1)
@@ -984,7 +988,11 @@ To find the LCS of $X_{i}$ and $Y_j$, compare $x_{i}$ and $y_{j}$. If they are e
 
 If our vectors have both real and categorical attributed, we two different options at our disposal, either transform the vectors to vectors of a single type, or define a measure that treats each set of features differently and then sum the pair of measures with appropriate weights.
 
-The simplest approach it to label encode categorical attributes as integers, and apply a proximity measure for real valued vectors. It is a good idea to standardize or normalize each feature, as to allow a fair comparison between features of different scales.
+The simplest approach it to label encode categorical attributes as integers, and apply a proximity measure for real valued vectors. It is a good idea to standardize or normalize each feature, as to allow a fair comparison between features of different scales. This approach works fairly well with ordinal or rank variables, where the rank is replaced by
+
+$$
+\frac{i-1/2}{M},\quad i=1,\ldots,M
+$$
 
 An alternative to above approach is to discretize all real valued features to obtain a categorical vector, then use some measure for categorical feature vectors.
 
