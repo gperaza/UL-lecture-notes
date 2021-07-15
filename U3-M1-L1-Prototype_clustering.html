@@ -487,6 +487,11 @@ S(N,K) = \frac{1}{K!}\sum_{k=1}^K (-1)^{K-k}{K \choose k}k^{N}
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;S(100, 4) = </span><span class="si">{</span><span class="n">S</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>S(10, 4) = 34105
+S(19, 4) = 1.1260e+10
+S(100, 4) = 6.6956e+58
+</pre></div>
+</div>
 <p>So, a brute force search is impractical. One option is a greedy search, or greedy descent of the loss function. This kind of iterative algorithms decrease the value of the loss function at each step and are guaranteed to find a local minima by exploring a reduced subset of partitions. Their local nature makes them susceptible to starting conditions and the local minimum found may be far from the global minimum. The most popular clustering algorithm of this type is by far the K-means algorithm described next.</p>
 </div>
 <div class="section" id="k-means">
@@ -617,6 +622,7 @@ E[W(C)] \leq 8(\log k + 2)W^{*}(C)
 <span class="n">animation</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;Figures/kmeans.gif&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><img alt="" src="_images/e6889fba5487f2437a90e637e3684545e3a390b0.png" /></p>
 <p><img alt="" src="_images/kmeans-slow.gif" /></p>
 <p>Note that without standardizing Time dominates the distance metric.</p>
 <p><img alt="" src="_images/7c258471cdebf4d9306be0a22d6f0ddc54cf515d.png" /></p>

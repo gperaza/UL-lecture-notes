@@ -77,6 +77,12 @@ print(f'S(19, 4) = {S(19, 4):.4e}')
 print(f'S(100, 4) = {S(100, 4):.4e}')
 ```
 
+``` example
+S(10, 4) = 34105
+S(19, 4) = 1.1260e+10
+S(100, 4) = 6.6956e+58
+```
+
 So, a brute force search is impractical. One option is a greedy search, or greedy descent of the loss function. This kind of iterative algorithms decrease the value of the loss function at each step and are guaranteed to find a local minima by exploring a reduced subset of partitions. Their local nature makes them susceptible to starting conditions and the local minimum found may be far from the global minimum. The most popular clustering algorithm of this type is by far the K-means algorithm described next.
 
 ## K-Means
@@ -222,6 +228,8 @@ for i in range(1, 7):
 animation = camera.animate()
 animation.save('Figures/kmeans.gif')
 ```
+
+![](./.ob-jupyter/e6889fba5487f2437a90e637e3684545e3a390b0.png)
 
 ![](Figures/kmeans-slow.gif)
 
