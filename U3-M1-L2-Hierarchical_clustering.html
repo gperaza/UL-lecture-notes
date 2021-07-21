@@ -52,6 +52,8 @@
         const thebe_selector_output = ".output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Density Based Clustering" href="U3-M1-L3-Density_based_clustering.html" />
@@ -210,7 +212,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="U2-M2-L3-Other_Linear_Methods_for_DR.html">
-   Other Linear Methods for DR
+   Other Dimensionality Reduction Methods
   </a>
  </li>
  <li class="toctree-l1">
@@ -371,13 +373,50 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#agglomerative">
-   Agglomerative
+  <a class="reference internal nav-link" href="#agglomerative-clustering-linkage-schemes">
+   Agglomerative clustering: Linkage Schemes
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#single-linkage">
+     Single Linkage
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#complete-linkage">
+     Complete Linkage
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#average-linkage">
+     Average Linkage
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#ward-s-criterion">
+     Ward’s Criterion
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#divisive-clustering">
+   Divisive clustering
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#divisive">
-   Divisive
+  <a class="reference internal nav-link" href="#dendogram">
+   Dendogram
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-human-tumor-microarray-data">
+   Example: Human Tumor Microarray Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
   </a>
  </li>
 </ul>
@@ -393,11 +432,143 @@
                 
   <div class="section" id="hierarchical-clustering">
 <h1>Hierarchical Clustering<a class="headerlink" href="#hierarchical-clustering" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="agglomerative">
-<h2>Agglomerative<a class="headerlink" href="#agglomerative" title="Permalink to this headline">¶</a></h2>
+<p>Hierarchical clustering algorithms they hierarchical representations in which the clusters at each level of the hierarchy are created by merging clusters at the next lower level. At the lowest level, each cluster contains a single observation. At the highest level there is only one cluster containing all of the data.</p>
+<p>Two basic paradigms:</p>
+<ol class="simple">
+<li><p>Agglomerative (bottom-up): Start at the bottom and at each level recursively merge a selected pair of clusters into a single cluster. This produces a grouping at the next higher level with one less cluster. The pair chosen for merging consist of the two groups with the smallest intergroup dissimilarity.</p></li>
+<li><p>Divisive (top-down): Divisive methods start at the top and at each level recursively split one of the existing clusters at that level into two new clusters. The split is chosen to produce two new groups with the largest between-group dissimilarity.</p></li>
+</ol>
+<p>With both paradigms there are <span class="math notranslate nohighlight">\(N - 1\)</span> levels in the hierarchy. Each level represents a different partition. The entire hierarchy represents an ordered sequence of such groupings. The choice of a particular partition depends on the characteristics of each particular dataset, and often requires domain knowledge, though some metrics, such as the gap statistic can aid the decision.</p>
+<div class="section" id="agglomerative-clustering-linkage-schemes">
+<h2>Agglomerative clustering: Linkage Schemes<a class="headerlink" href="#agglomerative-clustering-linkage-schemes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="single-linkage">
+<h3>Single Linkage<a class="headerlink" href="#single-linkage" title="Permalink to this headline">¶</a></h3>
+<p>A nice discussion is found in <a class="reference external" href="https://en.wikipedia.org/wiki/Single-linkage_clustering">Wikipedia</a>.</p>
+<p>In single-linkage clustering, the distance between two clusters is determined by a single element pair, namely those two elements (one in each cluster) that are closest to each other. The shortest of these links that remains at any step causes the fusion of the two clusters whose elements are involved. The method is also known as nearest neighbor clustering. A drawback of this method is that it tends to produce long thin clusters in which nearby elements of the same cluster have small distances, but elements at opposite ends of a cluster may be much farther from each other than two elements of other clusters. This may lead to difficulties in defining classes that could usefully subdivide the data.</p>
+<p>Mathematically, the linkage function – the distance <span class="math notranslate nohighlight">\(D(X,Y)\)</span> between clusters <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> – is described by the expression</p>
+<div class="math notranslate nohighlight">
+\[
+D(X,Y)=\min _{x\in X,y\in Y}d(x,y),
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> are any two sets of elements considered as clusters, and <span class="math notranslate nohighlight">\(d(x,y)\)</span> denotes the distance between the two elements <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>.</p>
+<p>The following algorithm is an agglomerative scheme that erases rows and columns in a proximity matrix as old clusters are merged into new ones. The <span class="math notranslate nohighlight">\(N\times N\)</span> proximity matrix <span class="math notranslate nohighlight">\(D\)</span> contains all distances <span class="math notranslate nohighlight">\(d(i,j)\)</span>. The clusterings are assigned sequence numbers <span class="math notranslate nohighlight">\(0,1,\ldots,n-1\)</span> and <span class="math notranslate nohighlight">\(L(k)\)</span> is the level of the <span class="math notranslate nohighlight">\(k\)</span>-th clustering. A cluster with sequence number <span class="math notranslate nohighlight">\(m\)</span> is denoted <span class="math notranslate nohighlight">\((m)\)</span> and the proximity between clusters <span class="math notranslate nohighlight">\((r)\)</span> and <span class="math notranslate nohighlight">\((s)\)</span> is denoted <span class="math notranslate nohighlight">\(d[(r),(s)]\)</span>.</p>
+<p>The single linkage algorithm is composed of the following steps:</p>
+<ol class="simple">
+<li><p>Begin with the disjoint clustering having level <span class="math notranslate nohighlight">\(L(0)=0\)</span> and sequence number <span class="math notranslate nohighlight">\(m=0\)</span>.</p></li>
+<li><p>Find the most similar pair of clusters in the current clustering, say pair <span class="math notranslate nohighlight">\((r),(s)\)</span>, according to <span class="math notranslate nohighlight">\(d[(r),(s)]=\min d[(i),(j)]\)</span> where the minimum is over all pairs of clusters in the current clustering.</p></li>
+<li><p>Increment the sequence number: <span class="math notranslate nohighlight">\(m=m+1\)</span>. Merge clusters <span class="math notranslate nohighlight">\((r)\)</span> and <span class="math notranslate nohighlight">\((s)\)</span> into a single cluster to form the next clustering <span class="math notranslate nohighlight">\(m\)</span>. Set the level of this clustering to <span class="math notranslate nohighlight">\(L(m)=d[(r),(s)]\)</span>.</p></li>
+<li><p>Update the proximity matrix, <span class="math notranslate nohighlight">\(D\)</span>, by deleting the rows and columns corresponding to clusters <span class="math notranslate nohighlight">\((r)\)</span> and <span class="math notranslate nohighlight">\((s)\)</span> and adding a row and column corresponding to the newly formed cluster. The proximity between the new cluster, denoted <span class="math notranslate nohighlight">\((r,s)\)</span> and old cluster <span class="math notranslate nohighlight">\((k)\)</span> is defined as <span class="math notranslate nohighlight">\(d[(r,s),(k)]=\min\{d[(k),(r)],d[(k),(s)]\}\)</span>.</p></li>
+<li><p>If all objects are in one cluster, stop. Else, go to step 2.</p></li>
+</ol>
+<p>We now need a function to find the minimum distance in a distance matrix:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_merge</span><span class="p">(</span><span class="n">D</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Find clusters to merge.</span>
+
+<span class="sd">    INPUTS:</span>
+<span class="sd">        - D: square distance matrix.</span>
+<span class="sd">    OUTPUTS:</span>
+<span class="sd">        - d_min: minimum distance in D.</span>
+<span class="sd">        - i: row index of d_min</span>
+<span class="sd">        - j: column index of d_min</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># You must return the following values correctly</span>
+    <span class="n">d_min</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="c1"># Find minimum of the distance matrix excluding the diagonal</span>
+    <span class="c1">### BEGIN SOLUTION</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">valid_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">d_min</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">D</span> <span class="o">==</span> <span class="n">d_min</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1">### END SOLUTION</span>
+
+    <span class="k">return</span> <span class="n">d_min</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span>
+</pre></div>
 </div>
-<div class="section" id="divisive">
-<h2>Divisive<a class="headerlink" href="#divisive" title="Permalink to this headline">¶</a></h2>
+<p>Now, test it on the example Data Matrix D, you should obtain 17:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+    <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">23</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">17</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">21</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">21</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">39</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">31</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span> <span class="mi">43</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">23</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span>  <span class="mi">0</span><span class="p">]</span>
+<span class="p">])</span>
+
+<span class="n">d</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">find_merge</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Minimum distance in D: </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s1">, at position (</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="c1">### BEGIN HIDDEN TESTS</span>
+<span class="k">assert</span> <span class="n">find_merge</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">### END HIDDEN TESTS</span>
+</pre></div>
+</div>
+<div class="highlight-example notranslate"><div class="highlight"><pre><span></span>Minimum distance in D: 17, at position (0,1)
+</pre></div>
+</div>
+<p>Now we need a way to delete the corresponding row/columns in D, and add a new pair of row-column for the new cluster formed my merging. Adding and deleting rows/columns from numpy arrays is SLOW, so a better approach is to use masks on the original data matrix. If you are not familiar with masks, you may take the slow approach of modifying the D matrix at each iteration.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">merge_clusters</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Merge clusters (i) (j) with distances given in D.</span>
+<span class="sd">    INPUTS:</span>
+<span class="sd">        - D: distance matrix for clusters.</span>
+<span class="sd">        - i: index of the first cluster to merge.</span>
+<span class="sd">        - j: index of the second cluster to merge.</span>
+
+<span class="sd">    OUPUT</span>
+<span class="sd">        - D_new: new data matrix with &quot;&quot;&quot;</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="c1"># Remove row i and column j</span>
+    <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">mask</span><span class="p">[:,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># Replace contents in row j and column i with</span>
+    <span class="c1"># the distances to the new cluster.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="complete-linkage">
+<h3>Complete Linkage<a class="headerlink" href="#complete-linkage" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="average-linkage">
+<h3>Average Linkage<a class="headerlink" href="#average-linkage" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="ward-s-criterion">
+<h3>Ward’s Criterion<a class="headerlink" href="#ward-s-criterion" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="divisive-clustering">
+<h2>Divisive clustering<a class="headerlink" href="#divisive-clustering" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="dendogram">
+<h2>Dendogram<a class="headerlink" href="#dendogram" title="Permalink to this headline">¶</a></h2>
+<p>Recursive binary splitting/agglomeration can be represented by a rooted binary tree. The nodes of the trees represent groups. The root node represents the entire data set. The N terminal nodes each represent one of the individual observations (singleton clusters). Each non-terminal node (“parent”) has two daughter nodes. For divisive clustering the two daughters represent the two groups resulting from the split of the parent; for agglomerative clustering the daughters represent the two groups that were merged to form the parent.</p>
+<p>Most agglomerative and some divisive methods (when viewed bottom-up) possess a monotonicity property. That is, the dissimilarity between merged clusters is monotone increasing with the level of the merger. Thus the binary tree can be plotted so that the height of each node is proportional to the value of the intergroup dissimilarity between its two daughters. The terminal nodes representing individual observations are all plotted at zero height. This type of graphical display is called a dendrogram.</p>
+</div>
+<div class="section" id="example-human-tumor-microarray-data">
+<h2>Example: Human Tumor Microarray Data<a class="headerlink" href="#example-human-tumor-microarray-data" title="Permalink to this headline">¶</a></h2>
+<p>This example is taken from <span id="id1">[<a class="reference internal" href="#id50"><span>1</span></a>]</span>, the implementation is my own.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">dendrogram</span><span class="p">,</span> <span class="n">linkage</span><span class="p">,</span> <span class="n">cophenet</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">pdist</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pkl</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="id2"><dl class="citation">
+<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Trevor Hastie, Robert Tibshirani, and Jerome Friedman. <em>The elements of statistical learning: data mining, inference, and prediction</em>. Springer Science &amp; Business Media, 2009.</p>
+</dd>
+</dl>
+</p>
 </div>
 </div>
 
