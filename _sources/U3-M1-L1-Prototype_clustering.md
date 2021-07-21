@@ -260,6 +260,44 @@ The following example illustrates a bad local minimum for 3 clusters. The exampl
 
 ### Application: Vector Quantization and Compression
 
+Vector quantization is technique for data compression in which all observations are replaced by their prototype. This means that instead of storing the $N\times D$ data matrix $X$, store the $K\times D$ prototype matrix, and the code vector of cluster assignments $C$. While the prototypes need not be obtained through the K-means algorithm, it is a popular choice.
+
+As an example, we can consider its application to image compression. In grayscale images each pixel is a value from 0 to 255 representing the intensity of gray, each value stored as a 8 bit integer. We could apply 1D K-means to find K prototypes, and now each pixel would need to store one of K different integers, which requires $\log_2 K$ bits per pixel, plus a $C$ coding vector of size $8K$ bits, which is typically negligible. The compression can be calculated as
+
+``` python
+def compression_per_pixel(K, p_size=8):
+    return np.log2(K)/p_size
+
+Kl = np.linspace(1, 200, 100)
+plt.plot(Kl, compression_per_pixel(Kl))
+plt.xlabel('K (# of prototypes)')
+plt.ylabel('fraction of original size');
+```
+
+![](./.ob-jupyter/541c718cc6c0e75e294668878194d7366c011a90.png)
+
+To measure the quality of the compression the mean squared error is often used, and depends on the particular image being compressed.
+
+Instead of specifying a value per pixel, we can take advantage of the correlation naturally occurring in images, and partition the image into $m\times m$ blocks. We take each block as a vector of length $m\times m$, and perform K-means on such vectors. The compressed image now requires $\log_2(K)/m^2$ bits per pixel, since we specify a value per block of $m^2$ pixels. The coding vector $C$ is still now of size $8Km$.
+
+``` python
+def compression_per_pixel(K, p_size=8, block_s=1):
+    return np.log2(K)/(block_s**2 * p_size)
+
+Kl = np.linspace(1, 200, 100)
+plt.plot(Kl, compression_per_pixel(Kl), label='single pixel')
+plt.plot(Kl, compression_per_pixel(Kl, block_s=2), label=r'$2\times 2$ blocks')
+plt.legend()
+plt.xlabel('K (# of prototypes)')
+plt.ylabel('fraction of original size');
+```
+
+![](./.ob-jupyter/5f02db5f5097719809acdad02723909bb1018dad.png)
+
+For color images, where each pixel is a 3-dimensional vector of integers with values between 0 and 255, per pixel clustering makes more sense. You\'ll an example in the assignment.
+
+In a information theory framework, the centroids or prototypes are called codewords, the the collection of centroids is called the codebook, the clustering process is called encoding, and the process of reconstructing the image from the vector $C$ and the codebook is called decoding. See {cite}`hastie2009elements` Section 14.3.9 for a discussion, the following example is taken from there.
+
 ## K-medoids
 
 A modification of K-means that can be used with categorical data and is more robust to outliers, since it allows for distance metrics different than squared euclidean, is K-medoids.
