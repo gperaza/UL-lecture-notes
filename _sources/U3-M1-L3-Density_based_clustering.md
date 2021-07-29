@@ -161,6 +161,7 @@ plt.scatter(X[:,0], X[:,1], c=labels);
 from sklearn.datasets import load_sample_image
 from sklearn.cluster import DBSCAN, KMeans
 import matplotlib.pyplot as plt
+from matplotlib import colors, cm
 import numpy as np
 ```
 
@@ -186,6 +187,120 @@ plt.scatter(mdata[:, 0], mdata[:, 1], c=mdata[:, 2:]/255.0, s=2, marker='+');
 
 This is what happens using K-means to look for different number of clusters using the coordinates and the color
 
+``` python
+for nc in range(2, 10, 1):
+    km = KMeans(n_clusters=nc)
+    labels = km.fit_predict(mdata)
+    unq = len(np.unique(labels))
+    ecolors = np.array(labels)
+    cmap = colors.ListedColormap(cm.get_cmap('tab20').colors[:unq])
+    plt.figure(figsize=(6,6))
+    plt.scatter(mdata[:, 0], mdata[:, 1],
+                c=ecolors, s=2, marker='+', cmap=cmap)
+    plt.savefig(f'Pre-rend/kmeans-flower-pos-k-{nc}')
+    plt.close()
+```
+
+```{raw} html
+<input id="valK1" type="range" min="2" max="9" value="3" step="1"
+    oninput="showValK1(this.value)"
+    onchange="showValK1(this.value)" />
+k: <span id="rangeK1">3</span>
+
+<br>
+
+<img id="img2" src="Pre-rend/kmeans-flower-pos-k-3.png">
+
+<script>
+    var val = document.getElementById("valK1").value;
+        document.getElementById("rangeK1").innerHTML=val;
+        document.getElementById("img2").src = "Pre-rend/kmeans-flower-pos-k-" + val + ".png";
+
+    function showValK1(newVal){
+      document.getElementById("rangeK1").innerHTML= newVal;
+      document.getElementById("img2").src = "Pre-rend/kmeans-flower-pos-k-" + newVal + ".png";
+    }
+</script>
+```
+Now we will cluster only the colors (we are applying vector quantization to the colors palette). You can play with the number of clusters to see how the cluster colors get closer to the original colors.
+
+``` python
+for nc in range(2, 10, 1):
+    km = KMeans(n_clusters=nc)
+    labels = km.fit_predict(mdata[:, 2:])
+    ccent = km.cluster_centers_/255.0
+    lcols = [ccent[l,:] for l in labels]
+    plt.figure(figsize=(6,6))
+    plt.scatter(mdata[:, 0], mdata[:, 1], c=lcols, s=2, marker='+')
+    plt.savefig(f'Pre-rend/kmeans-flower-col-k-{nc}')
+    plt.close()
+```
+
+```{raw} html
+<input id="valK2" type="range" min="2" max="9" value="3" step="1"
+    oninput="showValK2(this.value)"
+    onchange="showValK2(this.value)" />
+k: <span id="rangeK2">3</span>
+
+<br>
+
+<img id="img3" src="Pre-rend/kmeans-flower-col-k-3.png">
+
+<script>
+    var val = document.getElementById("valK2").value;
+        document.getElementById("rangeK2").innerHTML=val;
+        document.getElementById("img3").src = "Pre-rend/kmeans-flower-col-k-" + val + ".png";
+
+    function showValK2(newVal){
+      document.getElementById("rangeK2").innerHTML= newVal;
+      document.getElementById("img3").src = "Pre-rend/kmeans-flower-col-k-" + newVal + ".png";
+    }
+</script>
+```
+Using or not the coordinates obviously has an effect on the result.
+
+For DBSCAN we will also use coordinates and colors, now to select the parameters is more complex and different parameters will yield very different results.
+
+``` python
+for eps, ms in product(range(5, 51, 5), range(20, 200, 10)):
+    dbs = DBSCAN(eps=eps, min_samples=ms)
+    labels = dbs.fit_predict(mdata)
+    unq = len(np.unique(labels))
+    ecolors = np.array(labels)
+    plt.figure(figsize=(6,6))
+    plt.title(f"NClusters {unq-1}")
+    cmap = colors.ListedColormap(cm.get_cmap('tab20').colors[:unq])
+    plt.scatter(mdata[:, 0], mdata[:, 1],
+                c=ecolors, s=2, marker='+', cmap=cmap)
+    plt.savefig(f'Pre-rend/dbscan-flower-eps-{eps}-ms-{ms}')
+```
+
+```{raw} html
+<input id="valR" type="range" min="5" max="50" value="25" step="5"
+oninput="showVal(this.value)" onchange="showVal(this.value)" />
+    eps: <span id="range">25</span>
+<input id="valMs" type="range" min="20" max="190" value="100" step="10"
+oninput="showVal2(this.value)" onchange="showVal2(this.value)" />
+    ms: <span id="range2">100</span>
+    <br>
+    <img id="img" src="Pre-rend/dbscan-flower-eps-25-ms-100.png">
+
+<script>
+    var val = document.getElementById("valR").value;
+    var val2 = document.getElementById("valMs").value;
+        document.getElementById("range").innerHTML=val;
+        document.getElementById("range2").innerHTML=val2;
+        document.getElementById("img").src = "Pre-rend/dbscan-flower-eps-" + val + "-ms-" + val2 + ".png";
+        function showVal(newVal){
+          document.getElementById("range").innerHTML= newVal;
+          document.getElementById("img").src = "Pre-rend/dbscan-flower-eps-" + newVal + "-ms-" + document.getElementById("valMs").value + ".png";
+        }
+        function showVal2(newVal){
+          document.getElementById("range2").innerHTML= newVal;
+          document.getElementById("img").src = "Pre-rend/dbscan-flower-eps-" + document.getElementById("valR").value + "-ms-" + newVal + ".png";
+        }
+</script>
+```
 ### Application: Transit hot-spots
 
 ## OPTICS (Ordering Points To Identify the Clustering Structure)

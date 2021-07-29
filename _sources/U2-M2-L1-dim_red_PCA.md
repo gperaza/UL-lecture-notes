@@ -11,7 +11,7 @@ In the case where the number of extracted features is less than the number of or
 The most popular method for feature extraction is Principal Component Analysis (PCA). In simple terms, PCA searches for a rotation (orthogonal linear transformation) of the axes in data space (features) in which the transformed features are uncorrelated, i.e., the rotated covariance matrix is diagonal. The diagonal entries of the covariance matrix are, then, the variance along each of the new axes. Finally, dimensionality reduction is performed by dropping the features with the lowest variance, under the assumption that those are the least informative, or contribute less to the reconstruction error.
 
 ```{raw} html
-<script src="pca-rot.js" id="65f7bd09-d4f1-469e-b724-4de2189c2e59"></script>
+<script src="pca-rot.js" id="e6dca842-cfcf-494e-a114-10b591ed8136"></script>
 ```
 ### PCA through variance maximization
 

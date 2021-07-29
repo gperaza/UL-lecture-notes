@@ -575,6 +575,7 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_sample_image</span>
 <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">DBSCAN</span><span class="p">,</span> <span class="n">KMeans</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span><span class="p">,</span> <span class="n">cm</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
@@ -596,7 +597,106 @@
 </div>
 <p><img alt="" src="_images/482ada63238c27c7354ffd413c4f46117b16b914.png" /></p>
 <p>This is what happens using K-means to look for different number of clusters using the coordinates and the color</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">nc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">km</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">nc</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+    <span class="n">unq</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+    <span class="n">ecolors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;tab20&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span><span class="p">[:</span><span class="n">unq</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">mdata</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="n">c</span><span class="o">=</span><span class="n">ecolors</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pre-rend/kmeans-flower-pos-k-</span><span class="si">{</span><span class="n">nc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
 </div>
+<input id="valK1" type="range" min="2" max="9" value="3" step="1"
+    oninput="showValK1(this.value)"
+    onchange="showValK1(this.value)" />
+k: <span id="rangeK1">3</span>
+
+<br>
+
+<img id="img2" src="Pre-rend/kmeans-flower-pos-k-3.png">
+
+<script>
+    var val = document.getElementById("valK1").value;
+        document.getElementById("rangeK1").innerHTML=val;
+        document.getElementById("img2").src = "Pre-rend/kmeans-flower-pos-k-" + val + ".png";
+
+    function showValK1(newVal){
+      document.getElementById("rangeK1").innerHTML= newVal;
+      document.getElementById("img2").src = "Pre-rend/kmeans-flower-pos-k-" + newVal + ".png";
+    }
+</script><p>Now we will cluster only the colors (we are applying vector quantization to the colors palette). You can play with the number of clusters to see how the cluster colors get closer to the original colors.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">nc</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">km</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">nc</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">mdata</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:])</span>
+    <span class="n">ccent</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="o">/</span><span class="mf">255.0</span>
+    <span class="n">lcols</span> <span class="o">=</span> <span class="p">[</span><span class="n">ccent</span><span class="p">[</span><span class="n">l</span><span class="p">,:]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">mdata</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">lcols</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pre-rend/kmeans-flower-col-k-</span><span class="si">{</span><span class="n">nc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<input id="valK2" type="range" min="2" max="9" value="3" step="1"
+    oninput="showValK2(this.value)"
+    onchange="showValK2(this.value)" />
+k: <span id="rangeK2">3</span>
+
+<br>
+
+<img id="img3" src="Pre-rend/kmeans-flower-col-k-3.png">
+
+<script>
+    var val = document.getElementById("valK2").value;
+        document.getElementById("rangeK2").innerHTML=val;
+        document.getElementById("img3").src = "Pre-rend/kmeans-flower-col-k-" + val + ".png";
+
+    function showValK2(newVal){
+      document.getElementById("rangeK2").innerHTML= newVal;
+      document.getElementById("img3").src = "Pre-rend/kmeans-flower-col-k-" + newVal + ".png";
+    }
+</script><p>Using or not the coordinates obviously has an effect on the result.</p>
+<p>For DBSCAN we will also use coordinates and colors, now to select the parameters is more complex and different parameters will yield very different results.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">eps</span><span class="p">,</span> <span class="n">ms</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">10</span><span class="p">)):</span>
+    <span class="n">dbs</span> <span class="o">=</span> <span class="n">DBSCAN</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="n">ms</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">dbs</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">mdata</span><span class="p">)</span>
+    <span class="n">unq</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+    <span class="n">ecolors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;NClusters </span><span class="si">{</span><span class="n">unq</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;tab20&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">colors</span><span class="p">[:</span><span class="n">unq</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">mdata</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="n">c</span><span class="o">=</span><span class="n">ecolors</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Pre-rend/dbscan-flower-eps-</span><span class="si">{</span><span class="n">eps</span><span class="si">}</span><span class="s1">-ms-</span><span class="si">{</span><span class="n">ms</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<input id="valR" type="range" min="5" max="50" value="25" step="5"
+oninput="showVal(this.value)" onchange="showVal(this.value)" />
+    eps: <span id="range">25</span>
+<input id="valMs" type="range" min="20" max="190" value="100" step="10"
+oninput="showVal2(this.value)" onchange="showVal2(this.value)" />
+    ms: <span id="range2">100</span>
+    <br>
+    <img id="img" src="Pre-rend/dbscan-flower-eps-25-ms-100.png">
+
+<script>
+    var val = document.getElementById("valR").value;
+    var val2 = document.getElementById("valMs").value;
+        document.getElementById("range").innerHTML=val;
+        document.getElementById("range2").innerHTML=val2;
+        document.getElementById("img").src = "Pre-rend/dbscan-flower-eps-" + val + "-ms-" + val2 + ".png";
+        function showVal(newVal){
+          document.getElementById("range").innerHTML= newVal;
+          document.getElementById("img").src = "Pre-rend/dbscan-flower-eps-" + newVal + "-ms-" + document.getElementById("valMs").value + ".png";
+        }
+        function showVal2(newVal){
+          document.getElementById("range2").innerHTML= newVal;
+          document.getElementById("img").src = "Pre-rend/dbscan-flower-eps-" + document.getElementById("valR").value + "-ms-" + newVal + ".png";
+        }
+</script></div>
 <div class="section" id="application-transit-hot-spots">
 <h3>Application: Transit hot-spots<a class="headerlink" href="#application-transit-hot-spots" title="Permalink to this headline">¶</a></h3>
 </div>
