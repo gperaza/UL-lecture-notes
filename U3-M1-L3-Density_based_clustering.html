@@ -52,6 +52,8 @@
         const thebe_selector_output = ".output"
     </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Other Clustering Methods" href="U3-M1-L4-Other_clustering_methods.html" />
@@ -210,7 +212,7 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="U2-M2-L3-Other_Linear_Methods_for_DR.html">
-   Other Linear Methods for DR
+   Other Dimensionality Reduction Methods
   </a>
  </li>
  <li class="toctree-l1">
@@ -371,13 +373,50 @@
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#dbscan">
-   DBSCAN
+  <a class="reference internal nav-link" href="#dbscan-density-based-spatial-clustering-of-applications-with-noise">
+   DBSCAN (Density-Based Spatial Clustering of Applications with Noise)
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#remarks">
+     Remarks
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#application-image-segmentation">
+     Application: Image segmentation.
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#application-transit-hot-spots">
+     Application: Transit hot-spots
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optics-ordering-points-to-identify-the-clustering-structure">
+   OPTICS (Ordering Points To Identify the Clustering Structure)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mean-shift">
+   Mean-Shift
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#hdbscan">
    HDBSCAN
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#denclue">
+   DENCLUE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
   </a>
  </li>
 </ul>
@@ -393,11 +432,200 @@
                 
   <div class="section" id="density-based-clustering">
 <h1>Density Based Clustering<a class="headerlink" href="#density-based-clustering" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="dbscan">
-<h2>DBSCAN<a class="headerlink" href="#dbscan" title="Permalink to this headline">¶</a></h2>
+<p><strong>Note: Text in this notebook is mostly taken as is from reference <span id="id1">[<a class="reference internal" href="#id32"><span>1</span></a>]</span>.</strong></p>
+<p>In this framework, clusters are considered as regions in the l-dimensional space that are “dense” in points of X. Most of the density-based algorithms do not impose any restrictions to the shape of the resulting clusters. Thus, these algorithms have the ability to recover arbitrarily shaped clusters. In addition, they are able to handle efficiently the outliers. Moreover, the time complexity of these algorithms is lower than <span class="math notranslate nohighlight">\(O(N^2)\)</span>, which makes them eligible for processing large data sets.</p>
+<p>We’ll test our algorithms with the synthetic data from the HDBSCAN python implementation. This data set has 6 natural non-isotropic clusters of different densities, plus noise.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;Data/clusterable_data.npy&#39;</span><span class="p">)</span>
+<span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/7279c51d1b52fbd24e2ebf04279e8f0761136434.png" /></p>
+<div class="section" id="dbscan-density-based-spatial-clustering-of-applications-with-noise">
+<h2>DBSCAN (Density-Based Spatial Clustering of Applications with Noise)<a class="headerlink" href="#dbscan-density-based-spatial-clustering-of-applications-with-noise" title="Permalink to this headline">¶</a></h2>
+<p>The “density” as it is considered in DBSCAN around a point <span class="math notranslate nohighlight">\(x\)</span> is estimated as the number of points in <span class="math notranslate nohighlight">\(X\)</span> that fall inside a certain region in the l-dimensional space surrounding <span class="math notranslate nohighlight">\(x\)</span>. In the sequel, we will consider this region to be a hypersphere <span class="math notranslate nohighlight">\(V_\epsilon(x)\)</span> centered at <span class="math notranslate nohighlight">\(x\)</span>, whose radius <span class="math notranslate nohighlight">\(\epsilon\)</span> is a user-defined parameter. In addition, let <span class="math notranslate nohighlight">\(N_\epsilon(x)\)</span> denote the number of points of <span class="math notranslate nohighlight">\(X\)</span> lying in <span class="math notranslate nohighlight">\(V_\epsilon(x)\)</span>. An additional user-defined parameter is the minimum number of points, <span class="math notranslate nohighlight">\(q\)</span>, that must be contained in <span class="math notranslate nohighlight">\(V_\epsilon(x)\)</span>,in order for <span class="math notranslate nohighlight">\(x\)</span> to be considered an “interior” point of a cluster. Before we proceed, the following definitions are in order.</p>
+<p>A point <span class="math notranslate nohighlight">\(y\)</span> is <strong>directly density reachable</strong> from a point <span class="math notranslate nohighlight">\(x\)</span> if</p>
+<ol class="simple">
+<li><p><span class="math notranslate nohighlight">\(y \in V_\epsilon(x)\)</span> and</p></li>
+<li><p><span class="math notranslate nohighlight">\(N_\epsilon (x) \geq q\)</span>.</p></li>
+</ol>
+<p>In the figure, assuming that <span class="math notranslate nohighlight">\(q=5\)</span>, <span class="math notranslate nohighlight">\(y\)</span> is directly density reachable from <span class="math notranslate nohighlight">\(x\)</span>, but not vice versa:</p>
+<p><img alt="" src="_images/ddr.png" /></p>
+<p>For the assignment, you will implement your own version of DBSCAN, staring with a function to find the neighborhood, <code class="docutils literal notranslate"><span class="pre">eps_neighborhood</span></code>, here we will assume such functions are already implemented and will plot the neighborhood of a single data point.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">x_idx</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">e</span><span class="o">=</span><span class="mf">0.05</span>
+<span class="n">nn</span> <span class="o">=</span> <span class="n">eps_neighborhood</span><span class="p">(</span><span class="n">x_idx</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">nn</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">nn</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">x_idx</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">x_idx</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">circle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">X</span><span class="p">[</span><span class="n">x_idx</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">x_idx</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span><span class="n">radius</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">circle</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/41cf712d22a2c6c13f627fa7a74682875cac4e11.png" /></p>
+<p>A point <span class="math notranslate nohighlight">\(y\)</span> is <strong>density reachable</strong> from a point <span class="math notranslate nohighlight">\(x\)</span> in <span class="math notranslate nohighlight">\(X\)</span> if there is a sequence of points <span class="math notranslate nohighlight">\(x_1 , x_2 , \ldots, x_p \in X\)</span>, with <span class="math notranslate nohighlight">\(x_1 = x\)</span>, <span class="math notranslate nohighlight">\(x_p = y\)</span>, such that <span class="math notranslate nohighlight">\(x_{i+1}\)</span> is directly density reachable from <span class="math notranslate nohighlight">\(x_i\)</span>.</p>
+<p><img alt="" src="_images/dr.png" /></p>
+<p>It is easy to note that if <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> in the previous definition are “dense enough” (that is, <span class="math notranslate nohighlight">\(N_\epsilon (x) \geq q\)</span> and <span class="math notranslate nohighlight">\(N_\epsilon (y) \geq q\)</span>), the density reachability property is symmetric. On the other hand, symmetry is lost in the case where either of the points, <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span>, has less than <span class="math notranslate nohighlight">\(q\)</span> points in its neighborhood. However, in this case there must be a third point <span class="math notranslate nohighlight">\(z \in X\)</span> such that both <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are density reachable from <span class="math notranslate nohighlight">\(z\)</span>. This leads to the definition of the density-connectivity.</p>
+<p>A point <span class="math notranslate nohighlight">\(x\)</span> is <strong>density connected</strong> to a point <span class="math notranslate nohighlight">\(y \in X\)</span> if there exists <span class="math notranslate nohighlight">\(z \in X\)</span> such that both <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are density reachable from <span class="math notranslate nohighlight">\(z\)</span>.</p>
+<p><img alt="" src="_images/dc.png" /></p>
+<p>After the previous definitions, a <strong>cluster</strong> <span class="math notranslate nohighlight">\(C\)</span> in the DBSCAN framework is defined as a nonempty subset of <span class="math notranslate nohighlight">\(X\)</span> satisfying the following conditions:</p>
+<ol class="simple">
+<li><p>If <span class="math notranslate nohighlight">\(x\)</span> belongs to <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(y \in X\)</span> is density reachable from <span class="math notranslate nohighlight">\(x\)</span>, then <span class="math notranslate nohighlight">\(y \in C\)</span>.</p></li>
+<li><p>For each pair <span class="math notranslate nohighlight">\((x, y) \in C\)</span>, <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> are density connected.</p></li>
+</ol>
+<p>Let <span class="math notranslate nohighlight">\(C_1 ,\ldots , C_m\)</span> be the clusters in <span class="math notranslate nohighlight">\(X\)</span>. Then, the set of points that are not contained in any of the clusters <span class="math notranslate nohighlight">\(C_1 ,\ldots , C_m\)</span> is known as <strong>noise</strong>.</p>
+<p>In the sequel, we define a point <span class="math notranslate nohighlight">\(x\)</span> as a <strong>core point</strong> if it has at least <span class="math notranslate nohighlight">\(q\)</span> points in its neighborhood. Otherwise, <span class="math notranslate nohighlight">\(x\)</span> is said to be a <strong>noncore point</strong>. A noncore point may be either a <strong>border point</strong> of a cluster (that is, density reachable from a core point) or a <strong>noise point</strong> (that is, not density reachable from other points in <span class="math notranslate nohighlight">\(X\)</span>). Having established the previous definitions, the following two propositions hold true:</p>
+<ul class="simple">
+<li><p><strong>Proposition 1</strong>. If <span class="math notranslate nohighlight">\(x\)</span> is a core point and <span class="math notranslate nohighlight">\(D\)</span> is the set of points in <span class="math notranslate nohighlight">\(X\)</span> that are density reachable from <span class="math notranslate nohighlight">\(x\)</span>, then <span class="math notranslate nohighlight">\(D\)</span> is a cluster.</p></li>
+<li><p><strong>Proposition 2</strong>. If <span class="math notranslate nohighlight">\(C\)</span> is a cluster and <span class="math notranslate nohighlight">\(x\)</span> a core point in <span class="math notranslate nohighlight">\(C\)</span>, then <span class="math notranslate nohighlight">\(C\)</span> equals to the set of the points <span class="math notranslate nohighlight">\(y \in X\)</span> that are density reachable from <span class="math notranslate nohighlight">\(x\)</span>.</p></li>
+</ul>
+<p>These two propositions imply that a cluster is uniquely determined by any of its core points.</p>
+<p>You will also implement the <code class="docutils literal notranslate"><span class="pre">grow_cluster</span></code> function, to grow a cluster from a starting point.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="n">size</span> <span class="o">=</span> <span class="n">grow_cluster</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/7afd920b8b09315e6808852e70a95ce25d7a0a23.png" /></p>
+<p>We proceed now with the description of the DBSCAN algorithm. Let <span class="math notranslate nohighlight">\(X_{un}\)</span> be the set of points in <span class="math notranslate nohighlight">\(X\)</span> that have not been considered yet, and let <span class="math notranslate nohighlight">\(m\)</span> denote the number of clusters.</p>
+<ol class="simple">
+<li><p>Set <span class="math notranslate nohighlight">\(X_{un} = X\)</span></p></li>
+<li><p>Set $ m = 0$</p></li>
+<li><p>While <span class="math notranslate nohighlight">\(X_{un} \neq \emptyset\)</span> do</p>
+<ol class="simple">
+<li><p>Arbitrarily select a <span class="math notranslate nohighlight">\(x \in X_{un}\)</span>.</p></li>
+<li><p>If <span class="math notranslate nohighlight">\(x\)</span> is a noncore point then</p>
+<ol class="simple">
+<li><p>Mark <span class="math notranslate nohighlight">\(x\)</span> as noise point.</p></li>
+<li><p><span class="math notranslate nohighlight">\(X_{un} = X_{un} - \{x\}\)</span></p></li>
+</ol>
+</li>
+<li><p>If <span class="math notranslate nohighlight">\(x\)</span> is a core point then</p>
+<ol class="simple">
+<li><p><span class="math notranslate nohighlight">\(m = m + 1\)</span></p></li>
+<li><p>Determine all density-reachable points in <span class="math notranslate nohighlight">\(X\)</span> from <span class="math notranslate nohighlight">\(x\)</span>.</p></li>
+<li><p>Assign <span class="math notranslate nohighlight">\(x\)</span> and the previous points to the cluster <span class="math notranslate nohighlight">\(C_m\)</span>. The border points that may have been marked as noise are also assigned to <span class="math notranslate nohighlight">\(C_m\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(X_{un} = X_{un} - C_m\)</span></p></li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>A delicate point of the algorithm is the following. Suppose that a border point <span class="math notranslate nohighlight">\(y\)</span> of a cluster <span class="math notranslate nohighlight">\(C\)</span> has currently been selected by the algorithm. This point will be marked as a noise point, through the first branch of the if statement of the algorithm. Note, however, that when, later on, a core point <span class="math notranslate nohighlight">\(x\)</span> of <span class="math notranslate nohighlight">\(C\)</span> will be considered from which <span class="math notranslate nohighlight">\(y\)</span> is density reachable, then <span class="math notranslate nohighlight">\(y\)</span> will be identified as a density-reachable point from <span class="math notranslate nohighlight">\(x\)</span> and will be assigned to <span class="math notranslate nohighlight">\(C\)</span>. On the other hand, if <span class="math notranslate nohighlight">\(y\)</span> is a noise point it will be marked as such and because it is not density reachable by any of the core points in <span class="math notranslate nohighlight">\(X\)</span> its “noise” label will remain unaltered.</p>
+<p>You will use the previously defined functions to implement DBSCAN as above in the <code class="docutils literal notranslate"><span class="pre">dbscan</span></code> function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">dbscan</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The DBSCAN algorithm. Unoptimized implementation with pedagogical purposes.</span>
+
+<span class="sd">        INPUTS:</span>
+<span class="sd">                -X: data matrix</span>
+<span class="sd">                -e: epsilon, the neighbor radius arround each point</span>
+<span class="sd">                -q: The minimum number of points for a cluster to be dense</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+    <span class="c1"># Array to hold cluster assignments: 0 is not considered, -1 is noise</span>
+    <span class="c1"># You need to return this array correctly</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="c1"># Current cluster label</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Instead of using sets, well just iterate over every point in order.</span>
+    <span class="c1"># If you want to choose at random, you can shuffle X before starting.</span>
+    <span class="c1"># I don&#39;t beleive it makes a difference</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Point already in another cluster</span>
+            <span class="k">continue</span>
+        <span class="n">nbrs</span> <span class="o">=</span> <span class="n">eps_neighborhood</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nbrs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">q</span><span class="p">:</span>
+            <span class="c1"># Is a noise point (so far, can be claimed later.)</span>
+            <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">continue</span>
+        <span class="c1"># else, x is a core point</span>
+        <span class="n">m</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">m_size</span> <span class="o">=</span> <span class="n">grow_cluster</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">labels</span>
+
+
+<span class="c1"># Now test different values of e and q.</span>
+<span class="c1"># A good choice seems to be e = 0.025 and q = 4.</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">dbscan</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/057a9959c4fbec832fab608f431d0df73977a712.png" /></p>
+<div class="section" id="remarks">
+<h3>Remarks<a class="headerlink" href="#remarks" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The results of the algorithm are greatly influenced by the choice of <span class="math notranslate nohighlight">\(\epsilon\)</span> and <span class="math notranslate nohighlight">\(q\)</span>. Different values of the parameters may lead to totally different results. One should select these parameters so that the algorithm is able to detect the least “dense” cluster. In practice, one has to experiment with several values for <span class="math notranslate nohighlight">\(\epsilon\)</span> and <span class="math notranslate nohighlight">\(q\)</span> in order to identify their “best” combination for the data set at hand.</p></li>
+<li><p>Implementation of the algorithm by adopting the <span class="math notranslate nohighlight">\(R^∗\)</span>-tree data structure can achieve time complexity of <span class="math notranslate nohighlight">\(O(N log_2 N )\)</span> for low-dimensional data sets.</p></li>
+<li><p>The DBSCAN is not appropriate for cases where the clusters in <span class="math notranslate nohighlight">\(X\)</span> exhibit significant differences in density, and it is not well suited for high-dimensional data.</p></li>
+</ul>
+</div>
+<div class="section" id="application-image-segmentation">
+<h3>Application: Image segmentation.<a class="headerlink" href="#application-image-segmentation" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_sample_image</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">DBSCAN</span><span class="p">,</span> <span class="n">KMeans</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>We will transform the image into a dataset including the coordinates of the pixels and their RGB values</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+
+<span class="n">flower</span> <span class="o">=</span> <span class="n">load_sample_image</span><span class="p">(</span><span class="s1">&#39;flower.jpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Sumsample image to speed up clustering</span>
+<span class="n">sample_idxs</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">flower</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Build array where the first two columns are the pixel position, the last 3 the color values</span>
+<span class="n">mdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_idxs</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">flower</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">mdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">sample_idxs</span><span class="p">,</span> <span class="n">sample_idxs</span><span class="p">)))</span><span class="o">/</span><span class="mi">2</span>
+<span class="n">mdata</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="n">flower</span><span class="p">[</span><span class="n">mdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">mdata</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mdata</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">mdata</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">mdata</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:]</span><span class="o">/</span><span class="mf">255.0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><img alt="" src="_images/482ada63238c27c7354ffd413c4f46117b16b914.png" /></p>
+<p>This is what happens using K-means to look for different number of clusters using the coordinates and the color</p>
+</div>
+<div class="section" id="application-transit-hot-spots">
+<h3>Application: Transit hot-spots<a class="headerlink" href="#application-transit-hot-spots" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="optics-ordering-points-to-identify-the-clustering-structure">
+<h2>OPTICS (Ordering Points To Identify the Clustering Structure)<a class="headerlink" href="#optics-ordering-points-to-identify-the-clustering-structure" title="Permalink to this headline">¶</a></h2>
+<p>An extension of DBSCAN that overcomes the necessity of choosing carefully the parameters <span class="math notranslate nohighlight">\(\epsilon\)</span> and <span class="math notranslate nohighlight">\(q\)</span>. This generates a density-based cluster ordering, representing the intrinsic hierarchical cluster structure of the data set in a comprehensible form. Experiments indicate that the run time of OPTICS is roughly equal to 1.6 of the runtime required by DBSCAN. On the other hand, in practice one has to run DBSCAN more than one time for different values of <span class="math notranslate nohighlight">\(\epsilon\)</span> and <span class="math notranslate nohighlight">\(q\)</span>.</p>
+</div>
+<div class="section" id="mean-shift">
+<h2>Mean-Shift<a class="headerlink" href="#mean-shift" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="hdbscan">
 <h2>HDBSCAN<a class="headerlink" href="#hdbscan" title="Permalink to this headline">¶</a></h2>
+<p>Video introducing a fast HDBSCAN implementation with a good explanation of the algorithm: <a class="reference external" href="https://www.youtube.com/watch?v=dGsxd67IFiU">https://www.youtube.com/watch?v=dGsxd67IFiU</a>.</p>
+<p>Documentation from HDBSCAN implementation from the video: <a class="reference external" href="https://hdbscan.readthedocs.io/en/latest/index.html">https://hdbscan.readthedocs.io/en/latest/index.html</a></p>
+<p>A nice blog post: <a class="reference external" href="https://towardsdatascience.com/understanding-hdbscan-and-density-based-clustering-121dbee1320e">https://towardsdatascience.com/understanding-hdbscan-and-density-based-clustering-121dbee1320e</a></p>
+</div>
+<div class="section" id="denclue">
+<h2>DENCLUE<a class="headerlink" href="#denclue" title="Permalink to this headline">¶</a></h2>
+<p>Quick overview of DENCLUE: <a class="reference external" href="https://wiki.ubc.ca/Course:CPSC522/Density-Based_Unsupervised_Learning">https://wiki.ubc.ca/Course:CPSC522/Density-Based_Unsupervised_Learning</a></p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p id="id2"><dl class="citation">
+<dt class="label" id="id32"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Sergios Theodoridis and Konstantinos Koutroumbas. <em>Pattern Recognition</em>. Elsevier, 2009. URL: <a class="reference external" href="https://doi.org/10.1016/b978-1-59749-272-0.x0001-2">https://doi.org/10.1016/b978-1-59749-272-0.x0001-2</a>, <a class="reference external" href="https://doi.org/10.1016/b978-1-59749-272-0.x0001-2">doi:10.1016/b978-1-59749-272-0.x0001-2</a>.</p>
+</dd>
+</dl>
+</p>
 </div>
 </div>
 
