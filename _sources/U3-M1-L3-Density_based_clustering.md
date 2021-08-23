@@ -301,11 +301,44 @@ oninput="showVal2(this.value)" onchange="showVal2(this.value)" />
         }
 </script>
 ```
-### Application: Transit hot-spots
+### Application: Taxi hot-spots
+
+In this example we will try to identify taxi pick-up and drop-off hot spots in the NYC taxi data set. This application is of interest, as at peak congestion, finding a taxi is hard in the regions of high demand. Identifying such regions may inform a better distribution of taxis at key locations and times.
+
+The data base is fairly known and is somewhat large, so we will not provide in the repository. The code automatically downloads the data in parquet format, as to speed up importing. We also use Dask for out-of-core handling of the large data set. Code for importing and initial analysis is adapted from <https://examples.pyviz.org/nyc_taxi/nyc_taxi.html>.
+
+``` python
+import dask.dataframe as dd
+from pathlib import Path
+import urllib.request
+
+url = 'https://s3.amazonaws.com/datashader-data/nyc_taxi_wide.parq'
+dfile = Path('large-data/nyc_taxi_wide.parq')
+if not dfile.is_file():
+    urllib.request.urlretrieve(url, dfile)
+
+usecols = ['dropoff_x','dropoff_y','pickup_x','pickup_y',
+           'dropoff_hour','pickup_hour','passenger_count']
+# If you run put of memory, remove the persis method
+df = dd.read_parquet(dfile)[usecols].persist()
+df.tail()
+```
+
+|          | dropoff~x~   | dropoff~y~  | pickup~x~    | pickup~y~   | dropoff~hour~ | pickup~hour~ | passenger~count~ |
+|----------|--------------|-------------|--------------|-------------|---------------|--------------|------------------|
+| 11842089 | -8.23249e+06 | 4.97923e+06 | -8.2323e+06  | 4.98086e+06 | 19            | 19           | 2                |
+| 11842090 | -8.23486e+06 | 4.97113e+06 | -8.23572e+06 | 4.97233e+06 | 19            | 19           | 2                |
+| 11842091 | -8.2342e+06  | 4.98109e+06 | -8.23534e+06 | 4.97547e+06 | 19            | 19           | 1                |
+| 11842092 | -8.23562e+06 | 4.97372e+06 | -8.23759e+06 | 4.97384e+06 | 19            | 19           | 1                |
+| 11842093 | -8.23415e+06 | 4.97712e+06 | -8.23323e+06 | 4.97795e+06 | 19            | 19           | 1                |
+
+As you can see, this file contains about 12 million pickup and dropoff locations (in Web Mercator coordinates), with passenger counts.
 
 ## OPTICS (Ordering Points To Identify the Clustering Structure)
 
 An extension of DBSCAN that overcomes the necessity of choosing carefully the parameters $\epsilon$ and $q$. This generates a density-based cluster ordering, representing the intrinsic hierarchical cluster structure of the data set in a comprehensible form. Experiments indicate that the run time of OPTICS is roughly equal to 1.6 of the runtime required by DBSCAN. On the other hand, in practice one has to run DBSCAN more than one time for different values of $\epsilon$ and $q$.
+
+## Connection with Robust Single Linkage
 
 ## Mean-Shift
 

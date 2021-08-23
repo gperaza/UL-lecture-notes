@@ -388,8 +388,8 @@
     </a>
    </li>
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#application-transit-hot-spots">
-     Application: Transit hot-spots
+    <a class="reference internal nav-link" href="#application-taxi-hot-spots">
+     Application: Taxi hot-spots
     </a>
    </li>
   </ul>
@@ -397,6 +397,11 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#optics-ordering-points-to-identify-the-clustering-structure">
    OPTICS (Ordering Points To Identify the Clustering Structure)
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#connection-with-robust-single-linkage">
+   Connection with Robust Single Linkage
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -697,13 +702,95 @@ oninput="showVal2(this.value)" onchange="showVal2(this.value)" />
           document.getElementById("img").src = "Pre-rend/dbscan-flower-eps-" + document.getElementById("valR").value + "-ms-" + newVal + ".png";
         }
 </script></div>
-<div class="section" id="application-transit-hot-spots">
-<h3>Application: Transit hot-spots<a class="headerlink" href="#application-transit-hot-spots" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="application-taxi-hot-spots">
+<h3>Application: Taxi hot-spots<a class="headerlink" href="#application-taxi-hot-spots" title="Permalink to this headline">¶</a></h3>
+<p>In this example we will try to identify taxi pick-up and drop-off hot spots in the NYC taxi data set. This application is of interest, as at peak congestion, finding a taxi is hard in the regions of high demand. Identifying such regions may inform a better distribution of taxis at key locations and times.</p>
+<p>The data base is fairly known and is somewhat large, so we will not provide in the repository. The code automatically downloads the data in parquet format, as to speed up importing. We also use Dask for out-of-core handling of the large data set. Code for importing and initial analysis is adapted from <a class="reference external" href="https://examples.pyviz.org/nyc_taxi/nyc_taxi.html">https://examples.pyviz.org/nyc_taxi/nyc_taxi.html</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask.dataframe</span> <span class="k">as</span> <span class="nn">dd</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://s3.amazonaws.com/datashader-data/nyc_taxi_wide.parq&#39;</span>
+<span class="n">dfile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;large-data/nyc_taxi_wide.parq&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">dfile</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">dfile</span><span class="p">)</span>
+
+<span class="n">usecols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;dropoff_x&#39;</span><span class="p">,</span><span class="s1">&#39;dropoff_y&#39;</span><span class="p">,</span><span class="s1">&#39;pickup_x&#39;</span><span class="p">,</span><span class="s1">&#39;pickup_y&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;dropoff_hour&#39;</span><span class="p">,</span><span class="s1">&#39;pickup_hour&#39;</span><span class="p">,</span><span class="s1">&#39;passenger_count&#39;</span><span class="p">]</span>
+<span class="c1"># If you run put of memory, remove the persis method</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">dfile</span><span class="p">)[</span><span class="n">usecols</span><span class="p">]</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>dropoff~x~</p></th>
+<th class="head"><p>dropoff~y~</p></th>
+<th class="head"><p>pickup~x~</p></th>
+<th class="head"><p>pickup~y~</p></th>
+<th class="head"><p>dropoff~hour~</p></th>
+<th class="head"><p>pickup~hour~</p></th>
+<th class="head"><p>passenger~count~</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>11842089</p></td>
+<td><p>-8.23249e+06</p></td>
+<td><p>4.97923e+06</p></td>
+<td><p>-8.2323e+06</p></td>
+<td><p>4.98086e+06</p></td>
+<td><p>19</p></td>
+<td><p>19</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>11842090</p></td>
+<td><p>-8.23486e+06</p></td>
+<td><p>4.97113e+06</p></td>
+<td><p>-8.23572e+06</p></td>
+<td><p>4.97233e+06</p></td>
+<td><p>19</p></td>
+<td><p>19</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>11842091</p></td>
+<td><p>-8.2342e+06</p></td>
+<td><p>4.98109e+06</p></td>
+<td><p>-8.23534e+06</p></td>
+<td><p>4.97547e+06</p></td>
+<td><p>19</p></td>
+<td><p>19</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>11842092</p></td>
+<td><p>-8.23562e+06</p></td>
+<td><p>4.97372e+06</p></td>
+<td><p>-8.23759e+06</p></td>
+<td><p>4.97384e+06</p></td>
+<td><p>19</p></td>
+<td><p>19</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>11842093</p></td>
+<td><p>-8.23415e+06</p></td>
+<td><p>4.97712e+06</p></td>
+<td><p>-8.23323e+06</p></td>
+<td><p>4.97795e+06</p></td>
+<td><p>19</p></td>
+<td><p>19</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+<p>As you can see, this file contains about 12 million pickup and dropoff locations (in Web Mercator coordinates), with passenger counts.</p>
 </div>
 </div>
 <div class="section" id="optics-ordering-points-to-identify-the-clustering-structure">
 <h2>OPTICS (Ordering Points To Identify the Clustering Structure)<a class="headerlink" href="#optics-ordering-points-to-identify-the-clustering-structure" title="Permalink to this headline">¶</a></h2>
 <p>An extension of DBSCAN that overcomes the necessity of choosing carefully the parameters <span class="math notranslate nohighlight">\(\epsilon\)</span> and <span class="math notranslate nohighlight">\(q\)</span>. This generates a density-based cluster ordering, representing the intrinsic hierarchical cluster structure of the data set in a comprehensible form. Experiments indicate that the run time of OPTICS is roughly equal to 1.6 of the runtime required by DBSCAN. On the other hand, in practice one has to run DBSCAN more than one time for different values of <span class="math notranslate nohighlight">\(\epsilon\)</span> and <span class="math notranslate nohighlight">\(q\)</span>.</p>
+</div>
+<div class="section" id="connection-with-robust-single-linkage">
+<h2>Connection with Robust Single Linkage<a class="headerlink" href="#connection-with-robust-single-linkage" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="mean-shift">
 <h2>Mean-Shift<a class="headerlink" href="#mean-shift" title="Permalink to this headline">¶</a></h2>
