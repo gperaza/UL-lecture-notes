@@ -316,6 +316,60 @@ There are other optimization algorithms for K-medoids, for example, the PAM algo
 
 You will implement K-medoids in the assignment.
 
+## K-medians
+
+K-means is modification of the K-means algorithms that uses the l1-norm as a distance measure and the centroids are calculated as the median of each cluster, instead of the mean. This makes this algorithm less sensitive to outliers.
+
+The objective function for K-medians in
+
+$$
+S = \sum_{k=1}^K  \sum_{x_i \in C_k} |x_{i} - med_{k}|
+$$
+
+## K-modes
+
+K-modes is still another derivative of K-means, specifically designed to work with categorical variables. While K-medoids can be made to work with categorical variables using an appropriate dissimilarity function, the K-modes algorithm is better suited if all our variables are categorical. It works by replacing the means of the means of the clusters with modes. The dissimilarity function in K-modes can either be the simple matching distance or a frequency based, so if a large fraction of the observations in the cluster share a feature value with the mode, the distance is small, see for a discussion {cite}`ng2007impact`. This last distance is defined as
+
+$$
+D(x_i, c_{k}) = \sum_j d(x_{ij}, c_{kj})
+$$
+
+with
+
+```{math}
+\begin{align}
+d(x_{ij}, c_{kj}) =
+\begin{cases}
+1 - \frac{n_k^{c_{ij}}}{n_k} & x_{ij} = c_{ij}\\
+1 &  x_{ij} \neq c_{ij}
+\end{cases}
+\end{align}
+```
+where $n_k^r$ is the number of objects in the cluster whose attribute value $j$ is $c_{ij}$.
+
+## [TODO]{.todo .TODO} Fuzzy K-means/modes {#fuzzy-k-meansmodes}
+
+## [TODO]{.todo .TODO} K-prototype {#k-prototype}
+
+## Kernel K-means
+
+As we have previously discussed, one of the disadvantages of K-means, is that it favors isotropic spherical clusters. If the existing clusters in the data are not spherical, then K-means has problems finding them. One alternative is to use hierarchical or density based clustering, as we will show in other lessons. Here we discuss how to apply the kernel trick to K-means as another option that allows K-means to find non-isotropic clusters.
+
+The idea is to project the data into a high dimensional kernel space $\phi(x)$, and then perform K-means clustering in such space. The objective function of K-means can be rewritten as
+
+```{math}
+\begin{align}
+W =& \sum_K \sum_{C_i = k} |\phi(x_i) - \bar{\phi}_k|^2\\
+=& \sum_K \sum_{C_i = k} \left|\phi(x_i) - \frac{\sum_{j\in C_{k}}\phi(x_j)}{N_k}\right|^2\\
+=& \sum_K \sum_{C_i = k} \phi(x_i)\phi(x_i) - 2\frac{\sum_{j\in C_{k}}\phi(x_i)\phi(x_j)}{N_k} + \frac{\sum_{j,l\in C_{k}}\phi(x_j)\phi(x_l)}{N_k^2}
+\end{align}
+```
+from which the form of the distance function as function of the kernel product is also apparent.
+
+Spectral Clustering can be considered as a variant of Kernel K-means clustering {cite}`dhillon2004kernel`.
+
+### [TODO]{.todo .TODO} Example: KK-means for concentric circles using RBF kernel {#example-kk-means-for-concentric-circles-using-rbf-kernel}
+
 ## References
 
 ```{bibliography}

@@ -410,6 +410,38 @@
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#k-medians">
+   K-medians
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#k-modes">
+   K-modes
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#todo-todo-todo-fuzzy-k-means-modes-fuzzy-k-meansmodes">
+   [TODO]{.todo .TODO} Fuzzy K-means/modes {#fuzzy-k-meansmodes}
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#todo-todo-todo-k-prototype-k-prototype">
+   [TODO]{.todo .TODO} K-prototype {#k-prototype}
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#kernel-k-means">
+   Kernel K-means
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#todo-todo-todo-example-kk-means-for-concentric-circles-using-rbf-kernel-example-kk-means-for-concentric-circles-using-rbf-kernel">
+     [TODO]{.todo .TODO} Example: KK-means for concentric circles using RBF kernel {#example-kk-means-for-concentric-circles-using-rbf-kernel}
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
    References
   </a>
@@ -445,9 +477,9 @@ D(x_i, x_j) = \sum_l w_l\ d_l(x_{il},x_{jl}); \quad \sum_l w_l = 1
 \bar{d}_l = \frac{1}{N^2}\sum_{ij}d_l(x_i,x_j)
 \]</div>
 <p>is the mean dissimilarity for feature <span class="math notranslate nohighlight">\(l\)</span>. If we want the overall contributions for all features to be the same, we can choose <span class="math notranslate nohighlight">\(w_l = 1/\bar{d}_l\)</span> (note not all weights are the same in this case). For numerical variables and using the 2-norm, <span class="math notranslate nohighlight">\(\bar{d}_l = 2\sigma^2_l\)</span>, and the relative importance of each feature is proportional to its variance. Standardizing the data set is akin to make <span class="math notranslate nohighlight">\(w_l=1/2\sigma^2_l\)</span>, and gives all features equal importance. This is often recommended, but not always works well. Sometimes some features have naturally more discriminative power for clustering, and should be weighted more. Consider the following example:</p>
-<div class="figure align-default" id="id74">
+<div class="figure align-default" id="id78">
 <img alt="_images/clustering-scaling.png" src="_images/clustering-scaling.png" />
-<p class="caption"><span class="caption-number">Fig. 21 </span><span class="caption-text">Simulated data: on the left, K-means clustering (with K=2) has been applied to the raw data. The two colors indicate the cluster memberships. On the right, the features were first standardized before clustering. This is equivalent to using feature weights <span class="math notranslate nohighlight">\(1/[2 · var(X_j)]\)</span>. The standardization has obscured the two well-separated groups. Note that each plot uses the same units in the horizontal and vertical axes. Source: <span id="id1">[<a class="reference internal" href="#id52"><span>1</span></a>]</span>, p.506</span><a class="headerlink" href="#id74" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 21 </span><span class="caption-text">Simulated data: on the left, K-means clustering (with K=2) has been applied to the raw data. The two colors indicate the cluster memberships. On the right, the features were first standardized before clustering. This is equivalent to using feature weights <span class="math notranslate nohighlight">\(1/[2 · var(X_j)]\)</span>. The standardization has obscured the two well-separated groups. Note that each plot uses the same units in the horizontal and vertical axes. Source: <span id="id1">[<a class="reference internal" href="U3-M1-L2-Hierarchical_clustering.html#id50"><span>1</span></a>]</span>, p.506</span><a class="headerlink" href="#id78" title="Permalink to this image">¶</a></p>
 </div>
 <p>The first type of clustering we consider is <strong>prototype clustering</strong>, in which each cluster is represented by a <strong>prototype</strong>. All members of the cluster are supposed to be derived (noisy) versions of their prototype, with the prototype possessing the aggregated, or more important characteristics of the cluster members. For given clusters, one way of estimating such prototypes is to average all observations belonging to each cluster, resulting in cluster <strong>centroids</strong> as prototypes.</p>
 <div class="section" id="prerequisites">
@@ -673,7 +705,7 @@ E[W(C)] \leq 8(\log k + 2)W^{*}(C)
 </div>
 <p><img alt="" src="_images/5f02db5f5097719809acdad02723909bb1018dad.png" /></p>
 <p>For color images, where each pixel is a 3-dimensional vector of integers with values between 0 and 255, per pixel clustering makes more sense. You’ll an example in the assignment.</p>
-<p>In a information theory framework, the centroids or prototypes are called codewords, the the collection of centroids is called the codebook, the clustering process is called encoding, and the process of reconstructing the image from the vector <span class="math notranslate nohighlight">\(C\)</span> and the codebook is called decoding. See <span id="id3">[<a class="reference internal" href="#id52"><span>1</span></a>]</span> Section 14.3.9 for a discussion, the following example is taken from there.</p>
+<p>In a information theory framework, the centroids or prototypes are called codewords, the the collection of centroids is called the codebook, the clustering process is called encoding, and the process of reconstructing the image from the vector <span class="math notranslate nohighlight">\(C\)</span> and the codebook is called decoding. See <span id="id3">[<a class="reference internal" href="U3-M1-L2-Hierarchical_clustering.html#id50"><span>1</span></a>]</span> Section 14.3.9 for a discussion, the following example is taken from there.</p>
 </div>
 </div>
 <div class="section" id="k-medoids">
@@ -694,11 +726,66 @@ E[W(C)] \leq 8(\log k + 2)W^{*}(C)
 <p>There are other optimization algorithms for K-medoids, for example, the PAM algorithm works as follows: PAM method works by computing the cost of swapping a medoid with any non-medoid point. Then, make the swap that decreases the cost the most. Repeating the swapping until convergence.</p>
 <p>You will implement K-medoids in the assignment.</p>
 </div>
+<div class="section" id="k-medians">
+<h2>K-medians<a class="headerlink" href="#k-medians" title="Permalink to this headline">¶</a></h2>
+<p>K-means is modification of the K-means algorithms that uses the l1-norm as a distance measure and the centroids are calculated as the median of each cluster, instead of the mean. This makes this algorithm less sensitive to outliers.</p>
+<p>The objective function for K-medians in</p>
+<div class="math notranslate nohighlight">
+\[
+S = \sum_{k=1}^K  \sum_{x_i \in C_k} |x_{i} - med_{k}|
+\]</div>
+</div>
+<div class="section" id="k-modes">
+<h2>K-modes<a class="headerlink" href="#k-modes" title="Permalink to this headline">¶</a></h2>
+<p>K-modes is still another derivative of K-means, specifically designed to work with categorical variables. While K-medoids can be made to work with categorical variables using an appropriate dissimilarity function, the K-modes algorithm is better suited if all our variables are categorical. It works by replacing the means of the means of the clusters with modes. The dissimilarity function in K-modes can either be the simple matching distance or a frequency based, so if a large fraction of the observations in the cluster share a feature value with the mode, the distance is small, see for a discussion <span id="id4">[<a class="reference internal" href="#id76"><span>2</span></a>]</span>. This last distance is defined as</p>
+<div class="math notranslate nohighlight">
+\[
+D(x_i, c_{k}) = \sum_j d(x_{ij}, c_{kj})
+\]</div>
+<p>with</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+d(x_{ij}, c_{kj}) =
+\begin{cases}
+1 - \frac{n_k^{c_{ij}}}{n_k} &amp; x_{ij} = c_{ij}\\
+1 &amp;  x_{ij} \neq c_{ij}
+\end{cases}
+\end{align}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_k^r\)</span> is the number of objects in the cluster whose attribute value <span class="math notranslate nohighlight">\(j\)</span> is <span class="math notranslate nohighlight">\(c_{ij}\)</span>.</p>
+</div>
+<div class="section" id="todo-todo-todo-fuzzy-k-means-modes-fuzzy-k-meansmodes">
+<h2>[TODO]{.todo .TODO} Fuzzy K-means/modes {#fuzzy-k-meansmodes}<a class="headerlink" href="#todo-todo-todo-fuzzy-k-means-modes-fuzzy-k-meansmodes" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="todo-todo-todo-k-prototype-k-prototype">
+<h2>[TODO]{.todo .TODO} K-prototype {#k-prototype}<a class="headerlink" href="#todo-todo-todo-k-prototype-k-prototype" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="kernel-k-means">
+<h2>Kernel K-means<a class="headerlink" href="#kernel-k-means" title="Permalink to this headline">¶</a></h2>
+<p>As we have previously discussed, one of the disadvantages of K-means, is that it favors isotropic spherical clusters. If the existing clusters in the data are not spherical, then K-means has problems finding them. One alternative is to use hierarchical or density based clustering, as we will show in other lessons. Here we discuss how to apply the kernel trick to K-means as another option that allows K-means to find non-isotropic clusters.</p>
+<p>The idea is to project the data into a high dimensional kernel space <span class="math notranslate nohighlight">\(\phi(x)\)</span>, and then perform K-means clustering in such space. The objective function of K-means can be rewritten as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align}
+W =&amp; \sum_K \sum_{C_i = k} |\phi(x_i) - \bar{\phi}_k|^2\\
+=&amp; \sum_K \sum_{C_i = k} \left|\phi(x_i) - \frac{\sum_{j\in C_{k}}\phi(x_j)}{N_k}\right|^2\\
+=&amp; \sum_K \sum_{C_i = k} \phi(x_i)\phi(x_i) - 2\frac{\sum_{j\in C_{k}}\phi(x_i)\phi(x_j)}{N_k} + \frac{\sum_{j,l\in C_{k}}\phi(x_j)\phi(x_l)}{N_k^2}
+\end{align}\end{split}\]</div>
+<p>from which the form of the distance function as function of the kernel product is also apparent.</p>
+<p>Spectral Clustering can be considered as a variant of Kernel K-means clustering <span id="id5">[<a class="reference internal" href="#id77"><span>3</span></a>]</span>.</p>
+<div class="section" id="todo-todo-todo-example-kk-means-for-concentric-circles-using-rbf-kernel-example-kk-means-for-concentric-circles-using-rbf-kernel">
+<h3>[TODO]{.todo .TODO} Example: KK-means for concentric circles using RBF kernel {#example-kk-means-for-concentric-circles-using-rbf-kernel}<a class="headerlink" href="#todo-todo-todo-example-kk-means-for-concentric-circles-using-rbf-kernel-example-kk-means-for-concentric-circles-using-rbf-kernel" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p id="id4"><dl class="citation">
-<dt class="label" id="id52"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>)</span></dt>
+<p id="id6"><dl class="citation">
+<dt class="label" id="id54"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>)</span></dt>
 <dd><p>Trevor Hastie, Robert Tibshirani, and Jerome Friedman. <em>The elements of statistical learning: data mining, inference, and prediction</em>. Springer Science &amp; Business Media, 2009.</p>
+</dd>
+<dt class="label" id="id76"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dd><p>Michael K Ng, Mark Junjie Li, Joshua Zhexue Huang, and Zengyou He. On the impact of dissimilarity measure in k-modes clustering algorithm. <em>IEEE transactions on pattern analysis and machine intelligence</em>, 29(3):503–507, 2007.</p>
+</dd>
+<dt class="label" id="id77"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dd><p>Inderjit S Dhillon, Yuqiang Guan, and Brian Kulis. Kernel k-means: spectral clustering and normalized cuts. In <em>Proceedings of the tenth ACM SIGKDD international conference on Knowledge discovery and data mining</em>, 551–556. 2004.</p>
 </dd>
 </dl>
 </p>

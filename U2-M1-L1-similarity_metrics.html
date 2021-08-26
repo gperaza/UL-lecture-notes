@@ -681,7 +681,7 @@
 <h1>(Dis)similarity metrics<a class="headerlink" href="#dis-similarity-metrics" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>Lacking response and class information, most unsupervised algorithms search for patterns based on how alike or different are observations with respect to each other. One consequence of this is that the outcome of these algorithms will depend on what we mean by two observations being alike or similar. In this lesson, we’ll review several measures of proximity, quantifying either similarity or dissimilarity between pair of observations, or sets of observations. Most of the present material was adapted from references <span id="id1">[<a class="reference internal" href="#id53"><span>1</span></a>,<a class="reference internal" href="#id63"><span>2</span></a>]</span>.</p>
+<p>Lacking response and class information, most unsupervised algorithms search for patterns based on how alike or different are observations with respect to each other. One consequence of this is that the outcome of these algorithms will depend on what we mean by two observations being alike or similar. In this lesson, we’ll review several measures of proximity, quantifying either similarity or dissimilarity between pair of observations, or sets of observations. Most of the present material was adapted from references <span id="id1">[<a class="reference internal" href="U3-M1-L3-Density_based_clustering.html#id32"><span>1</span></a>,<a class="reference internal" href="#id63"><span>2</span></a>]</span>.</p>
 </div>
 <div class="section" id="what-is-a-proximity-measure">
 <h2>What is a proximity measure?<a class="headerlink" href="#what-is-a-proximity-measure" title="Permalink to this headline">¶</a></h2>
@@ -859,8 +859,8 @@ y_i^{p+1} &amp;\leq y_i^{p}\\
 |\vec{x}|_{p} &amp;\geq |\vec{x}|_{p+1}
 \end{align}\end{split}\]</div>
 <p>thus, proving the asseveration.</p>
-<div class="figure align-default" id="id93">
-<img alt="_images/2D_unit_balls.svg" src="_images/2D_unit_balls.svg" /><p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">The following figure shows unit circles (the set of all points that are at the unit distance from the centre) with various values of <span class="math notranslate nohighlight">\(p\)</span>. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Minkowski_distance">https://en.wikipedia.org/wiki/Minkowski_distance</a></span><a class="headerlink" href="#id93" title="Permalink to this image">¶</a></p>
+<div class="figure align-default" id="id95">
+<img alt="_images/2D_unit_balls.svg" src="_images/2D_unit_balls.svg" /><p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">The following figure shows unit circles (the set of all points that are at the unit distance from the centre) with various values of <span class="math notranslate nohighlight">\(p\)</span>. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Minkowski_distance">https://en.wikipedia.org/wiki/Minkowski_distance</a></span><a class="headerlink" href="#id95" title="Permalink to this image">¶</a></p>
 </div>
 <div class="section" id="l-1-manhattan-distance">
 <h4><span class="math notranslate nohighlight">\(l_1\)</span>, Manhattan distance<a class="headerlink" href="#l-1-manhattan-distance" title="Permalink to this headline">¶</a></h4>
@@ -870,8 +870,8 @@ y_i^{p+1} &amp;\leq y_i^{p}\\
 d_1(\vec{x},\vec{y}) =  \sum_{i=1}^D \left | x_i - y_i \right |
 \]</div>
 <p>It’s called the city block distance, since it sums the absolute difference of each component, akin to summing the orthogonal distances transversed when moving on a squared road network. It is preferred over the <span class="math notranslate nohighlight">\(l_2\)</span> norm when outliers are present. A good standardization for the Manhattan distance is to divide each its feature by its range.</p>
-<div class="figure align-default" id="id94">
-<img alt="_images/Manhattan_distance.svg" src="_images/Manhattan_distance.svg" /><p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">Taxicab geometry versus Euclidean distance: In taxicab geometry, the red, yellow, and blue paths all have the same shortest path length of 12. In Euclidean geometry, the green line has length and is the unique shortest path. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg">https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg</a></span><a class="headerlink" href="#id94" title="Permalink to this image">¶</a></p>
+<div class="figure align-default" id="id96">
+<img alt="_images/Manhattan_distance.svg" src="_images/Manhattan_distance.svg" /><p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">Taxicab geometry versus Euclidean distance: In taxicab geometry, the red, yellow, and blue paths all have the same shortest path length of 12. In Euclidean geometry, the green line has length and is the unique shortest path. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg">https://en.wikipedia.org/wiki/Taxicab_geometry#/media/File:Manhattan_distance.svg</a></span><a class="headerlink" href="#id96" title="Permalink to this image">¶</a></p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">proximity_matrix</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="n">minkowski_d</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -924,9 +924,9 @@ d_2(\vec{x},\vec{y}) = \sqrt{\left ( \sum_{i=1}^D \left (x_i - y_i \right )^2 \r
 \[
 d_\infty(\vec{x},\vec{y}) = \underset{1\leq i \leq D}{\operatorname{max}} \left | x_i - y_i  \right |
 \]</div>
-<div class="figure align-default" id="id95">
+<div class="figure align-default" id="id97">
 <img alt="_images/chess.png" src="_images/chess.png" />
-<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev_distance">https://en.wikipedia.org/wiki/Chebyshev_distance</a></span><a class="headerlink" href="#id95" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">The Chebyshev distance between two spaces on a chess board gives the minimum number of moves a king requires to move between them. This is because a king can move diagonally, so that the jumps to cover the smaller distance parallel to a rank or column is effectively absorbed into the jumps covering the larger. Above are the Chebyshev distances of each square from the square f6. Source: <a class="reference external" href="https://en.wikipedia.org/wiki/Chebyshev_distance">https://en.wikipedia.org/wiki/Chebyshev_distance</a></span><a class="headerlink" href="#id97" title="Permalink to this image">¶</a></p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">chebyshev_d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span>

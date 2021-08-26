@@ -299,16 +299,16 @@ D = pdist(X)
 
 fig, ax = plt.subplots(2,2, figsize=(20,20))
 ax[0,0].set_title(f'Single linkage, CCC: {cophenet(Z_sl, D)[0]:0.4f}')
-dendrogram(Z_sl, ax=ax[0,0], labels=y);
+dendrogram(Z_sl, ax=ax[0,0], labels=labels);
 
 ax[0,1].set_title(f'Complete linkage, CCC: {cophenet(Z_cl, D)[0]:0.4f}')
-dendrogram(Z_cl, ax=ax[0,1], labels=y);
+dendrogram(Z_cl, ax=ax[0,1], labels=labels);
 
 ax[1,0].set_title(f'Average linkage, CCC: {cophenet(Z_al, D)[0]:0.4f}')
-dendrogram(Z_al, ax=ax[1,0], labels=y);
+dendrogram(Z_al, ax=ax[1,0], labels=labels);
 
 ax[1,1].set_title(f'Ward, CCC: {cophenet(Z_ward, D)[0]:0.4f}')
-dendrogram(Z_ward, ax=ax[1,1], labels=y);
+dendrogram(Z_ward, ax=ax[1,1], labels=labels);
 ```
 
 ![](./.ob-jupyter/c175b8d3f2c427b0ee347f9d61366e75bec0fb80.png)
